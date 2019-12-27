@@ -3,7 +3,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.JPanel;
-
+//oo
 public class Avatar extends JPanel{
 	Image back;
 	Avatar(){
