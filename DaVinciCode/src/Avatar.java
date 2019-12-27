@@ -3,12 +3,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.JPanel;
-
+//oo
 public class Avatar extends JPanel{
 	Image back;
 	Avatar(){
 		setLayout(null); //기본 레이아웃 무시
-		back = Toolkit.getDefaultToolkit().getImage("c:\\image\\gameground.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("image\\game_bg.jpg");
 
 	}
 

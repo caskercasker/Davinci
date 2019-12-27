@@ -56,7 +56,7 @@ public class Login extends JPanel{// 해당블록은 선언부, 구현이 시작된 부분이 아�
 	//Login login = new Login(); 생성자로 기능을 하기 위해서 리턴형이 없어야함 ex> void 붙이면 일반 메소드가 됨.
 	Login(){
 		setLayout(null); //기본 레이아웃 무시
-		back = Toolkit.getDefaultToolkit().getImage("c:\\image\\background.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("image\\login_bg.jpg");
 		la1 = new JLabel("ID",JLabel.LEFT);
 		//la1.setForeground(Color.white);
 		//la1.setFont(new Font("Serif", Font.BOLD, 48));
