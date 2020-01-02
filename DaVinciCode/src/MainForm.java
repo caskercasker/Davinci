@@ -14,8 +14,8 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 
 	MainForm() {
 		setLayout(card);
-		add("LOGIN", login);
 		add("WR", wr);
+		add("LOGIN", login);
 		add("AVARTAR", ava);
 		add("GAME", gr);
 
