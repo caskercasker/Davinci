@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>image/Avatar/_444.jpg</name>
+			<type>1</type>
+			<location>C:/image/_444.jpg</location>
+		</link>
+	</linkedResources>
 </projectDescription>
