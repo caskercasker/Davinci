@@ -1,4 +1,4 @@
-//Window ¿Í °ü·ÃµÈ Å¬·¡½º
+//Window ì™€ ê´€ë ¨ëœ í´ë˜ìŠ¤
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -10,41 +10,41 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 /*
- * JFrame //Ã¢ ÃÖ¼ÒÈ­,ÃÖ´ëÈ­ ´İ±â Ã¢.
+ * JFrame //ì°½ ìµœì†Œí™”,ìµœëŒ€í™” ë‹«ê¸° ì°½.
  *
- * JPanel ´Üµ¶ µğ½ºÇÃ·¹ÀÌ ºÒ°¡´É// ³»ºÎÀÇ Ã¢..  					·Î±×ÀÎÃ¢
+ * JPanel ë‹¨ë… ë””ìŠ¤í”Œë ˆì´ ë¶ˆê°€ëŠ¥// ë‚´ë¶€ì˜ ì°½..  					ë¡œê·¸ì¸ì°½
  *
- * 		ÆĞ³ÎÀ» 4°³ ´Ù ¿Ã·ÁµÎ°í, ¸ÇÀ§·Î ¿Ã¸±°ÍÀ» Á¤ÇÏ´Â ¹æ½ÄÀ¸·Î ÇØ¾ß ´Ù¸¥ ÆäÀÌÁö¿¡ ÀúÀåµÈ µ¥ÀÌÅÍ°¡ ³¯¾Æ°¡Áö ¾ÊÀ½.
- *
- *
- * JWindow //no title bar,,½ÃÀÛ ·Îµù Ã¢
+ * 		íŒ¨ë„ì„ 4ê°œ ë‹¤ ì˜¬ë ¤ë‘ê³ , ë§¨ìœ„ë¡œ ì˜¬ë¦´ê²ƒì„ ì •í•˜ëŠ” ë°©ì‹ìœ¼ë¡œ í•´ì•¼ ë‹¤ë¥¸ í˜ì´ì§€ì— ì €ì¥ëœ ë°ì´í„°ê°€ ë‚ ì•„ê°€ì§€ ì•ŠìŒ.
  *
  *
- * JDialog // ´İ±â¹öÆ°¸¸ Á¸ÀçÇÏ´Â ¼³Á¤È­¸é °°Àº ÇüÅÂ , eclipse = file-new-project
- * 			// ´Ù¸¥ ÀÏ ÁøÇà ºÒ°¡´É...
- * 			ex> ¹æ¸¸µé±â..
- *
- * 			´Ù¸¥ ÀÛ¾÷ÀÌ °¡´ÉÇÑ ¹æ¹ıµµ ÀÖÀ½(ÂÊÁöº¸³»±â),
- *
- * extends //´ÜÀÏ»ó¼Ó ¸í·É¾î
+ * JWindow //no title bar,,ì‹œì‘ ë¡œë”© ì°½
  *
  *
+ * JDialog // ë‹«ê¸°ë²„íŠ¼ë§Œ ì¡´ì¬í•˜ëŠ” ì„¤ì •í™”ë©´ ê°™ì€ í˜•íƒœ , eclipse = file-new-project
+ * 			// ë‹¤ë¥¸ ì¼ ì§„í–‰ ë¶ˆê°€ëŠ¥...
+ * 			ex> ë°©ë§Œë“¤ê¸°..
  *
- *	À©µµ¿ì Ã¢ 1°³ÀÇ ÆĞ³Î ¿©·¯°³
- *	ÆĞ³Î¿¡´Ù°¡ ³»ºÎ È­¸é ±¸¼º.. (¹öÆ°Å¬¸¯°ú °°Àº ÀÌº¥Æ® Ã³¸®)
+ * 			ë‹¤ë¥¸ ì‘ì—…ì´ ê°€ëŠ¥í•œ ë°©ë²•ë„ ìˆìŒ(ìª½ì§€ë³´ë‚´ê¸°),
  *
- *	ÆĞ³Î ±¸¼º¹æ½Ä µğÀÚÀÎ  	1. Card layout
- *					2. ÅÇ
+ * extends //ë‹¨ì¼ìƒì† ëª…ë ¹ì–´
+ *
+ *
+ *
+ *	ìœˆë„ìš° ì°½ 1ê°œì˜ íŒ¨ë„ ì—¬ëŸ¬ê°œ
+ *	íŒ¨ë„ì—ë‹¤ê°€ ë‚´ë¶€ í™”ë©´ êµ¬ì„±.. (ë²„íŠ¼í´ë¦­ê³¼ ê°™ì€ ì´ë²¤íŠ¸ ì²˜ë¦¬)
+ *
+ *	íŒ¨ë„ êµ¬ì„±ë°©ì‹ ë””ìì¸  	1. Card layout
+ *					2. íƒ­
  *					3. Splitpan
  *
- *	internal frame ¿¢¼¿ ,ÂÊÁöÃ¢ ¶ç¿ì±â, 1´ë1Ã¤ÆÃÃ¢ ¶ç¿ì±â
+ *	internal frame ì—‘ì…€ ,ìª½ì§€ì°½ ë„ìš°ê¸°, 1ëŒ€1ì±„íŒ…ì°½ ë„ìš°ê¸°
  *
  *
  *
  */
 import javax.swing.JTextField;
 
-public class Login extends JPanel{// ÇØ´çºí·ÏÀº ¼±¾ğºÎ, ±¸ÇöÀÌ ½ÃÀÛµÈ ºÎºĞÀÌ ¾Æ´Ô..
+public class Login extends JPanel{// í•´ë‹¹ë¸”ë¡ì€ ì„ ì–¸ë¶€, êµ¬í˜„ì´ ì‹œì‘ëœ ë¶€ë¶„ì´ ì•„ë‹˜..
 
 	JLabel la1, la2;
 	JTextField tf;
@@ -52,11 +52,11 @@ public class Login extends JPanel{// ÇØ´çºí·ÏÀº ¼±¾ğºÎ, ±¸ÇöÀÌ ½ÃÀÛµÈ ºÎºĞÀÌ ¾Æ´
 	JButton b1,b2;
 
 	Image back;
-	//ÃÊ±â°ª ¼³Á¤, ÃÊ±âÈ­ ºí·Ï , È£ÃâÀ» µû·Î ¾ÈÇØµµ ÀÚµ¿À¸·Î ¼±¾ğ , »ı¼ºÀÚ		ex> ÀÚµ¿·Î±×ÀÎ
-	//Login login = new Login(); »ı¼ºÀÚ·Î ±â´ÉÀ» ÇÏ±â À§ÇØ¼­ ¸®ÅÏÇüÀÌ ¾ø¾î¾ßÇÔ ex> void ºÙÀÌ¸é ÀÏ¹İ ¸Ş¼Òµå°¡ µÊ.
+	//ì´ˆê¸°ê°’ ì„¤ì •, ì´ˆê¸°í™” ë¸”ë¡ , í˜¸ì¶œì„ ë”°ë¡œ ì•ˆí•´ë„ ìë™ìœ¼ë¡œ ì„ ì–¸ , ìƒì„±ì		ex> ìë™ë¡œê·¸ì¸
+	//Login login = new Login(); ìƒì„±ìë¡œ ê¸°ëŠ¥ì„ í•˜ê¸° ìœ„í•´ì„œ ë¦¬í„´í˜•ì´ ì—†ì–´ì•¼í•¨ ex> void ë¶™ì´ë©´ ì¼ë°˜ ë©”ì†Œë“œê°€ ë¨.
 	Login(){
-		setLayout(null); //±âº» ·¹ÀÌ¾Æ¿ô ¹«½Ã
-		back = Toolkit.getDefaultToolkit().getImage("image\\login_bg.jpg");
+		setLayout(null); //ê¸°ë³¸ ë ˆì´ì•„ì›ƒ ë¬´ì‹œ
+		back = Toolkit.getDefaultToolkit().getImage("image\\loginBackground.jpg");
 		la1 = new JLabel("ID",JLabel.LEFT);
 		//la1.setForeground(Color.white);
 		//la1.setFont(new Font("Serif", Font.BOLD, 48));
@@ -68,29 +68,32 @@ public class Login extends JPanel{// ÇØ´çºí·ÏÀº ¼±¾ğºÎ, ±¸ÇöÀÌ ½ÃÀÛµÈ ºÎºĞÀÌ ¾Æ´
 		tf = new JTextField();
 		pf = new JPasswordField();
 
-		b1 = new JButton("·Î±×ÀÎ");
-		b2 = new JButton("Ãë¼Ò");
-		//¹èÄ¡
+		b1 = new JButton("ë¡œê·¸ì¸");
+		//b2 = new JButton("ì·¨ì†Œ");
+		//ë°°ì¹˜
 		//la1.set;
 
 		//la1.text
-		la1.setBounds(80,230,80,30);
-		tf.setBounds(160, 230, 150, 30);
+		la1.setBounds(80,220,80,30);
+		tf.setBounds(160, 220, 150, 30);
 		la1.setBackground(Color.black);
 
 
-		la2.setBounds(80,265,80,30);
-		pf.setBounds(160,265, 150, 30);
+		la2.setBounds(80,255,80,30);
+		pf.setBounds(160,255, 150, 30);
 
 		//b1.setBounds(390,400,110,30);
 		//b2.setBounds(515,400,110,30);
 
 		JPanel p = new JPanel();
 		//p.setBounds(390, 405, 235, 30);
-		p.add(b1);
-		p.add(b2);
-		p.setBounds(80, 310, 235, 30);
-		p.setOpaque(false); //Åõ¸íµµ
+		//p.add(b1);
+		//p.add(b2);
+		//p.setBounds(80, 310, 235, 30);
+		p.setOpaque(false); //íˆ¬ëª…ë„
+		
+		add(b1);
+		b1.setBounds(80,310,230,35);
 
 		add(la1);
 		add(la2);
@@ -98,18 +101,12 @@ public class Login extends JPanel{// ÇØ´çºí·ÏÀº ¼±¾ğºÎ, ±¸ÇöÀÌ ½ÃÀÛµÈ ºÎºĞÀÌ ¾Æ´
 		add(pf);
 		add(p);
 
-//		b1.setBounds(390,400,110,30);
-//		b2.setBounds(515,400,110,30);
-//		add(b1);
-//		add(b2);
 
-
-	} //ºí·Ï¾È¿¡¼­¸¸ ±¸Çö
+	} //ë¸”ë¡ì•ˆì—ì„œë§Œ êµ¬í˜„
 
 	@Override
-	protected void paintComponent(Graphics g) { //½ºÅ² ÀÔÈú ¶§ , ¹é±×¶ó¿îµå¿¡ »ç¿ë
-		// ½ÇÁ¦ µ¿ÀÛÇÏ´Â È­¸éÀº paint¸¦ È°¿ë
-		// TODO Auto-generated method stub
+	protected void paintComponent(Graphics g) { //ìŠ¤í‚¨ ì…í ë•Œ , ë°±ê·¸ë¼ìš´ë“œì— ì‚¬ìš©
+		// ì‹¤ì œ ë™ì‘í•˜ëŠ” í™”ë©´ì€ paintë¥¼ í™œìš©
 		//super.paintComponent(g);
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
 	}

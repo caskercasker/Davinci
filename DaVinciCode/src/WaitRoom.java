@@ -10,39 +10,39 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
 
-//ÀüÃ¼ »çÀÌÁî : 1024 X 768
+//ì „ì²´ ì‚¬ì´ì¦ˆ : 1024 X 768
 public class WaitRoom extends JPanel {
 	
-	//Ã¤ÆÃÃ¢ È­¸é ¼±¾ğ
-	JTextPane chatHistory;  // textArea , ¿©·¯ÁÙÀÇ ÅØ½ºÆ® ¾Æ¹ÙÅ¸ ¿Ã¸®±â°¡ °¡´É
+	//ì±„íŒ…ì°½ í™”ë©´ ì„ ì–¸
+	JTextPane chatHistory;  // textArea , ì—¬ëŸ¬ì¤„ì˜ í…ìŠ¤íŠ¸ ì•„ë°”íƒ€ ì˜¬ë¦¬ê¸°ê°€ ê°€ëŠ¥
 	JTextField chatInput;	
-	//·¹µğ ¹öÆ° ¼±¾ğ
+	//ë ˆë”” ë²„íŠ¼ ì„ ì–¸
 	JButton btn_ready_1,btn_ready_2;
-	//Ä³¸¯ÅÍ 
-	//private Image player1Image = new ImageIcon(MainForm.class.getResource("../images/avartar1.jpg")).getImage();
+	//ìºë¦­í„° 
+	//private Image player1Image = new ImageIcon(MainForm.class.getResource("../image/avartar1.png")).getImage();
 	
 	WaitRoom(){
 		setLayout(null); 
 		
-		// »ı¼º
-		chatHistory = new JTextPane(); //º¯¼ö¸í º¯°æ : tp => chatHistory
-		chatInput = new JTextField(); //º¯¼ö¸í º¯°æ : tf => chatInput
+		// ìƒì„±
+		chatHistory = new JTextPane(); //ë³€ìˆ˜ëª… ë³€ê²½ : tp => chatHistory
+		chatInput = new JTextField(); //ë³€ìˆ˜ëª… ë³€ê²½ : tf => chatInput
 		btn_ready_1 = new JButton("Ready");
 		btn_ready_2 = new JButton("Ready");
 
-		// ¿ìÃø ÆĞ³Î
+		// ìš°ì¸¡ íŒ¨ë„
 		//JPanel p2 = new JPanel();
 		//p2.setBounds(700, 0, 324, 768); 
 		
-		JScrollPane chatRm = new JScrollPane(chatHistory); // ½ºÅ©·Ñ °¡´ÉÇÏ°Ô º¯°æ. º¯¼ö¸í º¯°æ: js3 => chatRm
-		chatRm.setBounds(705, 10, 300, 680); // ÀÌÀü ¼³Á¤ : (615, 15, 380, 300);
+		JScrollPane chatRm = new JScrollPane(chatHistory); // ìŠ¤í¬ë¡¤ ê°€ëŠ¥í•˜ê²Œ ë³€ê²½. ë³€ìˆ˜ëª… ë³€ê²½: js3 => chatRm
+		chatRm.setBounds(705, 10, 300, 680); 
 		chatInput.setBounds(705, 695, 300, 30); 		
 
 		//add(p2);
 		add(chatRm);
 		add(chatInput);		
 
-		// ÁÂÃøÆĞ³Î : 700 * 768  
+		// ì¢Œì¸¡íŒ¨ë„ : 700 * 768   
 		//JPanel p1 = new JPanel();
 		//p1.setBounds(0, 0, 700, 768);  
 		//add(p1);
@@ -54,9 +54,6 @@ public class WaitRoom extends JPanel {
 		
 		btn_ready_2.setBounds(400, 550, 150, 40);
 		add(btn_ready_2);
-		
-
-		
 	}
 
 	
