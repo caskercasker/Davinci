@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 public class Avatar extends JPanel{
 	Image back;
 	Avatar(){
-		setLayout(null); //±âº» ·¹ÀÌ¾Æ¿ô ¹«½Ã
+		setLayout(null); //ê¸°ë³¸ ë ˆì´ì•„ì›ƒ ë¬´ì‹œ
 		back = Toolkit.getDefaultToolkit().getImage("image\\game_bg.jpg");
 
 	}
@@ -20,7 +20,7 @@ public class Avatar extends JPanel{
 
 
 	@Override
-	protected void paintComponent(Graphics g) { //½ºÅ² ÀÔÈú ¶§ , ¹é±×¶ó¿îµå¿¡ »ç¿ë
+	protected void paintComponent(Graphics g) { //ìŠ¤í‚¨ ì…í ë•Œ , ë°±ê·¸ë¼ìš´ë“œì— ì‚¬ìš©
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
 	}
 

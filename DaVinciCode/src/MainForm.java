@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-public class MainForm extends JFrame implements ActionListener { // ActionLister ÀÎÅÍÆäÀÌ½º
+public class MainForm extends JFrame implements ActionListener { // ActionLister ì¸í„°í˜ì´ìŠ¤
 	Login login = new Login();
 	WaitRoom wr = new WaitRoom();
 	GameRoom gr = new GameRoom();
@@ -14,16 +14,17 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 
 	MainForm() {
 		setLayout(card);
-		add("WR", wr);
 		add("LOGIN", login);
-		add("AVARTAR", ava);
 		add("GAME", gr);
+		add("WR", wr);
+		add("AVARTAR", ava);
+		
 
-		setSize(1024, 768); // À©µµ¿ìÃ¢ »çÀÌÁî ¼³Á¤
-		setVisible(true); // À©µµ¿ì¸¦ º¸¿©¶ó.
-		setResizable(false); // Ã¢ Å©±â º¯°æ ºÒ°¡´ÉÇÏ°Ô
-		setLocationRelativeTo(null); // Ã¢ÀÌ Á¤ Áß¾Ó¿¡ ¶ß°Ô 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ã¢ Á¾·á ½Ã °ÔÀÓ Á¾·áµÇµµ·Ï (±×·¸Áö ¾ÊÀ¸¸é °ÔÀÓ ²¨µµ °è¼Ó µ¹¾Æ°¨...)
+		setSize(1024, 768); // ìœˆë„ìš°ì°½ ì‚¬ì´ì¦ˆ ì„¤ì •
+		setVisible(true); // ìœˆë„ìš°ë¥¼ ë³´ì—¬ë¼.
+		setResizable(false); // ì°½ í¬ê¸° ë³€ê²½ ë¶ˆê°€ëŠ¥í•˜ê²Œ
+		setLocationRelativeTo(null); // ì°½ì´ ì • ì¤‘ì•™ì— ëœ¨ê²Œ 
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ì°½ ì¢…ë£Œ ì‹œ ê²Œì„ ì¢…ë£Œë˜ë„ë¡ (ê·¸ë ‡ì§€ ì•Šìœ¼ë©´ ê²Œì„ êº¼ë„ ê³„ì† ëŒì•„ê°...)
 		
 		login.b1.addActionListener(this);
 
