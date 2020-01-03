@@ -14,10 +14,11 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 
 	MainForm() {
 		setLayout(card);
+		add("AVARTAR", ava);
 		add("LOGIN", login);
 		add("GAME", gr);
 		add("WR", wr);
-		add("AVARTAR", ava);
+		
 		
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정

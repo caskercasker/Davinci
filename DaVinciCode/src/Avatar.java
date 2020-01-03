@@ -11,20 +11,18 @@ public class Avatar extends JPanel{
 	Image back;
 	Avatar(){
 		setLayout(null); 
-		back = Toolkit.getDefaultToolkit().getImage("c:\\image\\gameground.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("image\\game_bg.jpg");
 		Image image;
 		
-		b1=new JButton(new ImageIcon("c:\\image\\_11.jpg"));
-		ImageIcon pressedIcon1 = new ImageIcon("c:\\image\\_111.jpg");   //눌렀을때 이미지 변경 아직 미구현
-		b2=new JButton(new ImageIcon("c:\\image\\_22.jpg"));
-		ImageIcon pressedIcon2 = new ImageIcon("c:\\image\\");
-		b3=new JButton(new ImageIcon("c:\\image\\_33.jpg"));
-		ImageIcon pressedIcon3 = new ImageIcon("c:\\image\\");
-		b4=new JButton(new ImageIcon("c:\\image\\_44.jpg"));
-		ImageIcon pressedIcon4 = new ImageIcon("c:\\image\\");
+		b1=new JButton(new ImageIcon("image\\Avatar\\_11.jpg"));
+		ImageIcon pressedIcon1 = new ImageIcon("image\\Avatar\\_11.jpg");   //눌렀을때 이미지 변경 아직 미구현
+		b2=new JButton(new ImageIcon("image\\Avatar\\_22.jpg"));
+		ImageIcon pressedIcon2 = new ImageIcon("image\\Avatar\\_22.jpg");
+		b3=new JButton(new ImageIcon("image\\Avatar\\_33.jpg"));
+		ImageIcon pressedIcon3 = new ImageIcon("image\\Avatar\\_33.jpg");
+		b4=new JButton(new ImageIcon("image\\Avatar\\_44.jpg"));
+		ImageIcon pressedIcon4 = new ImageIcon("image\\Avatar\\_44.jpg");
 		b5=new JButton("결정");
-		
-		
 		
 		add(b1);
 		b1.setBounds( 90, 175, 160, 199);
