@@ -11,15 +11,14 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 	GameRoom gr = new GameRoom();
 	Avatar ava = new Avatar();
 	CardLayout card = new CardLayout();
-
+	
 	MainForm() {
+		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
-		add("AVARTAR", ava);
 		add("LOGIN", login);
-		add("GAME", gr);
 		add("WR", wr);
-		
-		
+		add("GAME", gr);		
+		add("AVARTAR", ava);
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
 		setVisible(true); // 윈도우를 보여라.
@@ -28,11 +27,12 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 종료 시 게임 종료되도록 (그렇지 않으면 게임 꺼도 계속 돌아감...)
 		
 		login.b1.addActionListener(this);
+		wr.btn_ready_1.addActionListener(this);
 
 	}
 
 	public static void main(String[] args) {
-
+		
 		try {
 			UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
 			JFrame.setDefaultLookAndFeelDecorated(true);
@@ -45,8 +45,12 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == login.b1) {
-			card.show(getContentPane(), "WR");
+			card.show(getContentPane(), "AVARTAR");
 		}
+		if (e.getSource() == wr.btn_ready_1) {
+			card.show(getContentPane(), "GAME");
+		}
+
 
 	}
 }
