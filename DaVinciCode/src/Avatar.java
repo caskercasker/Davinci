@@ -1,47 +1,82 @@
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 public class Avatar extends JPanel{
-	JButton b1,b2,b3,b4,b5;
+	ImageIcon b1,b2,b3,b4,sb1,sb2,sb3,sb4;
+	JButton b5;
 	Image back;
+	JLabel msg1;
+	Font f1;
+	 
 	Avatar(){
 		setLayout(null); 
-		back = Toolkit.getDefaultToolkit().getImage("image\\game_bg.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
 		Image image;
 		
-		b1=new JButton(new ImageIcon("image\\Avatar\\_11.jpg"));
-		ImageIcon pressedIcon1 = new ImageIcon("image\\Avatar\\_11.jpg");   //눌렀을때 이미지 변경 아직 미구현
-		b2=new JButton(new ImageIcon("image\\Avatar\\_22.jpg"));
-		ImageIcon pressedIcon2 = new ImageIcon("image\\Avatar\\_22.jpg");
-		b3=new JButton(new ImageIcon("image\\Avatar\\_33.jpg"));
-		ImageIcon pressedIcon3 = new ImageIcon("image\\Avatar\\_33.jpg");
-		b4=new JButton(new ImageIcon("image\\Avatar\\_44.jpg"));
-		ImageIcon pressedIcon4 = new ImageIcon("image\\Avatar\\_44.jpg");
+		b1=new ImageIcon("images\\Avatar\\_11.jpg");
+		sb1=new ImageIcon("images\\Avatar\\_111.jpg");
+		b2=new ImageIcon("images\\Avatar\\_22.jpg");
+		sb2=new ImageIcon("images\\Avatar\\_222.jpg");
+		b3=new ImageIcon("images\\Avatar\\_33.jpg");
+		sb3=new ImageIcon("images\\Avatar\\_333.jpg");
+		b4=new ImageIcon("images\\Avatar\\_44.jpg");
+		sb4=new ImageIcon("images\\Avatar\\_444.jpg");
 		b5=new JButton("결정");
+		f1 = new Font("돋움", Font.BOLD, 20);
+		msg1 = new JLabel("원하는 캐릭터를 고르세요.");
 		
-		add(b1);
-		b1.setBounds( 90, 175, 160, 199);
-		b1.setOpaque(false);
-		add(b2);
-		b2.setBounds( 303, 175, 160, 199);
-		b2.setOpaque(false);
-		add(b3);
-		b3.setBounds( 516, 175, 160, 199);
-		b3.setOpaque(false);
-		add(b4);
-		b4.setBounds( 729, 175, 160, 199);
-		b4.setOpaque(false);
+		msg1.setFont(f1);
+		msg1.setBounds(380, 100, 500, 20);
+		add(msg1);
+		
+		ButtonGroup g=new ButtonGroup();
+		JRadioButton p1Icon = new JRadioButton(b1);
+		JRadioButton p2Icon = new JRadioButton(b2);
+		JRadioButton p3Icon = new JRadioButton(b3);
+		JRadioButton p4Icon = new JRadioButton(b4);
+		
+		p1Icon.setBorderPainted(true);
+		p1Icon.setSelectedIcon(sb1);
+		p2Icon.setBorderPainted(true);
+		p2Icon.setSelectedIcon(sb2);
+		p3Icon.setBorderPainted(true);
+		p3Icon.setSelectedIcon(sb3);
+		p4Icon.setBorderPainted(true);
+		p4Icon.setSelectedIcon(sb4);
+	
+		g.add(p1Icon);
+		g.add(p2Icon);
+		g.add(p3Icon);
+		g.add(p4Icon);
+		
+				
+		add(p1Icon);
+		p1Icon.setBounds( 90, 190, 160, 199);
+		p1Icon.setOpaque(false);
+		add(p2Icon);
+		p2Icon.setBounds( 303, 190, 160, 199);
+		p2Icon.setOpaque(false);
+		add(p3Icon);
+		p3Icon.setBounds( 516, 190, 160, 199);
+		p3Icon.setOpaque(false);
+		add(p4Icon);
+		p4Icon.setBounds( 729, 190, 160, 199);
+		p4Icon.setOpaque(false);
 		add(b5);
 		b5.setBounds( 450, 550, 100, 50);
 		b5.setOpaque(false);
 	}
-
-	
 
 
 	@Override
