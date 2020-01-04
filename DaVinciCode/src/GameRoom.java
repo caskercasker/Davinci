@@ -8,7 +8,7 @@ public class GameRoom extends JPanel {
 	Image back;
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
-		back = Toolkit.getDefaultToolkit().getImage("image\\game_bg.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
 
 	}
 

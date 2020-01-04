@@ -28,6 +28,7 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		
 		login.b1.addActionListener(this);
 		wr.btn_ready_1.addActionListener(this);
+		ava.b5.addActionListener(this);
 
 	}
 
@@ -47,10 +48,12 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		if (e.getSource() == login.b1) {
 			card.show(getContentPane(), "AVARTAR");
 		}
+		if (e.getSource() == ava.b5) {
+			card.show(getContentPane(), "WR");
+		}
 		if (e.getSource() == wr.btn_ready_1) {
 			card.show(getContentPane(), "GAME");
 		}
-
 
 	}
 }
