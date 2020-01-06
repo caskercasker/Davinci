@@ -32,7 +32,7 @@ public class GameRoom extends JPanel {
 
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
-		back = Toolkit.getDefaultToolkit().getImage("image\\game_bg.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
 
 		chatHistory = new JTextPane();
 		chatInput = new JTextField();
@@ -40,8 +40,8 @@ public class GameRoom extends JPanel {
 		mainPage = new JPanel();
 		int space = 55;
 
-		avatar_1 = new JLabel(new ImageIcon("image\\Avatar\\_11.jpg"));
-		avatar_2 = new JLabel(new ImageIcon("image\\Avatar\\_33.jpg"));
+		avatar_1 = new JLabel(new ImageIcon("images\\Avatar\\_11.jpg"));
+		avatar_2 = new JLabel(new ImageIcon("images\\Avatar\\_33.jpg"));
 		for(int i=0; i<24; i++)
 		{
 			bt[i] = new JButton(""+i);

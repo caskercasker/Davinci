@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import javax.swing.JTextPane;
 //전체 사이즈 : 1024 X 768
 public class WaitRoom extends JPanel {
 	
+	Image back;
 	JTextPane chatHistory; 
 	JTextField chatInput;	
 	JButton btn_ready_1,btn_ready_2;
@@ -31,6 +33,7 @@ public class WaitRoom extends JPanel {
 	
 	WaitRoom(){
 		setLayout(null); 
+		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
 		
 		chatHistory = new JTextPane();
 		chatInput = new JTextField();
@@ -85,6 +88,11 @@ public class WaitRoom extends JPanel {
 		btn_ready_2.setBounds(420, 520, 160, 40);
 		add(btn_ready_2);
 		
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
 	}
 
 	
