@@ -20,15 +20,14 @@ public class GameRoom extends JPanel {
 	private static final Component btn_ready_i = null;
 
 	Image back;
-	Image player1,player2;
+	Image player1,player2; //플레이어 이미지 파일 
 	
 	
 	JTextPane chatHistory;
 	JTextField chatInput;
 	JLabel gameMessage;
 	JPanel mainPage;
-	JLabel avatar_1;
-	JLabel avatar_2;
+	JLabel avatar_1, avatar_2; //플레이어 이미지 파일이 올라갈 레이블 
 	JButton[] bt = new JButton[24];
 	
 	GameRoom(){
@@ -97,6 +96,7 @@ public class GameRoom extends JPanel {
 		add(mainPage);
 		add(avatar_1);
 		add(avatar_2);
+		//새로운 브랜치 
 
 	}
 	@Override
