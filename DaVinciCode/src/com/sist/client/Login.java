@@ -1,3 +1,5 @@
+package com.sist.client;
+
 //Window 와 관련된 클래스
 import java.awt.Color;
 import java.awt.Font;
