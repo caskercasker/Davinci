@@ -23,17 +23,17 @@ public class Avatar extends JPanel{
 	 
 	Avatar(){
 		setLayout(null); 
-		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		Image image;
 		
-		b1=new ImageIcon("images\\Avatar\\_11.jpg");
-		sb1=new ImageIcon("images\\Avatar\\_111.jpg");
-		b2=new ImageIcon("images\\Avatar\\_22.jpg");
-		sb2=new ImageIcon("images\\Avatar\\_222.jpg");
-		b3=new ImageIcon("images\\Avatar\\_33.jpg");
-		sb3=new ImageIcon("images\\Avatar\\_333.jpg");
-		b4=new ImageIcon("images\\Avatar\\_44.jpg");
-		sb4=new ImageIcon("images\\Avatar\\_444.jpg");
+		b1=new ImageIcon("images/Avatar/_11.jpg");
+		sb1=new ImageIcon("images/Avatar/_111.jpg");
+		b2=new ImageIcon("images/Avatar/_22.jpg");
+		sb2=new ImageIcon("images/Avatar/_222.jpg");
+		b3=new ImageIcon("images/Avatar/_33.jpg");
+		sb3=new ImageIcon("images/Avatar/_333.jpg");
+		b4=new ImageIcon("images/Avatar/_44.jpg");
+		sb4=new ImageIcon("imagesAvatar/_444.jpg");
 		b5=new JButton("결정");
 		f1 = new Font("돋움", Font.BOLD, 20);
 		msg1 = new JLabel("원하는 캐릭터를 고르세요.");

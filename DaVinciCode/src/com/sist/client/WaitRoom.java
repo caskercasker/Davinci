@@ -33,7 +33,7 @@ public class WaitRoom extends JPanel {
 	
 	WaitRoom(){
 		setLayout(null); 
-		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		
 		chatHistory = new JTextPane();
 		chatInput = new JTextField();
@@ -71,12 +71,12 @@ public class WaitRoom extends JPanel {
 		add(showOtherID);
 		
 		// Show avatar image
-		ava1 = new ImageIcon("images\\Avatar\\_11.jpg");
+		ava1 = new ImageIcon("images/Avatar/_11.jpg");
 		ava1Box = new JLabel(ava1);
 		ava1Box.setBounds(130, 280, 160, 199);
 		add(ava1Box);
 		
-		ava2 = new ImageIcon("images\\Avatar\\_22.jpg");
+		ava2 = new ImageIcon("images/Avatar/_22.jpg");
 		ava2Box = new JLabel(ava2);
 		ava2Box.setBounds(420, 280, 160, 199);
 		add(ava2Box);

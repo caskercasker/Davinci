@@ -20,8 +20,9 @@ public class GameRoom extends JPanel {
 	private static final Component btn_ready_i = null;
 
 	Image back;
-	Image before,after;
-
+	Image player1,player2;
+	
+	
 	JTextPane chatHistory;
 	JTextField chatInput;
 	JLabel gameMessage;
@@ -29,19 +30,23 @@ public class GameRoom extends JPanel {
 	JLabel avatar_1;
 	JLabel avatar_2;
 	JButton[] bt = new JButton[24];
-
+	
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
-		back = Toolkit.getDefaultToolkit().getImage("images\\gameBackground.jpg");
+		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 
 		chatHistory = new JTextPane();
 		chatInput = new JTextField();
 		gameMessage = new JLabel();
 		mainPage = new JPanel();
 		int space = 55;
+		
+		player1 = Toolkit.getDefaultToolkit().getImage("images/Avatar/_11.jpg");
+		player2 = Toolkit.getDefaultToolkit().getImage("images/Avatar/_33.jpg");
 
-		avatar_1 = new JLabel(new ImageIcon("images\\Avatar\\_11.jpg"));
-		avatar_2 = new JLabel(new ImageIcon("images\\Avatar\\_33.jpg"));
+		avatar_1 = new JLabel(new ImageIcon(player1.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
+		
+		avatar_2 = new JLabel(new ImageIcon(player2.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 		for(int i=0; i<24; i++)
 		{
 			bt[i] = new JButton(""+i);
