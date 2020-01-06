@@ -33,7 +33,7 @@ public class Avatar extends JPanel{
 		b3=new ImageIcon("images/Avatar/_33.jpg");
 		sb3=new ImageIcon("images/Avatar/_333.jpg");
 		b4=new ImageIcon("images/Avatar/_44.jpg");
-		sb4=new ImageIcon("imagesAvatar/_444.jpg");
+		sb4=new ImageIcon("images/Avatar/_444.jpg");
 		b5=new JButton("결정");
 		f1 = new Font("돋움", Font.BOLD, 20);
 		msg1 = new JLabel("원하는 캐릭터를 고르세요.");
