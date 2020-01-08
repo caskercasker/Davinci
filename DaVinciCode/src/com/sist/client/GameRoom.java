@@ -37,14 +37,14 @@ public class GameRoom extends JPanel implements ActionListener {
 	JButton[] bt = new JButton[24];
 	JLabel[] play1 = new JLabel[12]; // player 1 덱이 올라갈 레이블
 	JLabel[] play2 = new JLabel[12]; // player 2 덱이 올라갈 레이블
-	Image[] buf = new Image[12];
-	JLabel test;
+	Image[] buf = new Image[12]; //정렬된 이미지 출력용 이미지 배열
 
-	public static double su[] = new double[24];
-	int bufArray[] = new int [12];
-	ArrayList<Double> tail = new ArrayList<Double>();
-	ArrayList<Image> imgBuf2 = new ArrayList<Image>();
+	public static double su[] = new double[24]; //고정된 난수 배열
 	
+	int bufArray[] = new int [12];
+	
+	ArrayList<Double> tail = new ArrayList<Double>(); //난수 정렬용 리스트
+
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
 		chatHistory = new JTextPane();
@@ -60,19 +60,6 @@ public class GameRoom extends JPanel implements ActionListener {
 
 		avatar_1 = new JLabel(new ImageIcon(player1.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 		avatar_2 = new JLabel(new ImageIcon(player2.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
-
-//		test = new JLabel(new ImageIcon());
-//		//test.setBounds(50, 250, 45, 65);
-//		//test.setBackground(Color.cyan);
-//		//test.setOpaque(true);
-//		double c = 0;
-//		imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+c+".png");
-//		//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
-//		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
-//		test.setOpaque(true);
-//		test = new JLabel(new ImageIcon(imgFixed));
-//		test.setBounds(50, 250, 45, 65);
-//		add(test);
 
 		for (int i=0; i<su.length; i++) { //스택틱 배열인 su에 중복되지 않은 난수를 넣음.
 			bCheck = true;
@@ -204,20 +191,20 @@ public class GameRoom extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		for(int j=0; j<24; j++) {
 			if(e.getSource()==bt[j]) {
-				System.out.println("버튼 들어옴");
+				
+				
 				bt[j].setVisible(false); //기존 버튼 이미지 날리기
-				if(su[j]>12)
+				
+				if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
 					su[j] = su[j]-12+0.5;
 
 				tail.add(su[j]);
-				Collections.sort(tail); //
+				Collections.sort(tail); // 리스트 정렬
 				System.out.println(tail.size());
 				System.out.println(tail.get(0));
-				//imgBuf2.add(setCardImage(su[j]));
-				//Collections.sort(imgBuf2);
+		
 				for(int k=0; k<tail.size();k++) {
-					//imgBuf2.add(setCardImage(tail.get(k)));
-					buf[k] = setCardImage(tail.get(k));
+										buf[k] = setCardImage(tail.get(k));
 					play1[k].setIcon(new ImageIcon(buf[k]));
 					play1[k].setOpaque(true);
 
