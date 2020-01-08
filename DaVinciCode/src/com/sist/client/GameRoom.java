@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,11 +35,16 @@ public class GameRoom extends JPanel implements ActionListener {
 	JPanel mainPage;
 	JLabel avatar_1, avatar_2; //플레이어 이미지 파일이 올라갈 레이블
 	JButton[] bt = new JButton[24];
-	JButton[] pl1 = new JButton[12]; // player 1 덱에 올라갈 버튼
-	JButton[] pl2 = new JButton[12]; // player 2 덱에 올라갈 버튼
+	JLabel[] play1 = new JLabel[12]; // player 1 덱이 올라갈 레이블
+	JLabel[] play2 = new JLabel[12]; // player 2 덱이 올라갈 레이블
+	Image[] buf = new Image[12];
+	JLabel test;
 
-	public static int su[] = new int[24];
-
+	public static double su[] = new double[24];
+	int bufArray[] = new int [12];
+	ArrayList<Double> tail = new ArrayList<Double>();
+	ArrayList<Image> imgBuf2 = new ArrayList<Image>();
+	
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
 		chatHistory = new JTextPane();
@@ -54,6 +61,18 @@ public class GameRoom extends JPanel implements ActionListener {
 		avatar_1 = new JLabel(new ImageIcon(player1.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 		avatar_2 = new JLabel(new ImageIcon(player2.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 
+//		test = new JLabel(new ImageIcon());
+//		//test.setBounds(50, 250, 45, 65);
+//		//test.setBackground(Color.cyan);
+//		//test.setOpaque(true);
+//		double c = 0;
+//		imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+c+".png");
+//		//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
+//		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
+//		test.setOpaque(true);
+//		test = new JLabel(new ImageIcon(imgFixed));
+//		test.setBounds(50, 250, 45, 65);
+//		add(test);
 
 		for (int i=0; i<su.length; i++) { //스택틱 배열인 su에 중복되지 않은 난수를 넣음.
 			bCheck = true;
@@ -67,19 +86,24 @@ public class GameRoom extends JPanel implements ActionListener {
 					}
 				}
 				su[i]=rand;
+				//System.out.print(su[i]+" ");
 			}
+			System.out.print(su[i]+" ");
 		}
+
+	
 
 		// su = {23,1,4,5,6,67,3,4,3,2,2....
 		for (int k=0; k<su.length;k++) {
 			if(su[k]<12) {
-			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+su[k]+".png");
-			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+su[k]+".png");
+			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
 			imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 			bt[k] = new JButton(new ImageIcon(imgFixed));
 			}else {
-			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+(su[k]-12)+".png");
-			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
+				su[k] = su[k]-12+0.5;
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+su[k]+".png");
+			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
 			imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 			bt[k] = new JButton(new ImageIcon(imgFixed));
 
@@ -99,12 +123,46 @@ public class GameRoom extends JPanel implements ActionListener {
 			add(bt[k]);
 			bt[k].addActionListener(this);
 		}
-
-		pl1[0] = new JButton(new ImageIcon());
-		pl1[0].setBounds(500, 470, 45, 65);
-		add(pl1[0]);
-
-
+		space = 0;
+		for (int i=0; i<12; i++) {
+			if(i<6) {
+				play1[i] = new JLabel(new ImageIcon());
+				play1[i].setBounds(250+space, 470, 45, 65);
+				space += 55;
+				play1[i].setBackground(Color.white);
+				play1[i].setOpaque(false);
+			}else {
+				if(i==6) {
+					space=0;
+				}
+				play1[i] = new JLabel(new ImageIcon());
+				play1[i].setBounds(250+space, 540, 45, 65);
+				space += 55;
+				play1[i].setBackground(Color.white);
+				play1[i].setOpaque(false);
+			}
+			add(play1[i]);
+		}
+		space =0;
+		for (int i=0; i<12; i++) {
+			if(i<6) {
+				play2[i] = new JLabel(new ImageIcon());
+				play2[i].setBounds(250+space, 50, 45, 65);
+				space += 55;
+				play2[i].setBackground(Color.white);
+				play2[i].setOpaque(false);
+			}else {
+				if(i==6) {
+					space=0;
+				}
+				play2[i] = new JLabel(new ImageIcon());
+				play2[i].setBounds(250+space, 120, 45, 65);
+				space += 55;
+				play2[i].setBackground(Color.white);
+				play2[i].setOpaque(false);
+			}
+			add(play2[i]);
+		}
 
 		JScrollPane chatRm = new JScrollPane(chatHistory);
 
@@ -144,15 +202,41 @@ public class GameRoom extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==bt[0]) {
-			System.out.println("버튼 들어옴");
-			if(su[0]>12)
-				su[0] = su[0]-12;
-			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+su[0]+".png");
-			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
-			imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
-			pl1[0].setIcon(new ImageIcon(imgFixed));
+		for(int j=0; j<24; j++) {
+			if(e.getSource()==bt[j]) {
+				System.out.println("버튼 들어옴");
+				bt[j].setVisible(false); //기존 버튼 이미지 날리기
+				if(su[j]>12)
+					su[j] = su[j]-12+0.5;
+
+				tail.add(su[j]);
+				Collections.sort(tail); //
+				System.out.println(tail.size());
+				System.out.println(tail.get(0));
+				//imgBuf2.add(setCardImage(su[j]));
+				//Collections.sort(imgBuf2);
+				for(int k=0; k<tail.size();k++) {
+					//imgBuf2.add(setCardImage(tail.get(k)));
+					buf[k] = setCardImage(tail.get(k));
+					play1[k].setIcon(new ImageIcon(buf[k]));
+					play1[k].setOpaque(true);
+
+				}
+				// 숫자에 해당하는 imgbuf파일을 만듬.
+				//12칸의 배열에 정렬된 값을 넣는다.
+				//play1[j].setIcon(new ImageIcon(imgFixed));
+			}
 		}
+
+	}
+	public Image setCardImage(double a) {
+		if(a%1.0!=0) {
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
+		}else {
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+a+".png");
+		}
+		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
+		return imgFixed;
 	}
 
 }
