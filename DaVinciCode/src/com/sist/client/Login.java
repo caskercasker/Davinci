@@ -93,7 +93,7 @@ public class Login extends JPanel{// 해당블록은 선언부, 구현이 시작
 		//p.add(b2);
 		//p.setBounds(80, 310, 235, 30);
 		p.setOpaque(false); //투명도
-		
+
 		add(b1);
 		b1.setBounds(80,310,230,35);
 

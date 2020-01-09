@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.border.Border;
 
 
 //전체 사이즈 : 1024 X 768
@@ -39,10 +41,14 @@ public class GameRoom extends JPanel implements ActionListener {
 	JLabel[] play2 = new JLabel[12]; // player 2 덱이 올라갈 레이블
 	Image[] buf = new Image[12]; //정렬된 이미지 출력용 이미지 배열
 
+	Border border = BorderFactory.createLineBorder(Color.RED, 5);
+	Border borderEmpty = BorderFactory.createLineBorder(new Color(0,0,0,0),2);
+
+	RotatedIcon ri;
 	public static double su[] = new double[24]; //고정된 난수 배열
-	
+	double[] temp = {12,12,12,12,12,12,12,12,12,12,12,12};
 	int bufArray[] = new int [12];
-	
+
 	ArrayList<Double> tail = new ArrayList<Double>(); //난수 정렬용 리스트
 
 	GameRoom(){
@@ -77,9 +83,6 @@ public class GameRoom extends JPanel implements ActionListener {
 			}
 			System.out.print(su[i]+" ");
 		}
-
-	
-
 		// su = {23,1,4,5,6,67,3,4,3,2,2....
 		for (int k=0; k<su.length;k++) {
 			if(su[k]<12) {
@@ -153,7 +156,6 @@ public class GameRoom extends JPanel implements ActionListener {
 
 		JScrollPane chatRm = new JScrollPane(chatHistory);
 
-
 		chatRm.setBounds(705, 10, 300, 680);
 		chatInput.setBounds(705, 695, 300, 30);
 
@@ -167,7 +169,6 @@ public class GameRoom extends JPanel implements ActionListener {
 
 		avatar_1.setBounds(50, 50, 90, 120);
 		avatar_2.setBounds(50, 470, 90, 120);
-
 
 		setLayout(null); //기본 레이아웃 무시
 
@@ -191,31 +192,53 @@ public class GameRoom extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		for(int j=0; j<24; j++) {
 			if(e.getSource()==bt[j]) {
-				
-				
 				bt[j].setVisible(false); //기존 버튼 이미지 날리기
-				
 				if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
 					su[j] = su[j]-12+0.5;
 
 				tail.add(su[j]);
 				Collections.sort(tail); // 리스트 정렬
-				System.out.println(tail.size());
-				System.out.println(tail.get(0));
-		
+
 				for(int k=0; k<tail.size();k++) {
-										buf[k] = setCardImage(tail.get(k));
-					play1[k].setIcon(new ImageIcon(buf[k]));
-					play1[k].setOpaque(true);
+					int l =0;
+					buf[k] = setCardImage(tail.get(k));
+					if(tail.size()==1 || tail.size()==2)
+						l=5;
+					else if(tail.size()==3 || tail.size()==4)
+						l=4;
+					else if (tail.size()==5 || tail.size()==6)
+						l=3;
+					else if (tail.size()==7 || tail.size()==8)
+						l=2;
+					else if (tail.size()==9 || tail.size()==10)
+						l=1;
+					else if( tail.size()==11 || tail.size()==12)
+						l=0;
+					temp[l+k] = tail.get(k);
+					play1[l+k].setIcon(new ImageIcon(buf[k]));
+					play1[l+k].setOpaque(true);
+					play1[l+k].setBorder(borderEmpty);
+					ri = new RotatedIcon(new ImageIcon(buf[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
+					play1[l+k].setIcon(ri);
 
 				}
+				int count = 0;
+				for (int i=0; i<12; i++) {
+					if(su[j]==temp[i]) {
+						count =i;
+						break;
+					}
+				}
+				play1[count].setBorder(border);
+			}
+
 				// 숫자에 해당하는 imgbuf파일을 만듬.
 				//12칸의 배열에 정렬된 값을 넣는다.
 				//play1[j].setIcon(new ImageIcon(imgFixed));
-			}
 		}
-
 	}
+
+
 	public Image setCardImage(double a) {
 		if(a%1.0!=0) {
 			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
