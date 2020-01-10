@@ -24,32 +24,41 @@ import javax.swing.border.Border;
 //전체 사이즈 : 1024 X 768
 public class GameRoom extends JPanel implements ActionListener {
 	private static final Component btn_ready_i = null;
-
+	public static double su[] = new double[24]; //고정된 난수 배열
+	//공용 데이터 공통으로 쓰는 화면
 	Image back;
-	Image player1,player2; //플레이어 이미지 파일
+	JButton[] dummy = new JButton[24]; // 처음에 올라가는 카드 더미
+	JTextPane chatHistory;		//채팅 내용
+	JTextField chatInput;		//채팅 입력 창
+	JLabel gameMessage;
+	JPanel mainPage;
+	JLabel timeLabel;
+	CountUpProgressBar cdpb; //timer Reset되는 방법 추가 및 경우의 수 넣기
+
+	//세팅 값  및 버퍼들
 	Image imgBuf;
 	Image imgFixed;
 	ImageIcon b1;
+	Border border = BorderFactory.createLineBorder(Color.RED, 5);  //선택된 카드를 구분하기 위한 보더 설정값 (두께 5에 빨간색)
+	Border borderEmpty = BorderFactory.createLineBorder(new Color(0,0,0,0),2); //
+	RotatedIcon ri; // 공개 혹 미공개 된 덱을 구분하기 위한 이미지 돌리는 값.
+	int set = 1; //player 구분 테스트용
 
-	JTextPane chatHistory;
-	JTextField chatInput;
-	JLabel gameMessage;
-	JPanel mainPage;
-	JLabel avatar_1, avatar_2; //플레이어 이미지 파일이 올라갈 레이블
-	JButton[] bt = new JButton[24];
+	//Player1 용 데이터
+	Image player1;
+	JLabel avatar_1;
 	JLabel[] play1 = new JLabel[12]; // player 1 덱이 올라갈 레이블
-	JLabel[] play2 = new JLabel[12]; // player 2 덱이 올라갈 레이블
 	Image[] buf = new Image[12]; //정렬된 이미지 출력용 이미지 배열
-
-	Border border = BorderFactory.createLineBorder(Color.RED, 5);
-	Border borderEmpty = BorderFactory.createLineBorder(new Color(0,0,0,0),2);
-
-	RotatedIcon ri;
-	public static double su[] = new double[24]; //고정된 난수 배열
-	double[] temp = {12,12,12,12,12,12,12,12,12,12,12,12};
-	int bufArray[] = new int [12];
-
+	double[] temp = {12,12,12,12,12,12,12,12,12,12,12,12}; // player 1 Deck 의 정렬된 숫자값을 가지고 있는 배열
 	ArrayList<Double> tail = new ArrayList<Double>(); //난수 정렬용 리스트
+
+	//Players2용 데이터
+	Image player2;
+	JLabel avatar_2; //플레이어 이미지 파일이 올라갈 레이블
+	JLabel[] play2 = new JLabel[12]; // player 2 덱이 올라갈 레이블
+	Image[] buf2 = new Image[12];
+	double[] temp2 = {12,12,12,12,12,12,12,12,12,12,12,12}; //players 2 Deck 의 정렬된 숫자값을 가지고 있는 배열
+	ArrayList<Double> tail2 = new ArrayList<Double>();
 
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
@@ -57,8 +66,12 @@ public class GameRoom extends JPanel implements ActionListener {
 		chatInput = new JTextField();
 		gameMessage = new JLabel();
 		mainPage = new JPanel();
+		cdpb = new CountUpProgressBar();
+
+		cdpb.setBounds(600, 580, 100, 50);
+		add(cdpb);
+
 		int space = 55;
-		boolean bCheck = false;
 
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		player1 = Toolkit.getDefaultToolkit().getImage("images/Avatar/_11.jpg");
@@ -67,52 +80,39 @@ public class GameRoom extends JPanel implements ActionListener {
 		avatar_1 = new JLabel(new ImageIcon(player1.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 		avatar_2 = new JLabel(new ImageIcon(player2.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 
-		for (int i=0; i<su.length; i++) { //스택틱 배열인 su에 중복되지 않은 난수를 넣음.
-			bCheck = true;
-			while(bCheck) {
-				bCheck=false;
-				int rand = (int)(Math.random()*24);
-				for(int j=0; j<i; j++) {
-					if(su[j] == rand) {
-						bCheck=true;
-						break;
-					}
-				}
-				su[i]=rand;
-				//System.out.print(su[i]+" ");
-			}
-			System.out.print(su[i]+" ");
-		}
+		getRand(su.length); //난수 static su[]배열에 삽입.
+
 		// su = {23,1,4,5,6,67,3,4,3,2,2....
 		for (int k=0; k<su.length;k++) {
 			if(su[k]<12) {
 			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+su[k]+".png");
 			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
 			imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
-			bt[k] = new JButton(new ImageIcon(imgFixed));
+			dummy[k] = new JButton(new ImageIcon(imgFixed));
 			}else {
 				su[k] = su[k]-12+0.5;
 			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+su[k]+".png");
 			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
 			imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
-			bt[k] = new JButton(new ImageIcon(imgFixed));
+			dummy[k] = new JButton(new ImageIcon(imgFixed));
 
 			}
 			if(k==0) {
-				bt[k].setBounds(30,260,45,65);
+				dummy[k].setBounds(30,260,45,65);
 			}else if(k>0 && k<12) {
-				bt[k].setBounds(30+space,260,45,65);
+				dummy[k].setBounds(30+space,260,45,65);
 				space += 55;
 			}else if(k==12) {
-				bt[k].setBounds(30,350,45,65);
+				dummy[k].setBounds(30,350,45,65);
 				space = 55;
 			}else if(k>=13 && k<24) {
-				bt[k].setBounds(30+space,350,45,65);
+				dummy[k].setBounds(30+space,350,45,65);
 				space += 55;
 			}
-			add(bt[k]);
-			bt[k].addActionListener(this);
+			add(dummy[k]);
+			dummy[k].addActionListener(this);
 		}
+
 		space = 0;
 		for (int i=0; i<12; i++) {
 			if(i<6) {
@@ -191,62 +191,123 @@ public class GameRoom extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		for(int j=0; j<24; j++) {
-			if(e.getSource()==bt[j]) {
-				bt[j].setVisible(false); //기존 버튼 이미지 날리기
-				if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
-					su[j] = su[j]-12+0.5;
+			if(e.getSource()==dummy[j]) {
+				if(set == 1) {
+					dummy[j].setVisible(false); //기존 버튼 이미지 날리기
+					if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
+						su[j] = su[j]-12+0.5;
+					tail.add(su[j]);
+					Collections.sort(tail); // 리스트 정렬
+						for(int k=0; k<tail.size();k++) {
+							int l =0;
+							buf[k] = setCardImage(tail.get(k));
+							if(tail.size()==1 )
+								l=5;
+							else if(tail.size()==2)
+								l=4;
+							else if (tail.size()==3)
+								l=3;
+							else if (tail.size()==4)
+								l=2;
+							else if (tail.size()==5)
+								l=1;
+							else if( tail.size()>=6)
+								l=0;
+							temp[l+k] = tail.get(k);
+							play1[l+k].setIcon(new ImageIcon(buf[k]));
+							play1[l+k].setOpaque(true);
+							play1[l+k].setBorder(borderEmpty);
+//							ri = new RotatedIcon(new ImageIcon(buf[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
+//							play1[l+k].setIcon(ri);
 
-				tail.add(su[j]);
-				Collections.sort(tail); // 리스트 정렬
+						}
+						int count = 0;
+						for (int i=0; i<12; i++) {
+							if(su[j]==temp[i]) {
+								count =i;
+								play1[count].setBorder(border);
+								break;
+							}
+						}
+						set = 0;
+				}else if (set ==0) {
+					dummy[j].setVisible(false); //기존 버튼 이미지 날리기
+					if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
+						su[j] = su[j]-12+0.5;
+					tail2.add(su[j]);
+					Collections.sort(tail2); // 리스트 정렬
+						for(int k=0; k<tail2.size();k++) {
+							int l =0;
+							buf2[k] = setCardImage(tail2.get(k));
+							if(tail2.size()==1 )
+								l=5;
+							else if(tail2.size()==2)
+								l=4;
+							else if (tail2.size()==3)
+								l=3;
+							else if (tail2.size()==4)
+								l=2;
+							else if (tail2.size()==5)
+								l=1;
+							else if( tail2.size()>=6)
+								l=0;
+							temp2[l+k] = tail2.get(k);
+							play2[l+k].setIcon(new ImageIcon(buf2[k]));
+							play2[l+k].setOpaque(true);
+							play2[l+k].setBorder(borderEmpty);
+//							ri = new RotatedIcon(new ImageIcon(buf2[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
+//							play2[l+k].setIcon(ri);
 
-				for(int k=0; k<tail.size();k++) {
-					int l =0;
-					buf[k] = setCardImage(tail.get(k));
-					if(tail.size()==1 || tail.size()==2)
-						l=5;
-					else if(tail.size()==3 || tail.size()==4)
-						l=4;
-					else if (tail.size()==5 || tail.size()==6)
-						l=3;
-					else if (tail.size()==7 || tail.size()==8)
-						l=2;
-					else if (tail.size()==9 || tail.size()==10)
-						l=1;
-					else if( tail.size()==11 || tail.size()==12)
-						l=0;
-					temp[l+k] = tail.get(k);
-					play1[l+k].setIcon(new ImageIcon(buf[k]));
-					play1[l+k].setOpaque(true);
-					play1[l+k].setBorder(borderEmpty);
-					ri = new RotatedIcon(new ImageIcon(buf[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
-					play1[l+k].setIcon(ri);
-
+						}
+						int count = 0;
+						for (int i=0; i<12; i++) {
+							if(su[j]==temp2[i]) {
+								count =i;
+								play2[count].setBorder(border);
+								break;
+							}
+						}
+						set = 1;
 				}
-				int count = 0;
-				for (int i=0; i<12; i++) {
-					if(su[j]==temp[i]) {
-						count =i;
-						break;
-					}
-				}
-				play1[count].setBorder(border);
 			}
-
-				// 숫자에 해당하는 imgbuf파일을 만듬.
-				//12칸의 배열에 정렬된 값을 넣는다.
-				//play1[j].setIcon(new ImageIcon(imgFixed));
 		}
 	}
 
 
 	public Image setCardImage(double a) {
-		if(a%1.0!=0) {
-			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
-		}else {
-			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+a+".png");
-		}
+		if(set==1)
+			if(a%1.0!=0) {
+				imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
+			}else {
+				imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+a+".png");
+			}
+		else if(set==0)
+			if(a%1.0!=0) {
+				imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
+			}else {
+				imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
+			}
+
 		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 		return imgFixed;
+	}
+
+	public void getRand(int a) {
+		boolean bCheck = false;
+		for (int i=0; i<a; i++) { //스택틱 배열인 su에 중복되지 않은 난수를 넣음.
+			bCheck = true;
+			while(bCheck) {
+				bCheck=false;
+				int rand = (int)(Math.random()*24);
+				for(int j=0; j<i; j++) {
+					if(su[j] == rand) {
+						bCheck=true;
+						break;
+					}
+				}
+				su[i]=rand;
+			}
+		}
 	}
 
 }
