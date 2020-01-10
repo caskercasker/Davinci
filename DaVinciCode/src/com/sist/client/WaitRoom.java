@@ -30,6 +30,7 @@ public class WaitRoom extends JPanel {
 	JLabel ava1Box,ava2Box;
 	Font f1;
 	Font f2;
+	public static int buffer;
 	
 	WaitRoom(){
 		setLayout(null); 
@@ -39,7 +40,8 @@ public class WaitRoom extends JPanel {
 		chatInput = new JTextField();
 		btn_ready_1 = new JButton("Ready");
 		btn_ready_2 = new JButton("Ready");
-		
+		System.out.println("=======================");
+		System.out.println();
 		// Message on top 
 		f1 = new Font("돋움", Font.BOLD, 15);
 		f2 = new Font("돋움", Font.PLAIN, 12);
@@ -71,7 +73,7 @@ public class WaitRoom extends JPanel {
 		add(showOtherID);
 		
 		// Show avatar image
-		ava1 = new ImageIcon("images/Avatar/_11.jpg");
+		//ava1 = new ImageIcon("images/Avatar/_"+buffer+buffer+"jpg");
 		ava1Box = new JLabel(ava1);
 		ava1Box.setBounds(130, 280, 160, 199);
 		add(ava1Box);
@@ -88,6 +90,7 @@ public class WaitRoom extends JPanel {
 		btn_ready_2.setBounds(420, 520, 160, 40);
 		add(btn_ready_2);
 		
+	
 	}
 	
 	@Override

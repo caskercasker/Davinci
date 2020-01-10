@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -12,18 +14,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-public class Avatar extends JPanel{
+public class Avatar extends JPanel implements ActionListener{
 	ImageIcon b1,b2,b3,b4,sb1,sb2,sb3,sb4;
+	JRadioButton p1Icon,p2Icon,p3Icon,p4Icon;
 	JButton b5;
 	Image back;
 	JLabel msg1;
 	Font f1;
+	public int nowSelected;
+
+	public int getNowSelected() {
+		return nowSelected;
+	}
+
+
+	public void setNowSelected(int nowSelected) {
+		this.nowSelected = nowSelected;
+	}
+
 
 	Avatar(){
 		setLayout(null);
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		Image image;
-
+	
 		b1=new ImageIcon("images/Avatar/_11.jpg");
 		sb1=new ImageIcon("images/Avatar/_111.jpg");
 		b2=new ImageIcon("images/Avatar/_22.jpg");
@@ -41,10 +55,10 @@ public class Avatar extends JPanel{
 		add(msg1);
 
 		ButtonGroup g=new ButtonGroup();
-		JRadioButton p1Icon = new JRadioButton(b1);
-		JRadioButton p2Icon = new JRadioButton(b2);
-		JRadioButton p3Icon = new JRadioButton(b3);
-		JRadioButton p4Icon = new JRadioButton(b4);
+		p1Icon = new JRadioButton(b1);
+		p2Icon = new JRadioButton(b2);
+		p3Icon = new JRadioButton(b3);
+		p4Icon = new JRadioButton(b4);
 
 		p1Icon.setBorderPainted(true);
 		p1Icon.setSelectedIcon(sb1);
@@ -76,12 +90,23 @@ public class Avatar extends JPanel{
 		add(b5);
 		b5.setBounds( 450, 550, 100, 50);
 		b5.setOpaque(false);
+		
+		//b5.addActionListener(this);
 	}
 
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
+	}
+
+	@Override 
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+			if (e.getSource() == b5) {
+				setNowSelected(1);
+				
+			}
 	}
 
 }
