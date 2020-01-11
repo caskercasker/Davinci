@@ -2,14 +2,18 @@ package com.sist.client;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,23 +22,32 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 
 //전체 사이즈 : 1024 X 768
-public class GameRoom extends JPanel implements ActionListener {
+public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	private static final Component btn_ready_i = null;
 	public static double su[] = new double[24]; //고정된 난수 배열
 	//공용 데이터 공통으로 쓰는 화면
 	Image back;
 	JButton[] dummy = new JButton[24]; // 처음에 올라가는 카드 더미
-	JTextArea chatHistory;		
-	JTextField chatInput;		
+	JTextPane chatHistory;		//채팅 내용
+	JTextField chatInput;		//채팅 입력 창
 	JLabel gameMessage;
 	JPanel mainPage;
 	JLabel timeLabel;
+	boolean gameStart = false;
+	int gameEnd1 = 100;
+	int gameEnd2 = 1000;
+	
+	Object[] numbers = {"0", "1", "2", "3","4","5","6","7","8","9","10","11"};
+	Object[] goOrStop = {"Yes","No"};
 	CountUpProgressBar cdpb; //timer Reset되는 방법 추가 및 경우의 수 넣기
+	public static double choose;
+	public static int option;
 
 	//세팅 값  및 버퍼들
 	Image imgBuf;
@@ -44,6 +57,7 @@ public class GameRoom extends JPanel implements ActionListener {
 	Border borderEmpty = BorderFactory.createLineBorder(new Color(0,0,0,0),2); //
 	RotatedIcon ri; // 공개 혹 미공개 된 덱을 구분하기 위한 이미지 돌리는 값.
 	int set = 1; //player 구분 테스트용
+	int messageToPlayers = 0;
 
 	//Player1 용 데이터
 	Image player1;
@@ -51,7 +65,10 @@ public class GameRoom extends JPanel implements ActionListener {
 	JLabel[] play1 = new JLabel[12]; // player 1 덱이 올라갈 레이블
 	Image[] buf = new Image[12]; //정렬된 이미지 출력용 이미지 배열
 	double[] temp = {12,12,12,12,12,12,12,12,12,12,12,12}; // player 1 Deck 의 정렬된 숫자값을 가지고 있는 배열
-	ArrayList<Double> tail = new ArrayList<Double>(); //난수 정렬용 리스트
+	public ArrayList<Double> tail = new ArrayList<Double>(); //난수 정렬용 리스트
+	int[] reveal = {1,1,1,1,1,1,1,1,1,1,1,1};
+	int count = 0; //현재 들어온 값 저장.
+	//reveal = {1,1,1,1,1,1,1,1,1,1,1,1};
 
 	//Players2용 데이터
 	Image player2;
@@ -59,13 +76,17 @@ public class GameRoom extends JPanel implements ActionListener {
 	JLabel[] play2 = new JLabel[12]; // player 2 덱이 올라갈 레이블
 	Image[] buf2 = new Image[12];
 	double[] temp2 = {12,12,12,12,12,12,12,12,12,12,12,12}; //players 2 Deck 의 정렬된 숫자값을 가지고 있는 배열
-	ArrayList<Double> tail2 = new ArrayList<Double>();
-
+	public ArrayList<Double> tail2 = new ArrayList<Double>();
+	int[] reveal2 = {1,1,1,1,1,1,1,1,1,1,1,1};
+	int count2 = 0;
+	private AbstractButton gmaeMessage;
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
-		chatHistory = new JTextArea ();
+		chatHistory = new JTextPane();
 		chatInput = new JTextField();
-		gameMessage = new JLabel();
+		gameMessage = new JLabel("카드 4장을 골라주세요", SwingConstants.CENTER); //메시지 초기값
+		
+		gameMessage.setFont(new Font("Serif", Font.BOLD, 20));
 		mainPage = new JPanel();
 		cdpb = new CountUpProgressBar();
 
@@ -133,6 +154,7 @@ public class GameRoom extends JPanel implements ActionListener {
 				play1[i].setOpaque(false);
 			}
 			add(play1[i]);
+			play1[i].addMouseListener(this);
 		}
 		space =0;
 		for (int i=0; i<12; i++) {
@@ -153,14 +175,20 @@ public class GameRoom extends JPanel implements ActionListener {
 				play2[i].setOpaque(false);
 			}
 			add(play2[i]);
+			play2[i].addMouseListener(this);
 		}
 
 		JScrollPane chatRm = new JScrollPane(chatHistory);
 
+		
+		
+		
 		chatRm.setBounds(705, 10, 300, 680);
 		chatInput.setBounds(705, 695, 300, 30);
-		chatHistory.setEnabled(false);
 		
+	
+		//gameMessage.setText("카드 장을 골라주세요"); //고정 멘트
+	
 		gameMessage.setBounds(10,645,690,80);
 		gameMessage.setBackground(Color.white);
 		gameMessage.setOpaque(true);
@@ -181,8 +209,13 @@ public class GameRoom extends JPanel implements ActionListener {
 		add(avatar_1);
 		add(avatar_2);
 		
-		// 채팅 이벤트 등록 
-		chatInput.addActionListener(this);
+		if(gameEnd1==tail.size()) {
+			System.out.println("Player 패배");
+			messageByPlyer(9);
+		}else if (gameEnd2 == tail.size()) {
+			System.out.println("상대방 승리");
+			messageByPlyer(8);
+		}
 
 
 	}
@@ -194,16 +227,7 @@ public class GameRoom extends JPanel implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// Chat
-		String msg= chatInput.getText();
-		if(e.getSource()==chatInput) {
-			chatHistory.append(msg+"\n");
-			if(msg ==null || msg.length()==0) {
-				JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
-			}else 
-				chatInput.setText("");
-			}
-		// Card
+		// TODO Auto-generated method stub
 		for(int j=0; j<24; j++) {
 			if(e.getSource()==dummy[j]) {
 				if(set == 1) {
@@ -213,29 +237,19 @@ public class GameRoom extends JPanel implements ActionListener {
 					tail.add(su[j]);
 					Collections.sort(tail); // 리스트 정렬
 						for(int k=0; k<tail.size();k++) {
-							int l =0;
 							buf[k] = setCardImage(tail.get(k));
-							if(tail.size()==1 )
-								l=5;
-							else if(tail.size()==2)
-								l=4;
-							else if (tail.size()==3)
-								l=3;
-							else if (tail.size()==4)
-								l=2;
-							else if (tail.size()==5)
-								l=1;
-							else if( tail.size()>=6)
-								l=0;
-							temp[l+k] = tail.get(k);
-							play1[l+k].setIcon(new ImageIcon(buf[k]));
-							play1[l+k].setOpaque(true);
-							play1[l+k].setBorder(borderEmpty);
-//							ri = new RotatedIcon(new ImageIcon(buf[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
-//							play1[l+k].setIcon(ri);
-
+							temp[k] = tail.get(k);
+							play1[k].setIcon(new ImageIcon(buf[k]));
+							play1[k].setOpaque( true);
+							play1[k].setBorder(borderEmpty);
+							if(tail.get(k)%0.5!=0) {
+								double c = tail.get(k)-0.01;
+								buf[k] = setCardImage(c);
+								ri = new RotatedIcon(new ImageIcon(buf[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
+								play1[k].setBorder(borderEmpty);
+								play1[k].setIcon(ri);
+							}
 						}
-						int count = 0;
 						for (int i=0; i<12; i++) {
 							if(su[j]==temp[i]) {
 								count =i;
@@ -243,7 +257,7 @@ public class GameRoom extends JPanel implements ActionListener {
 								break;
 							}
 						}
-						set = 0;
+					set = 0;
 				}else if (set ==0) {
 					dummy[j].setVisible(false); //기존 버튼 이미지 날리기
 					if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
@@ -251,39 +265,41 @@ public class GameRoom extends JPanel implements ActionListener {
 					tail2.add(su[j]);
 					Collections.sort(tail2); // 리스트 정렬
 						for(int k=0; k<tail2.size();k++) {
-							int l =0;
 							buf2[k] = setCardImage(tail2.get(k));
-							if(tail2.size()==1 )
-								l=5;
-							else if(tail2.size()==2)
-								l=4;
-							else if (tail2.size()==3)
-								l=3;
-							else if (tail2.size()==4)
-								l=2;
-							else if (tail2.size()==5)
-								l=1;
-							else if( tail2.size()>=6)
-								l=0;
-							temp2[l+k] = tail2.get(k);
-							play2[l+k].setIcon(new ImageIcon(buf2[k]));
-							play2[l+k].setOpaque(true);
-							play2[l+k].setBorder(borderEmpty);
-//							ri = new RotatedIcon(new ImageIcon(buf2[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
-//							play2[l+k].setIcon(ri);
-
+							temp2[k] = tail2.get(k);
+							play2[k].setIcon(new ImageIcon(buf2[k]));
+							play2[k].setOpaque(true);
+							play2[k].setBorder(borderEmpty);
+							if(tail2.get(k)%0.5!=0) {
+								double c = tail2.get(k)-0.01;
+								//buf2[k] = setCardImage(c);
+								play2[k].setIcon(new ImageIcon(changeCardImage(c)));
+								play2[k].setBorder(borderEmpty);
+								//play2[k].setIcon(ri);
+							}
+				
 						}
-						int count = 0;
 						for (int i=0; i<12; i++) {
 							if(su[j]==temp2[i]) {
-								count =i;
-								play2[count].setBorder(border);
+								count2 =i;
+								play2[count2].setBorder(border);
 								break;
 							}
 						}
-						set = 1;
+					set = 1;
 				}
 			}
+		}
+		if(tail.size()==4 && tail2.size()==4){
+			gameStart=true;
+			messageStart(gameStart);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			messageByPlyer(1);
 		}
 	}
 
@@ -305,6 +321,46 @@ public class GameRoom extends JPanel implements ActionListener {
 		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 		return imgFixed;
 	}
+	
+	public Image changeCardImage(double a) {
+		if(a%1.0!=0) {
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
+		}else {
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+a+".png");
+		}
+		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
+		
+		return imgFixed;
+	}
+	
+	public void messageStart(boolean b) {
+		if(b==true) {
+			gameMessage.setText("게임을 시작합니다");
+		}
+		
+	}
+	
+	public void messageByPlyer(int a) {
+		if(a==1) {
+			gameMessage.setText("카드를 한장 골라주세요");
+		}else if (a==2) {
+			gameMessage.setText("상대방이 카드를 고르고 있습니다.");
+		}else if (a==3) {
+			gameMessage.setText("상대방의 카드에서 1장을 선택해주세요.\n상대방의 카드 숫자는 무엇일까요?\n 01,2,3,4,5,6,7,8,9,10,11,");
+		}else if (a==4) {
+			gameMessage.setText("틀렸습니다.\n새로 가져온 카드의 수가 공개되었습니다.");			
+		}else if (a==5 ) {
+			gameMessage.setText("맞았습니다.\n 한 번 숫자를 맞춰보실래요 ? Yes or No");
+		}else if (a==6) {
+			gameMessage.setText("상대방이 카드를 선택중입니다.");
+		}else if (a==7) {
+			gameMessage.setText("상대방이 틀렸습니다.\n 상대방의 카드가 하나 공개되었습니다.");
+		}else if (a==8) {
+			gameMessage.setText("상대방의 모든 카드를 맞췄습니다. 승리 ");
+		}else if (a==9) {
+			gameMessage.setText("내 카드가 모두 다 공개되었습니다. ");
+		}
+	}
 
 	public void getRand(int a) {
 		boolean bCheck = false;
@@ -322,6 +378,95 @@ public class GameRoom extends JPanel implements ActionListener {
 				su[i]=rand;
 			}
 		}
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		for(int i =0; i<12;i++) {
+			if(e.getSource()==play2[i]) {
+				if(e.getClickCount()==2) {
+					//JOptionPane.showMessageDialog(this, "숫자를 고르세요");
+					choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, numbers, numbers[0]);
+											
+					System.out.println("------");
+					System.out.println(choose);
+					double tempValue = 0;
+					System.out.println("------");
+					System.out.println(temp2[i]);
+					
+					if(temp2[i]%1.0!=0) {
+						System.out.println("계산");
+						tempValue = temp2[i] - 0.5;
+						System.out.println(tempValue);
+					}
+					System.out.println(count);
+					
+					if(tempValue == choose || temp2[i] == choose) {
+						System.out.println("맞음");
+						play2[i].setIcon(new ImageIcon(changeCardImage(temp2[i])));
+						play2[i].setBorder(borderEmpty);
+						tail2.set(i, tail2.get(i)+0.01);
+						
+						gameEnd1 =0;
+						gameEnd2 =0;
+						for(int check=0; check<tail.size();check++) {
+							if (tail.get(check)%0.5!=0) 
+								gameEnd1 +=1;						
+						}
+						for (int cc = 0; cc<tail2.size(); cc++) {
+							if (tail2.get(cc)%0.5!=0) 
+							gameEnd2 +=1;
+						}
+						System.out.println("gmeEnd1 = " + gameEnd1);
+						System.out.println("tailSize = " + tail.size());
+						System.out.println("gmeEnd2 = " + gameEnd2);
+						System.out.println("tail2Size = " + tail2.size());
+													
+						option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
+						System.out.println(option); //맞으면 0 틀리면 1
+						if (option ==0) {
+							set = 1;
+							messageByPlyer(1);
+						}else if(option ==1) {
+							set = 0;
+							messageByPlyer(6);
+						}
+					}else {
+						System.out.println("틀림");
+						tail.set(count, tail.get(count)+0.01);
+						System.out.println(tail.get(count));
+						
+						//reveal[count]=0;
+						ri = new RotatedIcon(new ImageIcon(buf[count]),RotatedIcon.Rotate.UPSIDE_DOWN);
+						play1[count].setBorder(borderEmpty);
+						play1[count].setIcon(ri);
+						messageByPlyer(4);
+						set = 0;
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
