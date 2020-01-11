@@ -81,7 +81,7 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 	public void setAvatar(int a) {
 		ava.setNowSelected(a);
 		wr.buffer= ava.getNowSelected();
-		System.out.println(wr.buffer);
+		//System.out.println(wr.buffer);
 		wr.ava1 = new ImageIcon("images/Avatar/_"+wr.buffer+wr.buffer+".jpg");
 		wr.ava1Box = new JLabel(wr.ava1);
 		wr.ava1Box.setBounds(130, 280, 160, 199);
