@@ -6,22 +6,25 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
+
 
 
 //전체 사이즈 : 1024 X 768
-public class WaitRoom extends JPanel {
+public class WaitRoom extends JPanel implements ActionListener {
 	
 	Image back;
-	JTextPane chatHistory; 
+	JTextArea chatHistory; 
 	JTextField chatInput;	
 	JButton btn_ready_1,btn_ready_2;
 	JLabel msg1,msg2,showMyID,showOtherID;
@@ -36,7 +39,7 @@ public class WaitRoom extends JPanel {
 		setLayout(null); 
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		
-		chatHistory = new JTextPane();
+		chatHistory = new JTextArea();
 		chatInput = new JTextField();
 		btn_ready_1 = new JButton("Ready");
 		btn_ready_2 = new JButton("Ready");
@@ -58,12 +61,14 @@ public class WaitRoom extends JPanel {
 		add(msg2);
 		
 		// Chatting room on right 
-		JScrollPane chatRm = new JScrollPane(chatHistory); // 스크롤 가능하게
+		JScrollPane chatRm = new JScrollPane(chatHistory); 
 		chatRm.setBounds(705, 10, 300, 680); 
 		chatInput.setBounds(705, 695, 300, 30); 		
-
+		chatHistory.setEnabled(false);
 		add(chatRm);
 		add(chatInput);		
+		// 채팅 이벤트 등록 
+		chatInput.addActionListener(this);
 		
 		// Show ID 
 		showMyID.setBounds(130, 220, 200, 40);
@@ -96,6 +101,19 @@ public class WaitRoom extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+				String msg= chatInput.getText();
+				if(e.getSource()==chatInput) {
+					chatHistory.append(msg+"\n");
+					if(msg ==null || msg.length()==0) {
+						JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
+					}else 
+						chatInput.setText("");
+					}
+		
 	}
 
 	

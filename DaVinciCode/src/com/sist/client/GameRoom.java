@@ -14,10 +14,11 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
 
@@ -28,8 +29,8 @@ public class GameRoom extends JPanel implements ActionListener {
 	//공용 데이터 공통으로 쓰는 화면
 	Image back;
 	JButton[] dummy = new JButton[24]; // 처음에 올라가는 카드 더미
-	JTextPane chatHistory;		//채팅 내용
-	JTextField chatInput;		//채팅 입력 창
+	JTextArea chatHistory;		
+	JTextField chatInput;		
 	JLabel gameMessage;
 	JPanel mainPage;
 	JLabel timeLabel;
@@ -62,7 +63,7 @@ public class GameRoom extends JPanel implements ActionListener {
 
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
-		chatHistory = new JTextPane();
+		chatHistory = new JTextArea ();
 		chatInput = new JTextField();
 		gameMessage = new JLabel();
 		mainPage = new JPanel();
@@ -158,7 +159,8 @@ public class GameRoom extends JPanel implements ActionListener {
 
 		chatRm.setBounds(705, 10, 300, 680);
 		chatInput.setBounds(705, 695, 300, 30);
-
+		chatHistory.setEnabled(false);
+		
 		gameMessage.setBounds(10,645,690,80);
 		gameMessage.setBackground(Color.white);
 		gameMessage.setOpaque(true);
@@ -178,6 +180,9 @@ public class GameRoom extends JPanel implements ActionListener {
 		add(mainPage);
 		add(avatar_1);
 		add(avatar_2);
+		
+		// 채팅 이벤트 등록 
+		chatInput.addActionListener(this);
 
 
 	}
@@ -189,7 +194,16 @@ public class GameRoom extends JPanel implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		// Chat
+		String msg= chatInput.getText();
+		if(e.getSource()==chatInput) {
+			chatHistory.append(msg+"\n");
+			if(msg ==null || msg.length()==0) {
+				JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
+			}else 
+				chatInput.setText("");
+			}
+		// Card
 		for(int j=0; j<24; j++) {
 			if(e.getSource()==dummy[j]) {
 				if(set == 1) {
