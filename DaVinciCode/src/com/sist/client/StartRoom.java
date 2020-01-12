@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 
 
 //전체 사이즈 : 1024 X 768
-public class WaitRoom extends JPanel implements ActionListener {
+public class StartRoom extends JPanel implements ActionListener {
 	
 	private static final Color Color = null;
 	private static final String WHITE = null;
@@ -44,7 +44,7 @@ public class WaitRoom extends JPanel implements ActionListener {
 	public static int buffer;
 	
 
-	WaitRoom(){
+	StartRoom(){
 		setLayout(null); 
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		

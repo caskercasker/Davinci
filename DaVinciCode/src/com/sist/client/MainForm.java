@@ -11,19 +11,20 @@ import javax.swing.UIManager;
 
 public class MainForm extends JFrame implements ActionListener { // ActionLister 인터페이스
 	Login login = new Login();
-	WaitRoom wr = new WaitRoom();
+	StartRoom sr = new StartRoom(); // 1/12 이름 변경 : WaitRoom → StartRoom 
 	GameRoom gr = new GameRoom();
 	Avatar ava = new Avatar();
+	WaitingRoom wr = new WaitingRoom(); // 1/12 신규 생성 : WaitingRoom 
 	CardLayout card = new CardLayout();
 
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
-		add("LOGIN", login);
-		add("WR", wr);
-		add("AVARTAR", ava);
 		add("GAME", gr);
-
+		add("SR", sr);
+		add("LOGIN", login);
+		add("AVARTAR", ava);
+		add("WR", wr );
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
 		setVisible(true); // 윈도우를 보여라.
@@ -32,7 +33,7 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 종료 시 게임 종료되도록 (그렇지 않으면 게임 꺼도 계속 돌아감...)
 
 		login.b1.addActionListener(this);
-		wr.btn_ready_1.addActionListener(this);
+		sr.btn_ready_1.addActionListener(this);
 		ava.b5.addActionListener(this);
 		ava.p1Icon.addActionListener(this);
 		ava.p2Icon.addActionListener(this);
@@ -51,7 +52,7 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		}
 		MainForm mf = new MainForm();
 		//mf.ava.setNowSelected(1);
-		mf.wr.buffer=1;
+		mf.sr.buffer=1;
 	}
 
 	@Override
@@ -71,22 +72,22 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		}else if(e.getSource() == ava.p4Icon) {
 			setAvatar(4);
 		}	
-		if (e.getSource() == wr.btn_ready_1) {
-			card.show(getContentPane(), "GAME");
+		if (e.getSource() == sr.btn_ready_1) {
+			card.show(getContentPane(), "GR");
 		}
 		if (e.getSource() == gr.confirmGameEnd) {
-			card.show(getContentPane(),"WR");
+			card.show(getContentPane(),"GR");
 		}
 
 	}
 	public void setAvatar(int a) {
 		ava.setNowSelected(a);
-		wr.buffer= ava.getNowSelected();
-		//System.out.println(wr.buffer);
-		wr.ava1 = new ImageIcon("images/Avatar/_"+wr.buffer+wr.buffer+".jpg");
-		wr.ava1Box = new JLabel(wr.ava1);
-		wr.ava1Box.setBounds(130, 280, 160, 199);
-		wr.add(wr.ava1Box);
+		sr.buffer= ava.getNowSelected();
+		//System.out.println(sr.buffer);
+		sr.ava1 = new ImageIcon("images/Avatar/_"+sr.buffer+sr.buffer+".jpg");
+		sr.ava1Box = new JLabel(sr.ava1);
+		sr.ava1Box.setBounds(130, 280, 160, 199);
+		sr.add(sr.ava1Box);
 	}
 	
 }
