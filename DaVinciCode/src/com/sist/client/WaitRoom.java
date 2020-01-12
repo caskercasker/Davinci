@@ -137,6 +137,16 @@ public class WaitRoom extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==btn_ready_2) {
+			msg2 = new JLabel("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.");
+			msg2.setFont(f1);
+			msg2.setBounds(190, 100, 500, 20);
+			add(msg2);
+			showOtherID = new JLabel("Aziranom2");
+			
+			
+		}
+		
 				if(count==0) {
 					btn_ready_1.setEnabled(true);
 					msg3 = new JLabel("Start버튼을 누르면 게임이 시작됩니다.");
