@@ -34,6 +34,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	//공용 데이터 공통으로 쓰는 화면
 	Image back;
 	JButton[] dummy = new JButton[24]; // 처음에 올라가는 카드 더미
+	JButton confirmGameEnd;
 	JTextPane chatHistory;		//채팅 내용
 	JTextField chatInput;		//채팅 입력 창
 	JLabel gameMessage;
@@ -42,13 +43,13 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	boolean gameStart = false;
 	int gameEnd1 = 100;
 	int gameEnd2 = 1000;
+	boolean gameEndMessage = false;
 	
 	Object[] numbers = {"0", "1", "2", "3","4","5","6","7","8","9","10","11"};
 	Object[] goOrStop = {"Yes","No"};
 	CountUpProgressBar cdpb; //timer Reset되는 방법 추가 및 경우의 수 넣기
 	public static double choose;
 	public static int option;
-
 	//세팅 값  및 버퍼들
 	Image imgBuf;
 	Image imgFixed;
@@ -79,14 +80,24 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	public ArrayList<Double> tail2 = new ArrayList<Double>();
 	int[] reveal2 = {1,1,1,1,1,1,1,1,1,1,1,1};
 	int count2 = 0;
-	private AbstractButton gmaeMessage;
+
+	
 	GameRoom(){
 		setLayout(null); //기본 레이아웃 무시
 		chatHistory = new JTextPane();
 		chatInput = new JTextField();
 		gameMessage = new JLabel("카드 4장을 골라주세요", SwingConstants.CENTER); //메시지 초기값
-		
 		gameMessage.setFont(new Font("Serif", Font.BOLD, 20));
+		
+		confirmGameEnd = new JButton("CONFIRM");
+		confirmGameEnd.setFont(new Font ("Verdana",Font.BOLD,35));
+		confirmGameEnd.setBounds(320,330,300,100);
+		confirmGameEnd.setEnabled(false); //단순 비활성화
+		confirmGameEnd.setVisible(false);
+		//confirmGameEnd.setOpaque(true);
+		confirmGameEnd.addActionListener(this);
+		add(confirmGameEnd);
+		
 		mainPage = new JPanel();
 		cdpb = new CountUpProgressBar();
 
@@ -272,7 +283,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 						}
 						if(tail.size()<=4 && tail2.size()<=4)
 							turnChange();
-						
 				}else if (playerTurn ==0) {
 					dummy[j].setVisible(false); //기존 버튼 이미지 날리기
 					if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
@@ -311,7 +321,12 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			gameStart=true;
 			messageStart(gameStart);
 		}
+		if(tail.size()>4 || tail2.size()>4) {
+			messageByPlyer(10);
+		}
+
 	}
+
 
 
 	public Image setCardImage(double a) {
@@ -345,7 +360,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	
 	public void messageStart(boolean b) {
 		if(b==true) {
-			gameMessage.setText("게임을 시작합니다");
+			gameMessage.setText(convertToMultiline("게임을 시작합니다\n 카드를 한장 골라주세요("+playerTurn+")의 차례"));
 		}
 		
 	}
@@ -358,7 +373,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		}else if (a==3) {
 			gameMessage.setText(convertToMultiline("상대방의 카드에서 1장을 선택해주세요.\n상대방의 카드 숫자는 무엇일까요?\n 01,2,3,4,5,6,7,8,9,10,11,"));
 		}else if (a==4) {
-			gameMessage.setText(convertToMultiline("틀렸습니다.\n새로 가져온 카드의 수가 공개되었습니다."));			
+			gameMessage.setText(convertToMultiline("틀렸습니다.새로 가져온 카드의 수가 공개되었습니다.\n 카드를 한장 골라주세요"));			
 		}else if (a==5 ) {
 			gameMessage.setText(convertToMultiline("맞았습니다.\n 한 번 숫자를 맞춰보실래요 ? Yes or No"));
 		}else if (a==6) {
@@ -369,6 +384,8 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			gameMessage.setText("상대방의 모든 카드를 맞췄습니다. 승리 ");
 		}else if (a==9) {
 			gameMessage.setText("내 카드가 모두 다 공개되었습니다. ");
+		}else if (a==10) {
+			gameMessage.setText("상대방의 덱에서 카드하나를 더블클릭후 숫자를 맞춰 보세요");
 		}
 	}
 
@@ -414,15 +431,18 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 						play2[i].setIcon(new ImageIcon(changeCardImage(temp2[i])));
 						play2[i].setBorder(borderEmpty);
 						tail2.set(i, tail2.get(i)+0.01);
-						
 						gameEndCheck();
-						option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
-						System.out.println(option); //맞으면 0 틀리면 1
-						if (option ==0) {
-							messageByPlyer(1);
-						}else if(option ==1) {
-							turnChange();
-							messageByPlyer(6);
+						if(gameEndMessage==true){
+							break;
+						}else if(gameEndMessage == false) {
+							option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
+							System.out.println(option); //맞으면 0 틀리면 1
+							if (option ==0) {
+								messageByPlyer(1);
+							}else if(option ==1) {
+								turnChange();
+								messageByPlyer(6);
+							}
 						}
 					}else {
 						System.out.println("틀림");
@@ -453,27 +473,28 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 					if(tempValue == choose || temp[i] == choose) {
 						System.out.println("맞음");
 						
-						ri = new RotatedIcon(new ImageIcon(imageBuf1[count]),RotatedIcon.Rotate.UPSIDE_DOWN);
-						play1[count].setBorder(borderEmpty);
-						play1[count].setIcon(ri);
-						tail.set(count, tail.get(count)+0.01);
+						ri = new RotatedIcon(new ImageIcon(imageBuf1[i]),RotatedIcon.Rotate.UPSIDE_DOWN);
+						play1[i].setBorder(borderEmpty);
+						play1[i].setIcon(ri);
+						tail.set(i, tail.get(i)+0.01);
 						gameEndCheck();
-						option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
-						System.out.println(option); //맞으면 0 틀리면 1
-						if (option ==0) {
-							messageByPlyer(1);
-						}else if(option ==1) {
-							turnChange();
-							messageByPlyer(6);
+						if(gameEndMessage==true){
+							break;
+						}else if(gameEndMessage == false) {
+							option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
+							System.out.println(option); //맞으면 0 틀리면 1
+							if (option ==0) {
+								messageByPlyer(1);
+							}else if(option ==1) {
+								turnChange();
+								messageByPlyer(6);
+							}
 						}
 					}else {
 						System.out.println("틀림");
-						tail2.set(count, tail.get(count)+0.01);
-						System.out.println(tail.get(count));
-						play2[count].setIcon(new ImageIcon(changeCardImage(temp2[count])));
-						play2[count].setBorder(borderEmpty);
-						tail2.set(count, tail2.get(count)+0.01);
-						
+						tail2.set(count2, tail2.get(count2)+0.01);
+						play2[count2].setIcon(new ImageIcon(changeCardImage(temp2[count2])));
+						play2[count2].setBorder(borderEmpty);
 						messageByPlyer(4);
 						turnChange();
 					}
@@ -519,9 +540,10 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		}
 	}
 	
-	public void gameEndCheck() {
+	public void gameEndCheck()  {
 		gameEnd1 =0;
 		gameEnd2 =0;
+
 		for(int check=0; check<tail.size();check++) {
 			if (tail.get(check)%0.5!=0) 
 				gameEnd1 +=1;						
@@ -530,12 +552,26 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			if (tail2.get(cc)%0.5!=0) 
 			gameEnd2 +=1;
 		}
+		
+		if(gameEnd1 == tail.size()) {
+			messageByPlyer(9);
+			confirmGameEnd.setEnabled(true); //단순 비활성화
+			confirmGameEnd.setVisible(true);
+			gameEndMessage = true;
+
+		}else if(gameEnd2 == tail.size()) {
+			messageByPlyer(8);
+			confirmGameEnd.setEnabled(true); //단순 비활성화
+			confirmGameEnd.setVisible(true);
+			gameEndMessage = true;
+
+		}
 		System.out.println("gmeEnd1 = " + gameEnd1);
 		System.out.println("tailSize = " + tail.size());
 		System.out.println("gmeEnd2 = " + gameEnd2);
 		System.out.println("tail2Size = " + tail2.size());
 	}
-	
+
 	public static String convertToMultiline(String orig)
 	{
 	    return "<html>" + orig.replaceAll("\n", "<br>");

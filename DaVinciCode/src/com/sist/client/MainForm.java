@@ -38,7 +38,7 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		ava.p2Icon.addActionListener(this);
 		ava.p3Icon.addActionListener(this);
 		ava.p4Icon.addActionListener(this);
-
+		gr.confirmGameEnd.addActionListener(this);
 
 	}
 
@@ -70,11 +70,12 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 			setAvatar(3);
 		}else if(e.getSource() == ava.p4Icon) {
 			setAvatar(4);
-		}
-			
-		
+		}	
 		if (e.getSource() == wr.btn_ready_1) {
 			card.show(getContentPane(), "GAME");
+		}
+		if (e.getSource() == gr.confirmGameEnd) {
+			card.show(getContentPane(),"WR");
 		}
 
 	}
