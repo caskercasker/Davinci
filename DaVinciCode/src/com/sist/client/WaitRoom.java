@@ -69,7 +69,7 @@ public class WaitRoom extends JPanel implements ActionListener {
 		
 		if(count==0)
 		{
-			btn_ready_2.setEnabled(false);
+			btn_ready_2.setEnabled(true);
 			// Ready버튼 비활성화
 			msg1 = new JLabel("상대방의 준비를 기다리고 있습니다.");
 			msg1.setFont(f2);
