@@ -10,8 +10,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,38 +51,49 @@ public class WaitRoom extends JPanel implements ActionListener {
 		chatHistory = new JTextArea();
 		chatInput = new JTextField();
 		btn_ready_1 = new JButton("Start");
-		btn_ready_2 = new JButton("Ready");
-		System.out.println("=======================");
-		System.out.println();
-		// Message on top
-		
-		btn_ready_1.setEnabled(false);
-		// 임시방편으로 게임룸에 가려면 이 코드에 주석 넣어주세요.
-			
-		
+		btn_ready_2 = new JButton("Ready");			
 		f1 = new Font("돋움", Font.BOLD, 15);
 		f2 = new Font("돋움", Font.BOLD, 15);
 		f3 = new Font("돋움", Font.BOLD, 15);
 		showMyID = new JLabel("Monariza1");
 		
+		System.out.println("=======================");
+		System.out.println();
+		// Message on top
+		
+		btn_ready_1.setEnabled(false);
+		// 임시방편으로 게임룸에 가려면  이 코드에 주석 넣고 int count==0
+		
 		if(count==0)
 		{
 			btn_ready_2.setEnabled(false);
 			// Ready버튼 비활성화
-			msg1 = new JLabel("상대방의 준비를 기다리고 있습니다.");
+			msg1 = new JLabel("상대방의 준비를 기다리고 있습니다.",JLabel.CENTER);
 			msg1.setFont(f2);
-			msg1.setBounds(190, 100, 500, 20);
+			msg1.setBounds(190, 100, 400, 20);
 			add(msg1);
 			showOtherID = new JLabel("접속 대기 중");
+			
+			// Show avatar1 image
+			ava1 = new ImageIcon("images/Avatar/_"+buffer+buffer+"jpg");
+			ava1Box = new JLabel(ava1);
+			ava1Box.setBounds(130, 280, 160, 199);
+			add(ava1Box);
 		}
 		
 		if(count==1)
 		{
-			msg2 = new JLabel("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.");
+			msg2 = new JLabel("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.",JLabel.CENTER);
 			msg2.setFont(f1);
-			msg2.setBounds(190, 100, 500, 20);
+			msg2.setBounds(190, 100, 400, 20);
 			add(msg2);
 			showOtherID = new JLabel("Aziranom2");
+			
+			// Show avatar2 image			
+			ava2 = new ImageIcon("images/Avatar/_22.jpg");
+			ava2Box = new JLabel(ava2);
+			ava2Box.setBounds(420, 280, 160, 199);
+			add(ava2Box);
 		}
 		
 		// Chatting room on right 
@@ -93,29 +102,19 @@ public class WaitRoom extends JPanel implements ActionListener {
 		chatInput.setBounds(705, 695, 300, 30); 		
 		chatHistory.setEnabled(false);
 		add(chatRm);
-		add(chatInput);		
+		add(chatInput);
+		
 		// 채팅 레디버튼 이벤트 등록 
 		chatInput.addActionListener(this);		
 		btn_ready_2.addActionListener(this);
 		
 		// Show ID 
 		showMyID.setBounds(130, 220, 200, 40);
-		add(showMyID);
-		
+		add(showMyID);	
 		showOtherID.setBounds(420, 220, 200, 40);
 		add(showOtherID);
 		
-		// Show avatar image
-		ava1 = new ImageIcon("images/Avatar/_"+buffer+buffer+"jpg");
-		ava1Box = new JLabel(ava1);
-		ava1Box.setBounds(130, 280, 160, 199);
-		add(ava1Box);
-		
-		ava2 = new ImageIcon("images/Avatar/_22.jpg");
-		ava2Box = new JLabel(ava2);
-		ava2Box.setBounds(420, 280, 160, 199);
-		add(ava2Box);
-		
+		//방장 아이콘 표시
 		host = Toolkit.getDefaultToolkit().getImage("C:\\host.jpg");
 		hostBox = new JLabel(new ImageIcon(host.getScaledInstance(55,30, Image.SCALE_SMOOTH)));
 		hostBox.setBounds(120, 270, 55, 30);
@@ -139,9 +138,9 @@ public class WaitRoom extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 				if(count==0) {
 					btn_ready_1.setEnabled(true);
-					msg3 = new JLabel("Start버튼을 누르면 게임이 시작됩니다.");
+					msg3 = new JLabel("Start버튼을 누르면 게임이 시작됩니다.",JLabel.CENTER);
 					msg3.setFont(f3);
-					msg3.setBounds(190, 100, 500, 20);
+					msg3.setBounds(190, 100, 400, 20);
 					add(msg3);
 					if(count==1) {
 						btn_ready_2.setEnabled(false);
