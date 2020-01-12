@@ -10,10 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.AbstractButton;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -44,6 +45,8 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	int gameEnd1 = 100;
 	int gameEnd2 = 1000;
 	boolean gameEndMessage = false;
+	boolean dummyClickTurn= false;
+	
 	
 	Object[] numbers = {"0", "1", "2", "3","4","5","6","7","8","9","10","11"};
 	Object[] goOrStop = {"Yes","No"};
@@ -228,16 +231,24 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			messageByPlyer(8);
 		}
 		
+		
+		
+		
+		
+		///// 랜덤으로 턴을 정함.
 		int a = (int)(Math.random()*2);
 		System.out.println(a);
-		if(a==1) {
-			playerTurn =1; 
+		if(a==0) {
+			playerTurn =0; 
+			System.out.println("나 선턴");
 			avatar_1.setBorder(border);
 			avatar_2.setBorder(borderEmpty);
-		}else if(a ==0) {
-			playerTurn =0;
+		}else if(a ==1) {
+			playerTurn =1;
+			System.out.println("상대방 선턴");
 			avatar_2.setBorder(border);
 			avatar_1.setBorder(borderEmpty);
+			
 		}
 		
 	}
@@ -250,93 +261,116 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		for(int j=0; j<24; j++) {
-			if(e.getSource()==dummy[j]) {
-				if(playerTurn == 1) {
-					dummy[j].setVisible(false); //기존 버튼 이미지 날리기
-					if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
-						su[j] = su[j]-12+0.5;
-					tail.add(su[j]);
-					Collections.sort(tail); // 리스트 정렬
-						for(int k=0; k<tail.size();k++) {
-							imageBuf1[k] = setCardImage(tail.get(k));
-							temp[k] = tail.get(k);
-							play1[k].setIcon(new ImageIcon(imageBuf1[k]));
-							play1[k].setOpaque( true);
-							play1[k].setBorder(borderEmpty);
-							if(tail.get(k)%0.5!=0) {
-								double c = tail.get(k)-0.01;
-								imageBuf1[k] = setCardImage(c);
-								ri = new RotatedIcon(new ImageIcon(imageBuf1[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
+		if(dummyClickTurn == false || (tail.size()>=4 || tail2.size()>=4)) {
+			for(int j=0; j<24; j++) {
+				if(e.getSource()==dummy[j]) {
+					if(playerTurn == 0) {
+						dummy[j].setVisible(false); //기존 버튼 이미지 날리기
+						if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
+							su[j] = su[j]-12+0.5;
+						tail.add(su[j]);
+						Collections.sort(tail); // 리스트 정렬
+							for(int k=0; k<tail.size();k++) {
+								imageBuf1[k] = setCardImage(tail.get(k));
+								temp[k] = tail.get(k);
+								play1[k].setIcon(new ImageIcon(imageBuf1[k]));
+								play1[k].setOpaque( true);
 								play1[k].setBorder(borderEmpty);
-								play1[k].setIcon(ri);
-								//play1[k].setEnabled(false);
-
+								if(tail.get(k)%0.5!=0) {
+									double c = tail.get(k)-0.01;
+									imageBuf1[k] = setCardImage(c);
+									ri = new RotatedIcon(new ImageIcon(imageBuf1[k]),RotatedIcon.Rotate.UPSIDE_DOWN);
+									play1[k].setBorder(borderEmpty);
+									play1[k].setIcon(ri);
+									//play1[k].setEnabled(false);
+	
+								}
 							}
-						}
-						for (int i=0; i<12; i++) {
-							if(su[j]==temp[i]) {
-								count =i;
-								play1[count].setBorder(border);
-								break;
+							for (int i=0; i<12; i++) {
+								if(su[j]==temp[i]) {
+									count =i;
+									play1[count].setBorder(border);
+									break;
+								}
 							}
-						}
-						if(tail.size()<=4 && tail2.size()<=4)
-							turnChange();
-				}else if (playerTurn ==0) {
-					dummy[j].setVisible(false); //기존 버튼 이미지 날리기
-					if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
-						su[j] = su[j]-12+0.5;
-					tail2.add(su[j]);
-					Collections.sort(tail2); // 리스트 정렬
-						for(int k=0; k<tail2.size();k++) {
-							imageBuf2[k] = setCardImage(tail2.get(k));
-							temp2[k] = tail2.get(k);
-							play2[k].setIcon(new ImageIcon(imageBuf2[k]));
-							play2[k].setOpaque(true);
-							play2[k].setBorder(borderEmpty);
-							if(tail2.get(k)%0.5!=0) {
-								double c = tail2.get(k)-0.01;
-								//buf2[k] = setCardImage(c);
-								play2[k].setIcon(new ImageIcon(changeCardImage(c)));
+							if((tail.size()<=4 || tail2.size()<=4) && dummyClickTurn ==false){
+								turnChange();
+								if(tail.size()!=0 || tail2.size()!=0) {
+//									disableLabel_1(tail.size());
+//									disableLabel_2(tail2.size());
+								}							
+							}							
+							if(dummyClickTurn ==true) {
+								disableDummy();
+								System.out.println("내턴 상대방고르기");
+								enableLabel_2(tail2.size());
+//								disableLabel_1(tail.size());
+								messageByPlyer(10);
+							}
+					}else if (playerTurn ==1) {
+						dummy[j].setVisible(false); //기존 버튼 이미지 날리기
+						if(su[j]>12) //블랙 화이트 구분하기 위한 숫자 변환
+							su[j] = su[j]-12+0.5;
+						tail2.add(su[j]);
+						Collections.sort(tail2); // 리스트 정렬
+							for(int k=0; k<tail2.size();k++) {
+								imageBuf2[k] = setCardImage(tail2.get(k));
+								temp2[k] = tail2.get(k);
+								play2[k].setIcon(new ImageIcon(imageBuf2[k]));
+								play2[k].setOpaque(true);
 								play2[k].setBorder(borderEmpty);
-								//play2[k].setEnabled(false);
-								//play2[k].setIcon(ri);
+								if(tail2.get(k)%0.5!=0) {
+									double c = tail2.get(k)-0.01;
+									//buf2[k] = setCardImage(c);
+									play2[k].setIcon(new ImageIcon(changeCardImage(c)));
+									play2[k].setBorder(borderEmpty);
+									//play2[k].setEnabled(false);
+									//play2[k].setIcon(ri);
+								}
+					
 							}
-				
-						}
-						for (int i=0; i<12; i++) {
-							if(su[j]==temp2[i]) {
-								count2 =i;
-								play2[count2].setBorder(border);
-								break;
+							for (int i=0; i<12; i++) {
+								if(su[j]==temp2[i]) {
+									count2 =i;
+									play2[count2].setBorder(border);
+									break;
+								}
 							}
-						}
-						if(tail.size()<=4 && tail2.size()<=4)
-							turnChange();
+							if((tail.size()<=4 || tail2.size()<=4) && dummyClickTurn ==false) {
+								turnChange();
+								if(tail.size()!=0 || tail2.size()!=0) {
+//									disableLabel_1(tail.size());
+//									disableLabel_2(tail2.size());
+								}
+							}							
+							if(dummyClickTurn ==true) {
+								disableDummy();		
+								System.out.println("상대턴 내꺼 고르기");
+								enableLabel_1(tail.size());
+//								disableLabel_2(tail2.size());
+								messageByPlyer(10);
+							}
+					}
 				}
-			}
+			}	
 		}
 		if(tail.size()==4 && tail2.size()==4){
 			gameStart=true;
 			messageStart(gameStart);
+			dummyClickTurn = true; //게임이 시작되었다. 
 		}
-		if(tail.size()>4 || tail2.size()>4) {
-			messageByPlyer(10);
-		}
-
 	}
 
 
 
 	public Image setCardImage(double a) {
-		if(playerTurn==1)
+		if(playerTurn==0)
 			if(a%1.0!=0) {
 				imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
 			}else {
 				imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+a+".png");
 			}
-		else if(playerTurn==0)
+		else if(playerTurn==1)
 			if(a%1.0!=0) {
 				imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
 			}else {
@@ -439,21 +473,31 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 							System.out.println(option); //맞으면 0 틀리면 1
 							if (option ==0) {
 								messageByPlyer(1);
+								enableDummy();
+//								disableLabel_1(tail.size());
+//								disableLabel_2(tail2.size());
 							}else if(option ==1) {
 								turnChange();
+								enableDummy();
 								messageByPlyer(6);
+//								disableLabel_1(tail.size());
+//								disableLabel_2(tail2.size());
 							}
 						}
 					}else {
 						System.out.println("틀림");
+						enableDummy();
+//						disableLabel_1(tail.size());
+//						disableLabel_2(tail2.size());
 						tail.set(count, tail.get(count)+0.01);
 						ri = new RotatedIcon(new ImageIcon(imageBuf1[count]),RotatedIcon.Rotate.UPSIDE_DOWN);
 						play1[count].setBorder(borderEmpty);
 						play1[count].setIcon(ri);
 						messageByPlyer(4);
 						turnChange();
+
 					}
-				}
+				}	
 			}else if (e.getSource() == play1[i]) {
 				if(e.getClickCount()==2) {
 					choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, numbers, numbers[0]);
@@ -477,6 +521,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 						play1[i].setBorder(borderEmpty);
 						play1[i].setIcon(ri);
 						tail.set(i, tail.get(i)+0.01);
+						
 						gameEndCheck();
 						if(gameEndMessage==true){
 							break;
@@ -485,21 +530,31 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 							System.out.println(option); //맞으면 0 틀리면 1
 							if (option ==0) {
 								messageByPlyer(1);
+								enableDummy();
+//								disableLabel_1(tail.size());
+//								disableLabel_2(tail2.size());
 							}else if(option ==1) {
 								turnChange();
 								messageByPlyer(6);
+								enableDummy();
+//								disableLabel_1(tail.size());
+//								disableLabel_2(tail2.size());
 							}
 						}
 					}else {
 						System.out.println("틀림");
+						enableDummy();
+//						disableLabel_1(tail.size());
+//						disableLabel_2(tail2.size());
 						tail2.set(count2, tail2.get(count2)+0.01);
 						play2[count2].setIcon(new ImageIcon(changeCardImage(temp2[count2])));
 						play2[count2].setBorder(borderEmpty);
 						messageByPlyer(4);
 						turnChange();
+
 					}
 				}
-			}
+			}			
 		}
 	}
 	
@@ -529,14 +584,14 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	public void turnChange() { //내가 1 상대가 0
 		if(playerTurn==1) {
 			playerTurn = 0; 
-			avatar_2.setBorder(border);
-			avatar_1.setBorder(borderEmpty);
-			System.out.println("턴이 상대방으로 감");
-		}else if(playerTurn ==0) {
-			playerTurn =1;
 			avatar_1.setBorder(border);
 			avatar_2.setBorder(borderEmpty);
 			System.out.println("턴이 나에게로 옴");
+		}else if(playerTurn ==0) {
+			playerTurn =1;
+			avatar_2.setBorder(border);
+			avatar_1.setBorder(borderEmpty);
+			System.out.println("턴이 상대방으로 감");
 		}
 	}
 	
@@ -552,15 +607,17 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			if (tail2.get(cc)%0.5!=0) 
 			gameEnd2 +=1;
 		}
-		
+		System.out.println("게임 체크함");
 		if(gameEnd1 == tail.size()) {
 			messageByPlyer(9);
+			System.out.println("player 2 승리");
 			confirmGameEnd.setEnabled(true); //단순 비활성화
 			confirmGameEnd.setVisible(true);
 			gameEndMessage = true;
 
 		}else if(gameEnd2 == tail.size()) {
 			messageByPlyer(8);
+			System.out.println("player 1 승리");
 			confirmGameEnd.setEnabled(true); //단순 비활성화
 			confirmGameEnd.setVisible(true);
 			gameEndMessage = true;
@@ -571,7 +628,45 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		System.out.println("gmeEnd2 = " + gameEnd2);
 		System.out.println("tail2Size = " + tail2.size());
 	}
-
+	
+	public void enableLabel_1(int a) {
+		for(int i=0; i<a; i++) {
+			play1[i].setEnabled(true);
+		}
+	}
+	
+	public void enableLabel_2(int a) {
+		for(int i=0; i<a; i++) {
+			play2[i].setEnabled(true);
+		}
+		
+	}
+	public void disableLabel_1(int a) {
+		for(int i=0; i<a; i++) {
+			play1[i].setEnabled(false);
+		}			
+	}
+	
+	public void disableLabel_2(int a) {
+		for(int i=0; i<a; i++) {
+			play2[i].setEnabled(false);
+		}
+	}
+	public void disableDummy() {
+		for (int i=0; i<24; i++) {
+				dummy[i].setEnabled(false);
+				//dummy[i].setVisible(false);
+			}
+		
+	}
+	
+	public void enableDummy() {
+		for (int i=0; i<24; i++) {
+			dummy[i].setEnabled(true);
+			//dummy[i].setVisible(true);
+		}
+	}
+	
 	public static String convertToMultiline(String orig)
 	{
 	    return "<html>" + orig.replaceAll("\n", "<br>");
