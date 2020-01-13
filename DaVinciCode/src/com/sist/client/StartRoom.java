@@ -120,9 +120,9 @@ public class StartRoom extends JPanel implements ActionListener {
 		showOtherID.setOpaque(true);
 		
 		//방장 아이콘 표시
-		host = Toolkit.getDefaultToolkit().getImage("C:\\host.jpg");
+		host = Toolkit.getDefaultToolkit().getImage("images/host.jpg");
 		hostBox = new JLabel(new ImageIcon(host.getScaledInstance(55,30, Image.SCALE_SMOOTH)));
-		hostBox.setBounds(120, 270, 55, 30);
+		hostBox.setBounds(120, 190, 55, 30);
 		add(hostBox);
 		
 		// Ready button on bottom 
@@ -168,7 +168,7 @@ public class StartRoom extends JPanel implements ActionListener {
 				}
 	}
 	
-	public void messageByPlyer(int a) {												//상황에 따른 메시지 출력용 메소드 (단 player1과 player2가 다르게 보여야 메시지를 구분하여 뿌리지 못한다.현재화면 한개)
+	public void messageByPlyer(int a) {
 		if(a==1) {
 			gameMessage.setText("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.");
 		}else if (a==2) {
