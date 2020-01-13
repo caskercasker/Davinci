@@ -37,7 +37,6 @@ public class StartRoom extends JPanel implements ActionListener {
 	Image host;
 	ImageIcon ava1,ava2;
 	JLabel ava1Box,ava2Box,hostBox;
-	Font f1,f2,f3;
 	int count=0;
 	// 임시방편으로 count<-- 방장(0),상대방(1) 가정
 	// count=1 넣으면 상대방(1)로 플레이가능
