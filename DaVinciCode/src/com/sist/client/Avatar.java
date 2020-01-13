@@ -1,5 +1,6 @@
 package com.sist.client;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
 
 public class Avatar extends JPanel implements ActionListener{
 	ImageIcon b1,b2,b3,b4,sb1,sb2,sb3,sb4;
@@ -21,6 +23,7 @@ public class Avatar extends JPanel implements ActionListener{
 	Image back;
 	JLabel msg1;
 	Font f1;
+	JLabel selMessage;	
 	public int nowSelected;
 
 	public int getNowSelected() {
@@ -48,12 +51,17 @@ public class Avatar extends JPanel implements ActionListener{
 		sb4=new ImageIcon("images/Avatar/_444.jpg");
 		b5=new JButton("결정");
 		f1 = new Font("돋움", Font.BOLD, 20);
-		msg1 = new JLabel("원하는 캐릭터를 고르세요.");
-
+		selMessage = new JLabel("원하는 캐릭터를 고르세요.", SwingConstants.CENTER); 			
+		selMessage.setFont(new Font("Serif", Font.BOLD, 20));	
+		selMessage.setBounds(330, 100, 300, 30);
+		selMessage.setBackground(Color.white);
+		selMessage.setOpaque(true);
+		add(selMessage);
+		/*msg1 = new JLabel("원하는 캐릭터를 고르세요.");
+		
 		msg1.setFont(f1);
 		msg1.setBounds(380, 100, 500, 20);
-		add(msg1);
-
+		add(msg1);*/
 		ButtonGroup g=new ButtonGroup();
 		p1Icon = new JRadioButton(b1);
 		p2Icon = new JRadioButton(b2);

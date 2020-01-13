@@ -20,11 +20,14 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
+		
+		add("LOGIN", login);
+		add("AVARTAR", ava);
 		add("WR", wr );
 		add("GAME", gr);
 		add("SR", sr);
-		add("LOGIN", login);
-		add("AVARTAR", ava);
+		
+		
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
 		setVisible(true); // 윈도우를 보여라.
