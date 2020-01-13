@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 
 
@@ -31,7 +32,7 @@ public class StartRoom extends JPanel implements ActionListener {
 	JTextArea chatHistory; 
 	JTextField chatInput;	
 	JButton btn_ready_1,btn_ready_2;
-	JLabel msg1,msg2,msg3,showMyID,showOtherID;
+	JLabel showMyID,showOtherID,gameMessage;
 	
 	Image host;
 	ImageIcon ava1,ava2;
@@ -51,11 +52,10 @@ public class StartRoom extends JPanel implements ActionListener {
 		chatHistory = new JTextArea();
 		chatInput = new JTextField();
 		btn_ready_1 = new JButton("Start");
-		btn_ready_2 = new JButton("Ready");			
-		f1 = new Font("돋움", Font.BOLD, 15);
-		f2 = new Font("돋움", Font.BOLD, 15);
-		f3 = new Font("돋움", Font.BOLD, 15);
-		showMyID = new JLabel("Monariza1");
+		btn_ready_2 = new JButton("Ready");
+		gameMessage = new JLabel("상대방의 접속을 기다리고 있습니다", SwingConstants.CENTER);
+		showMyID = new JLabel("Monariza1", SwingConstants.CENTER);
+		showOtherID = new JLabel("접속 대기 중", SwingConstants.CENTER);
 		
 		System.out.println("=======================");
 		System.out.println();
@@ -66,35 +66,34 @@ public class StartRoom extends JPanel implements ActionListener {
 		
 		if(count==0)
 		{
-			btn_ready_2.setEnabled(true);
-			// Ready버튼 비활성화
-			msg1 = new JLabel("상대방의 준비를 기다리고 있습니다.",JLabel.CENTER);
-			msg1.setFont(f2);
-			msg1.setBounds(190, 100, 400, 20);
-			add(msg1);
-			showOtherID = new JLabel("접속 대기 중");
-			
+			btn_ready_2.setEnabled(false);
+			// Ready버튼 비활성화			
 			// Show avatar1 image
 			ava1 = new ImageIcon("images/Avatar/_"+buffer+buffer+"jpg");
 			ava1Box = new JLabel(ava1);
-			ava1Box.setBounds(130, 280, 160, 199);
+			ava1Box.setBounds(130, 200, 160, 199);
 			add(ava1Box);
 		}
 		
 		if(count==1)
 		{
-			msg2 = new JLabel("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.",JLabel.CENTER);
-			msg2.setFont(f1);
-			msg2.setBounds(190, 100, 400, 20);
-			add(msg2);
-			showOtherID = new JLabel("Aziranom2");
+			messageByPlyer(1);
+			showOtherID = new JLabel("Aziranom2",SwingConstants.CENTER);
 			
 			// Show avatar2 image			
 			ava2 = new ImageIcon("images/Avatar/_22.jpg");
 			ava2Box = new JLabel(ava2);
-			ava2Box.setBounds(420, 280, 160, 199);
+			ava2Box.setBounds(420, 200, 160, 199);
 			add(ava2Box);
+			if(count==0)
+			{
+				messageByPlyer(2);
+			}
 		}
+		
+		gameMessage.setBounds(10,645,690,80);
+		gameMessage.setBackground(Color.white);
+		gameMessage.setOpaque(true);
 		
 		// Chatting room on right 
 		JScrollPane chatRm = new JScrollPane(chatHistory); 
@@ -103,16 +102,22 @@ public class StartRoom extends JPanel implements ActionListener {
 		chatHistory.setEnabled(false);
 		add(chatRm);
 		add(chatInput);
+		gameMessage.setFont(new Font("Serif", Font.BOLD, 20));
+		add(gameMessage);
 		
 		// 채팅 레디버튼 이벤트 등록 
 		chatInput.addActionListener(this);		
 		btn_ready_2.addActionListener(this);
 		
 		// Show ID 
-		showMyID.setBounds(130, 220, 200, 40);
-		add(showMyID);	
-		showOtherID.setBounds(420, 220, 200, 40);
+		showMyID.setBounds(130, 400, 100, 20);
+		add(showMyID);
+		showMyID.setBackground(Color.lightGray);
+		showMyID.setOpaque(true);
+		showOtherID.setBounds(420, 400, 100, 20);
 		add(showOtherID);
+		showOtherID.setBackground(Color.lightGray);
+		showOtherID.setOpaque(true);
 		
 		//방장 아이콘 표시
 		host = Toolkit.getDefaultToolkit().getImage("C:\\host.jpg");
@@ -121,10 +126,10 @@ public class StartRoom extends JPanel implements ActionListener {
 		add(hostBox);
 		
 		// Ready button on bottom 
-		btn_ready_1.setBounds(130, 520, 160, 40);
+		btn_ready_1.setBounds(130, 450, 160, 40);
 		add(btn_ready_1);
 		
-		btn_ready_2.setBounds(420, 520, 160, 40);
+		btn_ready_2.setBounds(420, 450, 160, 40);
 		add(btn_ready_2);
 	}
 	
@@ -136,27 +141,21 @@ public class StartRoom extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==btn_ready_2) {
-			msg2 = new JLabel("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.");
-			msg2.setFont(f1);
-			msg2.setBounds(190, 100, 500, 20);
-			add(msg2);
-			showOtherID = new JLabel("Aziranom2");
-			
-			
-		}
-		
-				if(count==0) {
+		if(e.getSource()==btn_ready_2) 
+				{
+				if(count==0) 
+					{
 					btn_ready_1.setEnabled(true);
-					msg3 = new JLabel("Start버튼을 누르면 게임이 시작됩니다.",JLabel.CENTER);
-					msg3.setFont(f3);
-					msg3.setBounds(190, 100, 400, 20);
-					add(msg3);
-					if(count==1) {
+					btn_ready_2.setEnabled(false);
+					messageByPlyer(3);
+					if(count==1) 
+						{
 						btn_ready_2.setEnabled(false);
-					}
+						messageByPlyer(4);
+						}
 					// 상대방이 스타트 버튼을 누르면 방장에게 msg3메세지가 출력되고
-					// 방장에게만 스타트버튼이 활성화됨
+					// 상대방의 레디버튼 비활성화 + 방장에게 스타트버튼이 활성화
+					}
 				}
 				else if(e.getSource()==chatInput) {
 					String msg= chatInput.getText();
@@ -167,6 +166,20 @@ public class StartRoom extends JPanel implements ActionListener {
 						chatInput.setText("");
 					}
 				}
+	}
+	
+	public void messageByPlyer(int a) {												//상황에 따른 메시지 출력용 메소드 (단 player1과 player2가 다르게 보여야 메시지를 구분하여 뿌리지 못한다.현재화면 한개)
+		if(a==1) {
+			gameMessage.setText("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.");
+		}else if (a==2) {
+			gameMessage.setText("상대방의 준비를 기다리고 있습니다");	
+		}else if (a==3) {
+			gameMessage.setText("방장이 Start버튼을 누르면 게임이 시작됩니다.");
+		}else if (a==4) {
+			gameMessage.setText("Start버튼을 누르면 게임이 시작됩니다.");
+		}else if (a==5) {
+			gameMessage.setText("방장이 접속을 종료하여 방장이 되었습니다.");
+		}
 	}
 }	
 
