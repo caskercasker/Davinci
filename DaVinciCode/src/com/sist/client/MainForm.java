@@ -11,23 +11,23 @@ import javax.swing.UIManager;
 
 public class MainForm extends JFrame implements ActionListener { // ActionLister 인터페이스
 	Login login = new Login();
-	StartRoom sr = new StartRoom(); // 1/12 이름 변경 : WaitRoom → StartRoom
+	StartRoom sr = new StartRoom(); // 1/12 이름 변경 : WaitRoom → StartRoom 
 	GameRoom gr = new GameRoom();
 	Avatar ava = new Avatar();
-	WaitingRoom wr = new WaitingRoom(); // 1/12 신규 생성 : WaitingRoom
+	WaitingRoom wr = new WaitingRoom(); // 1/12 신규 생성 : WaitingRoom 
 	CardLayout card = new CardLayout();
 
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
-
+		
 		add("LOGIN", login);
 		add("AVARTAR", ava);
 		add("WR", wr );
 		add("GAME", gr);
 		add("SR", sr);
-
-
+		
+		
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
 		setVisible(true); // 윈도우를 보여라.
@@ -67,14 +67,14 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		if (e.getSource() == ava.b5) {
 			card.show(getContentPane(), "WR");
 		}else if(e.getSource() == ava.p1Icon) {
-			setAvatar(1);
+			setAvatar(1);			
 		}else if(e.getSource() == ava.p2Icon){
 			setAvatar(2);
 		}else if(e.getSource() == ava.p3Icon) {
 			setAvatar(3);
 		}else if(e.getSource() == ava.p4Icon) {
 			setAvatar(4);
-		}
+		}	
 		if (e.getSource() == sr.btn_ready_1) {
 			card.show(getContentPane(), "GR");
 		}
@@ -92,5 +92,6 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		sr.ava1Box.setBounds(130, 280, 160, 199);
 		sr.add(sr.ava1Box);
 	}
-
+	
 }
+
