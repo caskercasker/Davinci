@@ -23,6 +23,7 @@ public class Avatar extends JPanel implements ActionListener{
 	Image back;
 	JLabel msg1;
 	Font f1;
+
 	JLabel selMessage;	
 	public int nowSelected;
 
@@ -40,7 +41,7 @@ public class Avatar extends JPanel implements ActionListener{
 		setLayout(null);
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 		Image image;
-	
+
 		b1=new ImageIcon("images/Avatar/_11.jpg");
 		sb1=new ImageIcon("images/Avatar/_111.jpg");
 		b2=new ImageIcon("images/Avatar/_22.jpg");
@@ -58,10 +59,11 @@ public class Avatar extends JPanel implements ActionListener{
 		selMessage.setOpaque(true);
 		add(selMessage);
 		/*msg1 = new JLabel("원하는 캐릭터를 고르세요.");
-		
+
 		msg1.setFont(f1);
 		msg1.setBounds(380, 100, 500, 20);
 		add(msg1);*/
+
 		ButtonGroup g=new ButtonGroup();
 		p1Icon = new JRadioButton(b1);
 		p2Icon = new JRadioButton(b2);
@@ -98,7 +100,7 @@ public class Avatar extends JPanel implements ActionListener{
 		add(b5);
 		b5.setBounds( 450, 550, 100, 50);
 		b5.setOpaque(false);
-		
+
 		//b5.addActionListener(this);
 	}
 
@@ -108,12 +110,12 @@ public class Avatar extends JPanel implements ActionListener{
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
 	}
 
-	@Override 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 			if (e.getSource() == b5) {
 				setNowSelected(1);
-				
+
 			}
 	}
 
