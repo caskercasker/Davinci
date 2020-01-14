@@ -20,13 +20,11 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
-		
-		add("LOGIN", login);
+		add("SR", sr);
+		add("GAME", gr);
 		add("AVARTAR", ava);
 		add("WR", wr );
-		add("GAME", gr);
-		add("SR", sr);
-		
+		add("LOGIN", login);
 		
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
@@ -89,9 +87,8 @@ public class MainForm extends JFrame implements ActionListener { // ActionLister
 		//System.out.println(sr.buffer);
 		sr.ava1 = new ImageIcon("images/Avatar/_"+sr.buffer+sr.buffer+".jpg");
 		sr.ava1Box = new JLabel(sr.ava1);
-		sr.ava1Box.setBounds(130, 280, 160, 199);
+		sr.ava1Box.setBounds(130, 200, 160, 199);
 		sr.add(sr.ava1Box);
 	}
 	
 }
-
