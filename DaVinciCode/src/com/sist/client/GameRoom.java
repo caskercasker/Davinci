@@ -58,10 +58,10 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	ImageIcon b1;
 	Border border = BorderFactory.createLineBorder(Color.RED, 5);  						//선택된 카드를 구분하기 위한 보더 설정값 (두께 5에 빨간색)
 	Border borderEmpty = BorderFactory.createLineBorder(new Color(0,0,0,0),2); 			//현재 들어오지 않은 카드를 설정하기 위한 보더 설정값
-	RotatedIcon ri; 																	// 공개 혹 미공개 된 덱을 구분하기 위한 이미지 돌리는 값.
-	int playerTurn = 0; 																//player 구분 테스트용 ( 0이 아래 나 자신 1이 위 상대방)
-	int messageToPlayers = 0;
 
+
+	int messageToPlayers = 0;
+	int playerTurn;
 	//Player1 용 데이터
 	Image player1;																		//player1 이미지
 	JLabel avatar_1;																	//player1 이미지 파일이 올라갈 레이블
