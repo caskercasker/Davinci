@@ -1,13 +1,24 @@
 package com.sist.client;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Collections;
-import javax.swing.table.*;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 public class WaitingRoom extends JPanel implements ActionListener, MouseListener{
 	JTable table1, table2;
@@ -17,13 +28,13 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 
 	JTextArea chatHistory; // 채팅 내용
 	JTextField chatInput; // 채팅 입력 창
-	
+
 	Image back;
 
 	WaitingRoom() {
-		setLayout(null); 
+		setLayout(null);
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
-		
+
 		// Room list
 		String[] col1 = { "방 이름", "참가인원", "상태" };
 		String[][] row1 = new String[0][3];
@@ -37,11 +48,11 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 		table1.getTableHeader().setForeground(Color.white);
 		table1.getTableHeader().setFont(new Font("돋움", Font.BOLD, 14));
 		js1.getViewport().setBackground(Color.white);
-		// Table cell width 
+		// Table cell width
 		for (int i = 0; i < 3; i++) {
 			column1 = table1.getColumnModel().getColumn(i);
 			TableCellRenderer rend = column1.getCellRenderer();
-			if (i == 0) { 
+			if (i == 0) {
 				column1.setPreferredWidth(440);
 			} else if (i == 1) {
 				column1.setPreferredWidth(120);
@@ -51,7 +62,7 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 			column1.setCellRenderer(rend);
 
 		}
-		
+
 		// User list
 		String[] col2 = { "ID", "캐릭터", "상태" };
 		String[][] row2 = new String[0][4];
@@ -65,11 +76,11 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 		table2.getTableHeader().setForeground(Color.white);
 		table2.getTableHeader().setFont(new Font("돋움", Font.BOLD, 14));
 		js2.getViewport().setBackground(Color.white);
-		// Table cell width 
+		// Table cell width
 		for (int i = 0; i < 3; i++) {
 			column2 = table2.getColumnModel().getColumn(i);
 			TableCellRenderer rend = column2.getCellRenderer();
-			if (i == 0) { 
+			if (i == 0) {
 				column2.setPreferredWidth(440);
 			} else if (i == 1) {
 				column2.setPreferredWidth(120);
@@ -79,7 +90,7 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 			column2.setCellRenderer(rend);
 
 		}
-		
+
 		// Room list & User list
 		setLayout(null);
 		js1.setBounds(10, 10, 680, 400);
@@ -90,52 +101,53 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 		b2 = new JButton("게임 종료");
 		b1.setBounds(170, 650, 150, 40);
 		b2.setBounds(370, 650, 150, 40);
-		
+
 		// Chatting
 		chatHistory = new JTextArea();	//채팅 기록
 		chatInput = new JTextField();	//채팅 인풋
-		
+
 		JScrollPane chatRm = new JScrollPane(chatHistory);
 		chatRm.setBounds(705, 10, 300, 680);
 		chatInput.setBounds(705, 695, 300, 30);
 		chatHistory.setEnabled(false);
 		chatInput.addActionListener(this);
-		
+
 		add(b1);
 		add(b2);
 		add(js1);
 		add(js2);
 		add(chatRm);
 		add(chatInput);
-		
+
 		b1.addActionListener(this);
 		b2.addActionListener(this);
 
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
 	}
-	
-	
+
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Chat
 		String msg= chatInput.getText();
 		if(e.getSource()==chatInput) {
-			chatHistory.append(msg+"\n");
-			if(msg ==null || msg.length()==0) {
-					JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
-			}else 
-			chatInput.setText("");
+//			//chatHistory.append(msg+"\n");
+//			if(msg ==null || msg.length()==0) {
+//					JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
+//			}else
+//			chatInput.setText("");
+//		}
 		}
-		// 방만들기 버튼 클릭 시 
+		// 방만들기 버튼 클릭 시
 		if(e.getSource()==b1) {
 
-			
-		}		
-		// 게임종료 버튼 클릭 시 종료시킴 
+
+		}
+		// 게임종료 버튼 클릭 시 종료시킴
 		if(e.getSource()==b2) {
 			System.exit(0);
 		}
@@ -145,30 +157,30 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
