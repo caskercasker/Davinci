@@ -1,11 +1,7 @@
 package com.sist.client;
-import java.util.EventObject;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,29 +21,29 @@ import javax.swing.SwingConstants;
 
 //전체 사이즈 : 1024 X 768
 public class StartRoom extends JPanel implements ActionListener {
-	
+
 	private static final Color Color = null;
 	private static final String WHITE = null;
 	Image back;
-	JTextArea chatHistory; 
-	JTextField chatInput;	
+	JTextArea chatHistory;
+	JTextField chatInput;
 	JButton btn_ready_1,btn_ready_2;
 	JLabel showMyID,showOtherID,gameMessage;
-	
+
 	Image host;
 	ImageIcon ava1,ava2;
 	JLabel ava1Box,ava2Box,hostBox;
 	int count=0;
 	// 임시방편으로 count<-- 방장(0),상대방(1) 가정
 	// count=1 넣으면 상대방(1)로 플레이가능
-	
-	public static int buffer;
-	
 
+	public static int buffer;
+
+	boolean[] sw = new boolean[2];
 	StartRoom(){
-		setLayout(null); 
+		setLayout(null);
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
-		
+
 		chatHistory = new JTextArea();
 		chatInput = new JTextField();
 		btn_ready_1 = new JButton("Start");
@@ -55,31 +51,31 @@ public class StartRoom extends JPanel implements ActionListener {
 		gameMessage = new JLabel("상대방의 접속을 기다리고 있습니다", SwingConstants.CENTER);
 		showMyID = new JLabel("Monariza1", SwingConstants.CENTER);
 		showOtherID = new JLabel("접속 대기 중", SwingConstants.CENTER);
-		
+
 		System.out.println("=======================");
 		System.out.println();
 		// Message on top
-		
+
 		btn_ready_1.setEnabled(false);
 		// 임시방편으로 게임룸에 가려면  이 코드에 주석 넣고 int count==0
-		
+
 		if(count==0)
 		{
 			btn_ready_2.setEnabled(false);
-			// Ready버튼 비활성화			
+			// Ready버튼 비활성화
 			// Show avatar1 image
 			ava1 = new ImageIcon("images/Avatar/_"+buffer+buffer+"jpg");
 			ava1Box = new JLabel(ava1);
 			ava1Box.setBounds(130, 200, 160, 199);
 			add(ava1Box);
 		}
-		
+
 		if(count==1)
 		{
 			messageByPlyer(1);
 			showOtherID = new JLabel("Aziranom2",SwingConstants.CENTER);
-			
-			// Show avatar2 image			
+
+			// Show avatar2 image
 			ava2 = new ImageIcon("images/Avatar/_22.jpg");
 			ava2Box = new JLabel(ava2);
 			ava2Box.setBounds(420, 200, 160, 199);
@@ -89,26 +85,26 @@ public class StartRoom extends JPanel implements ActionListener {
 				messageByPlyer(2);
 			}
 		}
-		
+
 		gameMessage.setBounds(10,645,690,80);
 		gameMessage.setBackground(Color.white);
 		gameMessage.setOpaque(true);
-		
-		// Chatting room on right 
-		JScrollPane chatRm = new JScrollPane(chatHistory); 
-		chatRm.setBounds(705, 10, 300, 680); 
-		chatInput.setBounds(705, 695, 300, 30); 		
+
+		// Chatting room on right
+		JScrollPane chatRm = new JScrollPane(chatHistory);
+		chatRm.setBounds(705, 10, 300, 680);
+		chatInput.setBounds(705, 695, 300, 30);
 		chatHistory.setEnabled(false);
 		add(chatRm);
 		add(chatInput);
 		gameMessage.setFont(new Font("Serif", Font.BOLD, 20));
 		add(gameMessage);
-		
-		// 채팅 레디버튼 이벤트 등록 
-		chatInput.addActionListener(this);		
+
+		// 채팅 레디버튼 이벤트 등록
+		chatInput.addActionListener(this);
 		btn_ready_2.addActionListener(this);
-		
-		// Show ID 
+
+		// Show ID
 		showMyID.setBounds(130, 400, 100, 20);
 		add(showMyID);
 		showMyID.setBackground(Color.lightGray);
@@ -117,22 +113,22 @@ public class StartRoom extends JPanel implements ActionListener {
 		add(showOtherID);
 		showOtherID.setBackground(Color.lightGray);
 		showOtherID.setOpaque(true);
-		
+
 		//방장 아이콘 표시
 		host = Toolkit.getDefaultToolkit().getImage("images/host.jpg");
 		hostBox = new JLabel(new ImageIcon(host.getScaledInstance(55,30, Image.SCALE_SMOOTH)));
 		hostBox.setBounds(120, 190, 55, 30);
 		add(hostBox);
-		
-		// Ready button on bottom 
+
+		// Ready button on bottom
 		btn_ready_1.setBounds(130, 450, 160, 40);
 		add(btn_ready_1);
-		
+
 		btn_ready_2.setBounds(420, 450, 160, 40);
 		add(btn_ready_2);
 	}
-	
-	
+
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
@@ -140,14 +136,14 @@ public class StartRoom extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==btn_ready_2) 
+		if(e.getSource()==btn_ready_2)
 				{
-				if(count==0) 
+				if(count==0)
 					{
 					btn_ready_1.setEnabled(true);
 					btn_ready_2.setEnabled(false);
 					messageByPlyer(3);
-					if(count==1) 
+					if(count==1)
 						{
 						btn_ready_2.setEnabled(false);
 						messageByPlyer(4);
@@ -166,12 +162,12 @@ public class StartRoom extends JPanel implements ActionListener {
 					}
 				}
 	}
-	
+
 	public void messageByPlyer(int a) {
 		if(a==1) {
 			gameMessage.setText("게임할 준비가 되었다면 Ready 버튼을 눌러주세요.");
 		}else if (a==2) {
-			gameMessage.setText("상대방의 준비를 기다리고 있습니다");	
+			gameMessage.setText("상대방의 준비를 기다리고 있습니다");
 		}else if (a==3) {
 			gameMessage.setText("방장이 Start버튼을 누르면 게임이 시작됩니다.");
 		}else if (a==4) {
@@ -180,7 +176,7 @@ public class StartRoom extends JPanel implements ActionListener {
 			gameMessage.setText("방장이 접속을 종료하여 방장이 되었습니다.");
 		}
 	}
-}	
+}
 
 //private int clientOne, clientTwo;
 //private String userOne, userTwo;
@@ -202,7 +198,7 @@ public class StartRoom extends JPanel implements ActionListener {
 //		if (count == 0) {
 //			clientOne = 1;
 //			userOne = data.getName();
-//			
+//
 //		} else if (count == 1) {
 //			clientTwo = 2;
 //			userTwo = data.getName();
@@ -210,7 +206,7 @@ public class StartRoom extends JPanel implements ActionListener {
 //		cp.addClient(st);
 //		cp.broadCasting(sndData);
 //		break;
-//		
+//
 //	case ServerData.SENDDATA:
 //		if (data.getDivision() == 11) {
 //			stateMessage(userOne + "에게 데이터를 보냅니다.\n");

@@ -144,13 +144,13 @@ public class WaitingRoom extends JPanel implements ActionListener, MouseListener
 		}
 		// 방만들기 버튼 클릭 시
 		if(e.getSource()==b1) {
-			MakeRoom mr = new MakeRoom();
-			
-		}		
-		// 게임종료 버튼 클릭 시 종료시킴 
+
+
+		}
+		// 게임종료 버튼 클릭 시 종료시킴
 
 		if(e.getSource()==b2) {
-			System.exit(0);
+
 		}
 
 	}
