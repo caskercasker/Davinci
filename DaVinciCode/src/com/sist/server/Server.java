@@ -16,7 +16,8 @@ public class Server implements Runnable{
 	private final int PORT = 8888;
 	//접속자 저장 공간
 
-	private Vector<Client> waitVC = new Vector<Client>();
+	private Vector<Client> waitVc = new Vector<Client>();
+	private Vector<Room>	roomVc = new Vector<Room>();
 	public Server() {
 		try {
 			ss = new ServerSocket(PORT); //bind,listen
@@ -45,7 +46,7 @@ public class Server implements Runnable{
 	//통신을 담당하는 부분 (각 클라이언트마다 따로 작업을 한다)
 	class Client extends Thread{
 		String id,name,img,pos;
-
+		//int img;
 		//pos => 방위치
 		//통신
 		Socket s; //통신장비
@@ -85,16 +86,55 @@ public class Server implements Runnable{
 
 						messageAll(Function.LOGIN+"|"+id+"|"+name+"|"+pos);
 						//img+"|"+
-						waitVC.add(this);
+						waitVc.add(this);
 						messageTo(Function.MYLOG+"|"+id);
-						for(Client user:waitVC) {
+						for(Client user:waitVc) {
 							messageTo(Function.LOGIN+"|"+user.id+"|"+user.name+"|"+user.pos);
+						}
+
+						//개설된 방 정보 전송
+						for(Room room :roomVc) {
+							messageTo(Function.MAKEROOM+"|"+room.roomName+"|"+room.roomState+"|"+room.current+"/"+room.maxcount);
 						}
 						break;
 					}
 					case Function.WAITCHAT:{
 
 						messageAll(Function.WAITCHAT+"|["+name+"]"+st.nextToken());
+						break;
+					}
+					case Function.EXIT:{
+						String mid = id;
+						for(int i=0; i<waitVc.size();i++) {
+							Client user=waitVc.get(i);
+							if(mid.equals(user.id)) {
+								//윈도우 종료
+								messageTo(Function.MYEXIT+"|");
+								//vector 제거
+								waitVc.remove(i);
+								//닫기  (통신종료)
+								in.close();
+								out.close();
+								break;
+							}
+						}
+						//전체 메세지 => 나가는 유저를 테이블에서 삭제
+						messageAll(Function.EXIT+"|"+mid);
+						break;
+					}
+					case Function.MAKEROOM:{
+						/*
+						 * Function.makeRoom
+						 *
+						 */
+						Room room = new Room(st.nextToken(), st.nextToken(), st.nextToken()	, Integer.parseInt(st.nextToken()));
+						room.userVc.add(this);
+
+
+						roomVc.add(room);
+						pos = room.roomName;
+
+						messageAll(Function.MAKEROOM+"|"+room.roomName+"|"+room.roomState+"|"+room.current+"/"+room.maxcount);
 						break;
 					}
 
@@ -115,7 +155,7 @@ public class Server implements Runnable{
 		// 전체적으로 전송
 		public synchronized void messageAll(String msg) {
 			try {
-				for(Client user:waitVC) {
+				for(Client user:waitVc) {
 					user.messageTo(msg);
 				}
 			}catch(Exception ex) {}
