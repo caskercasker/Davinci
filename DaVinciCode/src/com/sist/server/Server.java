@@ -45,7 +45,7 @@ public class Server implements Runnable{
 	}
 	//통신을 담당하는 부분 (각 클라이언트마다 따로 작업을 한다)
 	class Client extends Thread{
-		String id,name,img,pos;
+		String id,img_name,img_source,pos;
 		//int img;
 		//pos => 방위치
 		//통신
@@ -79,17 +79,17 @@ public class Server implements Runnable{
 					switch(protocol) {
 					case Function.LOGIN:{
 						id=st.nextToken();
-						name = st.nextToken();
-						img = st.nextToken();
+						img_name = st.nextToken();
+						img_source = st.nextToken();
 						pos = "대기실";
 
 
-						messageAll(Function.LOGIN+"|"+id+"|"+name+"|"+pos);
+						messageAll(Function.LOGIN+"|"+id+"|"+img_name+"|"+pos);
 						//img+"|"+
 						waitVc.add(this);
 						messageTo(Function.MYLOG+"|"+id);
 						for(Client user:waitVc) {
-							messageTo(Function.LOGIN+"|"+user.id+"|"+user.name+"|"+user.pos);
+							messageTo(Function.LOGIN+"|"+user.id+"|"+user.img_name+"|"+user.pos);
 						}
 
 						//개설된 방 정보 전송
@@ -100,7 +100,7 @@ public class Server implements Runnable{
 					}
 					case Function.WAITCHAT:{
 
-						messageAll(Function.WAITCHAT+"|["+name+"]"+st.nextToken());
+						messageAll(Function.WAITCHAT+"|["+img_name+"]"+st.nextToken());
 						break;
 					}
 					case Function.EXIT:{
@@ -135,6 +135,51 @@ public class Server implements Runnable{
 						pos = room.roomName;
 
 						messageAll(Function.MAKEROOM+"|"+room.roomName+"|"+room.roomState+"|"+room.current+"/"+room.maxcount);
+						//방에 들어가게 만든다.
+						messageTo(Function.ROOMIN+"|"+room.roomName+"|"+id+"|"+img_name+"|"+img_source); //이미지 파일 명 떄문에 성별과 아바타 번호를 받는다.
+
+						break;
+					}
+					case Function.ROOMIN:{
+						//Function.ROOMIN+"|"+rn
+						String rn = st.nextToken();
+						/*
+						 * 	1. 방이름을 받는다.
+						 * 	2. 방을 찾는다 (roomVc)
+						 *  3. pos.current 를 변경
+						 *  ===================
+						 *  = 방에 있는 사람 처리 => ROOMADD
+						 *  	1. 방에 입장하는 사람의 정보를 정보 전송  (id,avata..)
+						 *    	2. 입장메시지 전송
+						 *  = 방에 들어가는 사람 처리 =>
+						 *  	1. 방에 들어가라 => ROOMIN
+						 *  	2. 방에 있는 사람들에게 정보를 보내준다.
+						 *  = 대기실 변경
+						 *  	인원수가 변경 => 메시지 전송
+						 *
+						 */
+						for(Room room:roomVc) {
+							if(rn.equals(room.roomName)) { //방찾기
+								pos=room.roomName;
+								room.current++;
+
+								for(Client user:room.userVc) {
+									user.messageTo(Function.ROOMADD+"|"
+											+id+"|"+img_name+"|"+img_source);
+									user.messageTo(Function.ROOMCHAT+"|[알림 ☞]"+id+"님이 입장하셨습니다.");
+								}
+								//본인처리
+								room.userVc.add(this);
+								messageTo(Function.ROOMIN+"|"+room.roomName+"|"+id+"|"+img_name+"|"+img_source);
+
+								for(Client user:room.userVc) {
+									if(!id.equals(user.id)) {
+										messageTo(Function.ROOMADD+"|"
+												+user.id+"|"+user.img_name+"|"+user.img_source);
+									}
+								}
+							}
+						}
 						break;
 					}
 

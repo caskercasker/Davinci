@@ -1,8 +1,12 @@
 package com.sist.client;
 
 import java.awt.CardLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -18,7 +22,7 @@ import javax.swing.UIManager;
 import com.sist.common.Function;
 import com.sist.dao.MemberDAO;
 
-public class MainForm extends JFrame implements ActionListener, Runnable { // ActionLister 인터페이스
+public class MainForm extends JFrame implements ActionListener, Runnable, MouseListener { // ActionLister 인터페이스
 	Login login = new Login();
 	StartRoom sr = new StartRoom(); // 1/12 이름 변경 : WaitRoom → StartRoom
 	GameRoom gr = new GameRoom();
@@ -35,13 +39,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable { // Ac
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
-
 		add("LOGIN", login);
+
+		add("SR", sr);
 		add("AVARTAR", ava);
 		add("WR", wr );
 		add("GAME", gr);
 
-		add("SR", sr);
+
 
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
@@ -64,6 +69,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable { // Ac
 
 		mr.b1.addActionListener(this);	// 실제방만들기
 		mr.b2.addActionListener(this);  // 방만들기 취소
+
+		wr.table1.addMouseListener(this);
 	}
 
 	public static void main(String[] args) {
@@ -282,6 +289,92 @@ public class MainForm extends JFrame implements ActionListener, Runnable { // Ac
 						wr.model1.addRow(data);
 						break;
 					}
+					case Function.ROOMIN:{
+						/*
+						 * Function.ROOMIN+"|"+room.roomName+"|"+id+"|"+img_name+"|"+img_source
+						 *
+						 */
+						 myRoom = st.nextToken();
+						 String id = st.nextToken();
+						 String img_name = st.nextToken();
+						 String img_source = st.nextToken();
+						 Image img ;
+						 String temp ="";
+//						 if(sex.equals("남자")) {
+//							 temp ="m"+avatar; //m1.png, m2.png ...
+//						 }else {
+//							 temp = "w"+avatar; //w1.png, w2.png ...
+//						 }
+						 card.show(getContentPane(), "SR"); //스타팅룸으로 들어감
+						if(sr.sw[0]==false) {
+								sr.sw[0] = true;
+								sr.ava1Box.removeAll();
+								System.out.println(img_source);
+								img = Toolkit.getDefaultToolkit().getImage(""+img_source);
+								sr.ava1.setImage(img);
+								sr.ava1Box = new JLabel(sr.ava1);
+								sr.showMyID.setText(id);
+
+						}else {
+								sr.sw[1] = true;
+								sr.ava2Box.removeAll();
+								System.out.println(img_source);
+								img = Toolkit.getDefaultToolkit().getImage(""+img_source);
+								sr.ava2.setImage(img);
+								sr.ava2Box = new JLabel(sr.ava2);
+								sr.showOtherID.setText(id);
+						}
+
+
+//						 for(int i=0; i<6; i++) { //비어있다면 false 들어가고 True로 바꾸는 boolean 형 배열
+//							 if(gr.sw[i]==false) {
+//								 gr.sw[i] = true;
+//								 gr.pans[i].removeAll(); //label 위에 labe을 올릴수 없기 때문에 이미 올라가있는 label 을 지움
+//								 gr.pans[i].setLayout(new BorderLayout());
+//								 gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon("c:\\image\\"+temp+".png"), 150, 120))));
+//								 gr.pans[i].validate(); //재배치 remove 와 쌍으로 작동한다.
+//								 gr.ids[i].setText(id);
+//								 break;
+//							 }
+
+						break;
+					}
+					case Function.ROOMADD:{
+						 String id = st.nextToken();
+						 String img_name = st.nextToken();
+						 String img_source = st.nextToken();
+
+//						 String temp ="";
+//						 if(sex.equals("남자")) {
+//							 temp ="m"+avatar; //m1.png, m2.png ...
+//						 }else {
+//							 temp = "w"+avatar; //w1.png, w2.png ...
+//						 }
+
+						 if(sr.sw[0]==false) {
+								sr.sw[0] = true;
+								sr.ava1Box.removeAll();
+								System.out.println(img_source);
+								sr.ava1 = new ImageIcon(img_source);
+								sr.ava1Box = new JLabel(sr.ava1);
+								sr.showMyID.setText(id);
+
+						}else {
+							sr.sw[1] = true;
+							sr.ava2Box.removeAll();
+								System.out.println(img_source);
+								sr.ava2 = new ImageIcon(img_source);
+								sr.ava2Box = new JLabel(sr.ava2);
+								sr.showMyID.setText(id);
+							}
+
+						break;
+					}
+					case Function.ROOMCHAT:{
+						sr.chatHistory.append(st.nextToken()+"\n");
+
+						break;
+					}
 				}
 			}
 		}catch(Exception ex) {}
@@ -295,6 +388,58 @@ public class MainForm extends JFrame implements ActionListener, Runnable { // Ac
 		sr.ava1Box = new JLabel(sr.ava1);
 		sr.ava1Box.setBounds(130, 200, 160, 199);
 		sr.add(sr.ava1Box);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource() == wr.table1) {
+			if(e.getClickCount()==2) {//더블클릭
+				//방이름
+				int row = wr.table1.getSelectedRow(); //값 비교를 위해 해당 row의 값들을 하나한 가져와서 비교함.
+				String rn=wr.model1.getValueAt(row, 0).toString();
+				String inwon=wr.model1.getValueAt(row,2).toString();
+				//String state=wr.model1.getValueAt(row,1).toString();
+				StringTokenizer st = new StringTokenizer(inwon,"/");
+
+				//1/5
+				int no1 = Integer.parseInt(st.nextToken()); //1
+				int no2 = Integer.parseInt(st.nextToken()); //5
+				if(no1==no2) {
+					//방에 들어갈 수 없다.
+					JOptionPane.showMessageDialog(this, "이미 방 인원이 찼습니다\n 다른방을 선택하세요");
+				}else {
+					try {
+						out.write((Function.ROOMIN+"|"+rn+"\n").getBytes());
+					}catch(Exception ex) {}
+				}
+
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 
