@@ -33,7 +33,7 @@ public class StartRoom extends JPanel implements ActionListener {
 	Image host;
 	ImageIcon ava1,ava2;
 	JLabel ava1Box,ava2Box,hostBox;
-	int count=0;
+	int count=1;
 	// 임시방편으로 count<-- 방장(0),상대방(1) 가정
 	// count=1 넣으면 상대방(1)로 플레이가능
 
@@ -59,8 +59,7 @@ public class StartRoom extends JPanel implements ActionListener {
 		btn_ready_1.setEnabled(false);
 		// 임시방편으로 게임룸에 가려면  이 코드에 주석 넣고 int count==0
 
-		if(count==0)
-		{
+
 			btn_ready_2.setEnabled(false);
 			// Ready버튼 비활성화
 			// Show avatar1 image
@@ -68,10 +67,8 @@ public class StartRoom extends JPanel implements ActionListener {
 			ava1Box = new JLabel(ava1);
 			ava1Box.setBounds(130, 200, 160, 199);
 			add(ava1Box);
-		}
 
-		if(count==1)
-		{
+
 			messageByPlyer(1);
 			showOtherID = new JLabel("Aziranom2",SwingConstants.CENTER);
 
@@ -80,11 +77,7 @@ public class StartRoom extends JPanel implements ActionListener {
 			ava2Box = new JLabel(ava2);
 			ava2Box.setBounds(420, 200, 160, 199);
 			add(ava2Box);
-			if(count==0)
-			{
-				messageByPlyer(2);
-			}
-		}
+
 
 		gameMessage.setBounds(10,645,690,80);
 		gameMessage.setBackground(Color.white);

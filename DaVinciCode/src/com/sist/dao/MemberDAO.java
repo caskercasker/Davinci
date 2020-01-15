@@ -62,13 +62,13 @@ public class MemberDAO {
 				String mid = rs.getString(1);
 				String mpwd = rs.getString(2);
 				String name = rs.getString(3);
-				String img = rs.getString(4);
-
+				String img_source = rs.getString(4);
+				//String img_source = rs.getString(5);
 				rs.close();
 
 				if(mpwd.equals(pwd)) {
 					//로그인
-					result=mid+"|"+name+"|"+img;
+					result=mid+"|"+name+"|"+img_source;
 				}else {
 					//비밀번호가 틀리다
 					result ="NOPWD";
