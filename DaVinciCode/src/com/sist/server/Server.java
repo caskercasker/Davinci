@@ -100,7 +100,7 @@ public class Server implements Runnable{
 					}
 					case Function.WAITCHAT:{
 
-						messageAll(Function.WAITCHAT+"|["+img_name+"]"+st.nextToken());
+						messageAll(Function.WAITCHAT+"|["+id+"] "+st.nextToken());
 						break;
 					}
 					case Function.EXIT:{
@@ -166,7 +166,7 @@ public class Server implements Runnable{
 								for(Client user:room.userVc) {
 									user.messageTo(Function.ROOMADD+"|"
 											+id+"|"+img_name+"|"+img_source);
-									user.messageTo(Function.ROOMCHAT+"|[알림 ☞]"+id+"님이 입장하셨습니다.");
+									user.messageTo(Function.ROOMCHAT+"|[알림 ☞] "+id+"님이 입장하셨습니다.");
 								}
 								//본인처리
 								room.userVc.add(this);
