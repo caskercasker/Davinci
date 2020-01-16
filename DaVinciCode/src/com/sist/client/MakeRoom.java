@@ -44,6 +44,7 @@ public class MakeRoom extends JDialog implements ActionListener{
 		box.addItem(2+"명");
 
 
+
 		//배치
 		setLayout(null);
 		la1.setBounds(10, 15, 50, 30);
