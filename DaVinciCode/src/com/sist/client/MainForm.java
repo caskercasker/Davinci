@@ -39,12 +39,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
+		add("GAME", gr);
 		add("LOGIN", login);
-
 		add("SR", sr);
 		add("AVARTAR", ava);
 		add("WR", wr );
-		add("GAME", gr);
+		
 
 
 
@@ -261,7 +261,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					}
 					case Function.WAITCHAT:{
 						wr.chatHistory.append(st.nextToken()+"\n");
-
+						// 스크롤이 최하단으로 자동으로 내려가게 설정
+						int sc = wr.chatHistory.getText().length();
+						wr.chatHistory.setCaretPosition(sc);
 						break;
 					}
 					case Function.EXIT: { //남아 있는 사람
@@ -372,7 +374,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					}
 					case Function.ROOMCHAT:{
 						sr.chatHistory.append(st.nextToken()+"\n");
-
+						// 스크롤이 최하단으로 자동으로 내려가게 설정
+						int sc = gr.chatHistory.getText().length();
+						gr.chatHistory.setCaretPosition(sc);
 						break;
 					}
 				}
