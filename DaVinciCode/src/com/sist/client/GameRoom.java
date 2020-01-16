@@ -1,5 +1,6 @@
 package com.sist.client;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -43,10 +44,12 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	int space = 55;				//고정된 간격값
 	JOptionPane pane;
 	JDialog dialog;
-
+	JTextField[] ids=new JTextField[2];
 	boolean gameEndMessage = false;  //true일 경우 게임이 끝났음을 체크
 	boolean dummyClickTurn= false;	//본격적인 게임 시작시 dummy 클릭 비활성화를 위한 flag
 	boolean gameStart = false;		//게임 시작임을 알리는 flag
+	
+	int[] gameReadyCheck = {0,0}; //
 
 	Object[] numbers = {"0", "1", "2", "3","4","5","6","7","8","9","10","11"};		//숫자를 고르기 위해 JOptionPane 에 출력될 숫자
 	Object[] goOrStop = {"Yes","No"};												//숫자를 계속 맞출것인지 넘길것인지를 표시하는 옵션
@@ -83,6 +86,11 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	int count2 = 0; 																	//현재 들어온 값 저장.Player2
 	int gameEnd2 = 1000;		//게임 승리조건 초기화 (Player2가 패배할 경우)
 
+	
+	JPanel[] pans=new JPanel[2];
+	boolean[] sw=new boolean[6];
+	
+	
 	GameRoom(){
 		setLayout(null); 																//기본 레이아웃 무시
 
@@ -108,6 +116,33 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		player2 = Toolkit.getDefaultToolkit().getImage("images/Avatar/_33.jpg");
 		avatar_1 = new JLabel(new ImageIcon(player1.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
 		avatar_2 = new JLabel(new ImageIcon(player2.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
+
+		for(int i=0;i<2;i++)
+		   {
+			   pans[i]=new JPanel();
+			   pans[i].setBackground(Color.black);
+			   ids[i]=new JTextField();
+			   ids[i].setEditable(false);
+		   }
+		   setLayout(null);
+	
+		   pans[0].setBounds(50, 470, 90, 120);
+		   pans[0].setLayout(new BorderLayout());
+		   pans[0].add("Center",new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("images/blank.png"), 160, 199))));
+		   ids[0].setBounds(50, 595, 90, 20);
+
+		   pans[1].setBounds(50, 50, 90, 120);
+		   pans[1].setLayout(new BorderLayout());
+		   pans[1].add("Center", new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("images/blank.png"), 160, 199))));
+		   ids[1].setBounds(50, 175, 90, 20);
+
+		   for(int i=0;i<2;i++)
+		   {
+			   add(pans[i]);
+			   add(ids[i]);
+		   }
+
+
 
 		getRand(su.length); 																			//난수 static su[]배열에 삽입.
 
@@ -204,10 +239,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		gameMessage.setBackground(Color.white);
 		gameMessage.setOpaque(true);
 
-		//player1,2 의 아바타 위치값 설정
-		avatar_1.setBounds(50, 470, 90, 120);
-		avatar_2.setBounds(50, 50, 90, 120);
-
 		add(chatRm);
 		add(chatInput);
 		add(gameMessage);
@@ -216,6 +247,9 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		add(confirmGameEnd);
 
 		//선턴을  랜덤으로 정함.
+		
+		
+		
 		int a = (int)(Math.random()*2);
 		System.out.println(a);
 		if(a==0) {
@@ -232,6 +266,12 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		}
 
 	}
+	public Image getImageSizeChange(ImageIcon icon,int width,int height)
+	   {
+	   	Image img=icon.getImage();
+	   	Image change=img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+	   	return change;
+	   }
 
 	@Override
 	protected void paintComponent(Graphics g) { //스킨 입힐 때 , 백그라운드에 사용

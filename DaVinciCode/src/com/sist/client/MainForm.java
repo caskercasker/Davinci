@@ -37,6 +37,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 	Image img,img2;
 	String myRoom;
+	int gameReady;
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
@@ -72,8 +73,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		wr.table1.addMouseListener(this);
 
 		sr.b1.addActionListener(this); //준비
-		sr.b2.addActionListener(this); //시작
-		sr.b3.addActionListener(this); //나가기
+		sr.b2.addActionListener(this); //시 
+		sr.b3.addActionListener(this); //
+		sr.b4.addActionListener(this); //
 	}
 
 	public static void main(String[] args) {
@@ -97,7 +99,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				JOptionPane.showMessageDialog(this, "ID를 입력하세요");
 				login.tf.requestFocus();
 				return;
-
 			}
 			String pwd = String.valueOf(login.pf.getPassword());
 			if(pwd.length()<1) {
@@ -105,8 +106,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				login.pf.requestFocus();
 				return;
 			}
+			
 			MemberDAO dao = new MemberDAO();
 			String result = dao.isLogin(id, pwd);
+			
 			if(result.equals("NOID")) {
 				JOptionPane.showMessageDialog(this, "ID가 존재하지 않습니다.");
 				login.tf.setText("");
@@ -138,18 +141,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			wr.chatInput.setText("");
 		}
 
+		//wr 관련 버
 
-		if (e.getSource() == ava.b5) {
-			card.show(getContentPane(), "WR");
-		}
-		if (e.getSource() == sr.b1) {
-			card.show(getContentPane(), "GR");
-		}
-		if (e.getSource() == gr.confirmGameEnd) {
-			card.show(getContentPane(),"GR");
-		}
-
-		if (e.getSource() == wr.b1) {
+		if (e.getSource() == wr.b1) {		//방만들기 버튼 입력시 모든 입력 초기
 			mr.tf.setText("");
 			mr.rb1.setSelected(true);
 			mr.box.setSelectedIndex(0);
@@ -170,7 +164,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				 */
 
 			}catch(Exception ex) {}
-		}else if(e.getSource() == mr.b1) {
+		}
+		
+		// 방만들기 설정 이후에 버튼 
+		else if(e.getSource() == mr.b1) {
 			//1. 방이름
 			String rn = mr.tf.getText();
 			if(rn.length() <1) {
@@ -178,7 +175,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				mr.tf.requestFocus();
 				return;
 			}
-			System.out.println(wr.model1.getRowCount());
 			for (int i=0; i<wr.model1.getRowCount(); i++) {
 				String roomName = wr.model1.getValueAt(i, 0).toString();
 				if(rn.equals(roomName)) {
@@ -188,10 +184,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					return;
 				}
 			}
-
 			//공개 비공개
-			String rs =""; //상태
-			String rp =""; //비밀번호
+			String rs =""; //상태 
+			String rp =""; //비밀번호  
 			if(mr.rb1.isSelected()) {
 				rs="공개";
 				rp=" ";
@@ -211,18 +206,49 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		}else if(e.getSource() == mr.b2) {
 			mr.setVisible(false);
 		}
+		
+		if( e.getSource() == sr.b1) {
+			sr.b2.setEnabled(true);
+			//둘다 레디라면 스타트 버튼 활성화
+			//gameReadyCheck[0]=1;
+			gameReady=1;
+			
+			try {
+				out.write((Function.MYGAMEREADY+"|"+myRoom+"|"+gameReady+"\n").getBytes());
+			}catch(Exception ex) {}
+			
+		}
+
+		
+		
 		else if(e.getSource()==sr.b3) // 겜방 나가기.
 		{
+			System.out.println("룸나가기 활성");
 			try
 			{
 				out.write((Function.ROOMOUT+"|"+myRoom+"\n").getBytes());
 			}catch(Exception ex) {}
+		}else if (e.getSource() == sr.b2) {
+			
+			try {
+				out.write((Function.GAMESTART+"|"+myRoom+"\n").getBytes());
+			}catch(Exception ex) {}
+		}
+		
+		
+		//게임 관련 버
+		if (e.getSource() == gr.confirmGameEnd) {
+			card.show(getContentPane(),"GR");
 		}
 
 	}
+	
+	
+	
+	
 	public void connection(String userData) {
 		try {
-			s = new Socket("localhost",8888); //전화 걸기
+			s = new Socket("192.168.0.4",8888); //전화 걸기
 			//송신/수신
 			out=s.getOutputStream();
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -259,7 +285,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					case Function.MYLOG:{
 						String id = st.nextToken();
 						setTitle(id);
-						card.show(getContentPane(), "AVATAR");
+						card.show(getContentPane(), "WR");
 						break;
 					}
 					case Function.WAITCHAT:{
@@ -358,7 +384,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						 break;
 					}
 					case Function.ROOMCHAT:{
-
+						sr.ta.append(st.nextToken()+"\n");
 						gr.chatHistory.append(st.nextToken()+"\n");
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
 						int sc = gr.chatHistory.getText().length();
@@ -462,6 +488,56 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						JOptionPane.showMessageDialog(this, rn+"방에서 강퇴되었습니다");
 						out.write((Function.ROOMOUT+"|"+rn+"\n").getBytes());
 						break;
+					}
+					
+					case Function.MYGAMEREADY:{
+						
+						for(int i=0; i<2; i++) {
+							if(gr.gameReadyCheck[i]==0) {
+								gr.gameReadyCheck[i]=1;
+								break;		
+							}
+						}
+						
+						
+						break;
+					}
+					case Function.GAMEREADY:{
+						String rn = st.nextToken();
+						int readyNumber =0;
+						for(int i=0; i<2; i++) {
+							if(gr.gameReadyCheck[i]==1) {
+								readyNumber ++;		
+							}
+						}
+						out.write((Function.GAMEREADYCHECK+"|"+rn+"|"+readyNumber+"|"+"\n").getBytes());
+					}
+						
+					
+					
+					case Function.GAMESTART:
+					{
+						 myRoom = st.nextToken();
+						 String id = st.nextToken();
+						 String img_name = st.nextToken();
+						 String img_source = st.nextToken();
+						 
+						 for(int i=0;i<2;i++){
+								{
+									if(gr.sw[i]==false)
+									{
+										gr.sw[i]=true;
+										gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
+										gr.pans[i].setLayout(new BorderLayout());
+										gr.pans[i].add("Center",new JLabel(new ImageIcon(sr.getImageSizeChange(new ImageIcon(img_source), 160, 199))));
+										gr.pans[i].validate();  // 재배치 remove-validate
+										gr.ids[i].setText(id);
+										break;
+									}
+								}
+							 }
+						 card.show(getContentPane(), "GAME"); 
+						
 					}
 				}
 			}

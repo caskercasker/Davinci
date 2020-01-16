@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import com.sist.common.Function;
+
+import oracle.jdbc.driver.Message;
 public class Server implements Runnable{
 	//연결 => 접속 => ServerSocket
 	//각 클라이언트마다 통신담당 (Thread) => Socket <=> Socket
@@ -17,7 +19,7 @@ public class Server implements Runnable{
 	//접속자 저장 공간
 
 	private Vector<Client> waitVc = new Vector<Client>();
-	private Vector<Room>	roomVc = new Vector<Room>();
+	private Vector<Room> roomVc = new Vector<Room>();
 	public Server() {
 		try {
 			ss = new ServerSocket(PORT); //bind,listen
@@ -240,6 +242,69 @@ public class Server implements Runnable{
 						  //messageTo(Function.MYROOMOUT+"|");
 						 // break;
 					   }
+					   case Function.MYGAMEREADY:{
+						   String rn = st.nextToken();
+						   int ready = Integer.parseInt(st.nextToken());
+						   
+						   messageTo(Function.GAMEREADY+"|"+rn+"|"+ready+"\n");
+						   
+						   break;
+					   }
+					   
+					   
+					   case Function.GAMEREADY:{
+						   String rn = st.nextToken();
+						   int ready = Integer.parseInt(st.nextToken());
+						   
+						   
+						   for(Room room:roomVc) {
+							  if(rn.equals(room.roomName)){
+								  for(Client user:room.userVc) { //uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
+								   user.messageTo(Function.GAMESTART+"|"+id+"|"+img_name+"|"+img_source);
+								   user.messageTo(Function.ROOMCHAT+"|[알림 ☞] 게임 시작 되었습니다");
+								  }
+								  break;
+							  }
+						   }
+						   
+						   break;
+					   }
+					   
+					   case Function.GAMEREADYCHECK:{
+						   String rn = st.nextToken();
+						   int ready = Integer.parseInt(st.nextToken());
+						   if(ready == 2) {
+							   for(Room room:roomVc) {
+									  if(rn.equals(room.roomName)){
+										  for(Client user:room.userVc) { //uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
+										   user.messageTo(Function.GAMESTART+"|"+id+"|"+img_name+"|"+img_source);
+										   user.messageTo(Function.ROOMCHAT+"|[알림 ☞] 게임 시작 되었습니다");
+										  }
+										  break;
+									  }
+								   }
+							   
+						   }else 
+							   messageTo(Function.ROOMCHAT+"|[알림 ☞] 상대가 준비되지 않았습니다 ");
+						   break;
+					   }
+					 
+					   case Function.GAMESTART:{ //myroom
+						   String rn = st.nextToken();
+						   
+						   for(Room room:roomVc) {
+							  if(rn.equals(room.roomName)){
+								  for(Client user:room.userVc) { //uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
+								   user.messageTo(Function.GAMESTART+"|"+id+"|"+img_name+"|"+img_source);
+								   user.messageTo(Function.ROOMCHAT+"|[알림 ☞] 게임 시작 되었습니다");
+								  }
+								  break;
+							  }
+						   }
+						   break;
+					   }
+					   
+
 
 					}
 				}

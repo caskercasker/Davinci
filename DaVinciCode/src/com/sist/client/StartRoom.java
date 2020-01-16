@@ -20,9 +20,8 @@ public class StartRoom extends JPanel{
    JTextField[] ids=new JTextField[2];
    JTextArea ta=new JTextArea();
    JTextField tf=new JTextField();
-   JButton b1,b2,b3,b4; //b1게임준비, b2 게임 시작, b3 나가기 b4 강퇴하기 임시
+   JButton b1,b2,b3,b4; 
 //   GameView games=new GameView();
-
    boolean[] sw=new boolean[6];
 
    public StartRoom()
@@ -34,7 +33,7 @@ public class StartRoom extends JPanel{
 		   pans[i]=new JPanel();
 		   pans[i].setBackground(Color.black);
 		   ids[i]=new JTextField();
-		   ids[i].setEnabled(false);
+		   ids[i].setEditable(false);
 	   }
 	   setLayout(null);
 	   pans[0].setBounds(130, 200, 160,199 );
@@ -60,16 +59,18 @@ public class StartRoom extends JPanel{
 	   tf.setBounds(705, 695, 300, 30);
 	   add(tf);
 
-	   b1=new JButton("준비");
-	   b2=new JButton("시작");
+	   b1=new JButton("준비1");
+	   b2=new JButton("시작 ");
 	   b3=new JButton("나가기");
-	   b4=new JButton("강퇴");
+	   b4=new JButton("강퇴  ") ;
 
 
 	   JPanel p=new JPanel();
 	   p.setLayout(new GridLayout(1,4,4,5));
 	   p.add(b1);p.add(b2);p.add(b3); p.add(b4);
 	   p.setBounds(130, 450, 450, 50);
+	   
+	   b2.setEnabled(false);
 	   add(p);
    }
    public Image getImageSizeChange(ImageIcon icon,int width,int height)

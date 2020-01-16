@@ -32,6 +32,12 @@ public class Function {
 	public static final int INVITE = 310;
 	public static final int INVITE_YES = 320;
 	public static final int INVITE_NO = 330;
+	
+	public static final int MYGAMEREADY = 400;
+	public static final int GAMEREADY = 410;
+	public static final int GAMEREADYCHECK = 415;
+	public static final int GAMESTART = 420;
+	
 	public static final int EXIT = 900;		//
 	public static final int MYEXIT = 910;	//나가는 사람 게임에서 나감.
 
