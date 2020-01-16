@@ -84,6 +84,7 @@ public class Server implements Runnable{
 						pos = "대기실";
 
 
+
 						messageAll(Function.LOGIN+"|"+id+"|"+img_name+"|"+pos);
 						//img+"|"+
 						waitVc.add(this);
@@ -94,7 +95,7 @@ public class Server implements Runnable{
 
 						//개설된 방 정보 전송
 						for(Room room :roomVc) {
-							messageTo(Function.MAKEROOM+"|"+room.roomName+"|"+room.roomState+"|"+room.current+"/"+room.maxcount);
+							messageTo(Function.MAKEROOM+"|"+room.roomName+"|"+room.current+"/"+room.maxcount+"|"+room.roomState);
 						}
 						break;
 					}
@@ -128,16 +129,21 @@ public class Server implements Runnable{
 						 *
 						 */
 						Room room = new Room(st.nextToken(), st.nextToken(), st.nextToken()	, Integer.parseInt(st.nextToken()));
+						//String roomName, String roomState, String roomPwd, int maxcount)
 						room.userVc.add(this);
 
 
 						roomVc.add(room);
 						pos = room.roomName;
 
-						messageAll(Function.MAKEROOM+"|"+room.roomName+"|"+room.roomState+"|"+room.current+"/"+room.maxcount);
+						messageAll(Function.MAKEROOM+"|"+room.roomName+"|"+room.current+"/"+room.maxcount+"|"+pos);
 						//방에 들어가게 만든다.
 						messageTo(Function.ROOMIN+"|"+room.roomName+"|"+id+"|"+img_name+"|"+img_source); //이미지 파일 명 떄문에 성별과 아바타 번호를 받는다.
 
+
+
+						//대기실
+						   messageAll(Function.POSCHANGE+"|"+id+"|"+pos);
 						break;
 					}
 					case Function.ROOMIN:{
@@ -163,7 +169,7 @@ public class Server implements Runnable{
 								pos=room.roomName;
 								room.current++;
 
-								for(Client user:room.userVc) {
+								for(Client user:room.userVc) { //uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
 									user.messageTo(Function.ROOMADD+"|"
 											+id+"|"+img_name+"|"+img_source);
 									user.messageTo(Function.ROOMCHAT+"|[알림 ☞]"+id+"님이 입장하셨습니다.");
@@ -177,11 +183,63 @@ public class Server implements Runnable{
 										messageTo(Function.ROOMADD+"|"
 												+user.id+"|"+user.img_name+"|"+user.img_source);
 									}
+								//대기실 갱신
+								messageAll(Function.WAITUPDATE+"|"+room.roomName+"|"+room.current+"|"+room.maxcount+"|"+id+"|"+pos);
 								}
 							}
 						}
 						break;
 					}
+					case Function.ROOMCHAT:{
+						   String rn = st.nextToken();
+						   String strMsg = st.nextToken();
+						   for(Room room:roomVc) {
+							   if(rn.equals(room.roomName)) {
+								   for(Client user:room.userVc) {
+									   user.messageTo(Function.ROOMCHAT+"|["+id+"."+img_name+"]"+strMsg);
+								   }
+							   }
+						   }
+						   break;
+					   }
+					   case Function.ROOMOUT:{
+						   //방찾기
+						   String rn=st.nextToken();
+						   for(int i=0; i<roomVc.size(); i++) {
+							   Room room=roomVc.get(i);
+							   if(rn.equals(room.roomName)) {
+								   pos = "대기실";
+								   room.current--;
+
+								   //방에 남아 있는 사람
+								   for(Client user:room.userVc) {
+									   if(!user.id.equals(id)) {
+										   user.messageTo(Function.ROOMOUT+"|"+id);
+										   user.messageTo(Function.ROOMCHAT+"|[알림☞]"+id+"."+img_name+"님이 퇴장하셨습니다");
+									   }
+								   }
+								   //실제 나가는 사람
+								   for(int j=0; j<room.userVc.size();j++) {
+									   Client user = room.userVc.get(j);
+									   if(id.equals(user.id)) {
+										   //userVc에서 제거
+										   room.userVc.remove(j);
+										   messageTo(Function.MYROOMOUT+"|");
+										   break;
+									   }
+								   }
+								   //대기실
+								   messageAll(Function.WAITUPDATE+"|"+room.roomName+"|"+room.current+"|"+room.maxcount+"|"+id+"|"+pos);
+								   if(room.current==0) {
+
+									   roomVc.remove(i);
+									   break;
+								   }
+							   }
+						   }
+						  //messageTo(Function.MYROOMOUT+"|");
+						 // break;
+					   }
 
 					}
 				}
