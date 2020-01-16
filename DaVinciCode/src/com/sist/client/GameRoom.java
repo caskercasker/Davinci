@@ -193,7 +193,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		JScrollPane chatRm = new JScrollPane(chatHistory);
 		chatRm.setBounds(705, 10, 300, 680);
 		chatInput.setBounds(705, 695, 300, 30);
-		chatHistory.setEnabled(false);
+		chatHistory.setEditable(false);
 		chatInput.addActionListener(this);
 
 		//안내메시지 위치값 설정
