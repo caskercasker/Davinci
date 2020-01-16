@@ -40,14 +40,11 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
-		add("GAME", gr);
 		add("LOGIN", login);
+		add("GAME", gr);
 		add("SR", sr);
-		add("AVARTAR", ava);
+		add("AVATAR", ava);
 		add("WR", wr );
-		
-
-
 
 
 		setSize(1024, 768); // 윈도우창 사이즈 설정
@@ -132,10 +129,11 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				return;
 			}
 
-			//서버로 전송
+			// 서버로 전송 
 			try {
-				out.write((Funct+"|"+msg+"\n").getBytes());
-			}catch(Exception ex) {}
+				out.write((Function.WAITCHAT + "|" + msg + "\n").getBytes());
+			} catch (Exception ex) {
+			}
 
 			wr.chatInput.setText("");
 		}
@@ -261,7 +259,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					case Function.MYLOG:{
 						String id = st.nextToken();
 						setTitle(id);
-						card.show(getContentPane(), "WR");
+						card.show(getContentPane(), "AVATAR");
 						break;
 					}
 					case Function.WAITCHAT:{
@@ -361,7 +359,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					}
 					case Function.ROOMCHAT:{
 
-						sr.chatHistory.append(st.nextToken()+"\n");
+						gr.chatHistory.append(st.nextToken()+"\n");
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
 						int sc = gr.chatHistory.getText().length();
 						gr.chatHistory.setCaretPosition(sc);

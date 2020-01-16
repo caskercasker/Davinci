@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
@@ -195,6 +196,8 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		chatInput.setBounds(705, 695, 300, 30);
 		chatHistory.setEditable(false);
 		chatInput.addActionListener(this);
+		chatRm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); //horizontal scroll 생기지 않도록 
+		chatHistory.setLineWrap(true); //아주 긴 내용 입력 시 자동으로 줄바뀜되도록 
 
 		//안내메시지 위치값 설정
 		gameMessage.setBounds(10,645,690,80);
