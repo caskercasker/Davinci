@@ -11,6 +11,7 @@ public class Room {
 		this.roomState = roomState;
 		this.roomPwd = roomPwd;
 		this.maxcount = maxcount;
+		//this.ready =ready;
 		current = 1;
 	}
 

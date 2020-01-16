@@ -208,10 +208,11 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		}
 		
 		if( e.getSource() == sr.b1) {
-			sr.b2.setEnabled(true);
+			
 			//둘다 레디라면 스타트 버튼 활성화
 			//gameReadyCheck[0]=1;
 			gameReady=1;
+			sr.b1.setEnabled(false);
 			
 			try {
 				out.write((Function.MYGAMEREADY+"|"+myRoom+"|"+gameReady+"\n").getBytes());
@@ -504,13 +505,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					}
 					case Function.GAMEREADY:{
 						String rn = st.nextToken();
-						int readyNumber =0;
-						for(int i=0; i<2; i++) {
-							if(gr.gameReadyCheck[i]==1) {
-								readyNumber ++;		
-							}
-						}
-						out.write((Function.GAMEREADYCHECK+"|"+rn+"|"+readyNumber+"|"+"\n").getBytes());
+						sr.b1.setEnabled(false);
+						sr.b2.setEnabled(true);
 					}
 						
 					

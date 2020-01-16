@@ -48,6 +48,7 @@ public class Server implements Runnable{
 	//통신을 담당하는 부분 (각 클라이언트마다 따로 작업을 한다)
 	class Client extends Thread{
 		String id,img_name,img_source,pos;
+		int ready;
 		//int img;
 		//pos => 방위치
 		//통신
@@ -245,10 +246,58 @@ public class Server implements Runnable{
 					   case Function.MYGAMEREADY:{
 						   String rn = st.nextToken();
 						   int ready = Integer.parseInt(st.nextToken());
+						   int c=0;
 						   
-						   messageTo(Function.GAMEREADY+"|"+rn+"|"+ready+"\n");
 						   
-						   break;
+						   
+						   
+						   for(int i=0;i<roomVc.size();i++) {
+							   Room room = roomVc.get(i);
+							   if(rn.equals(room.roomName)) {
+								   System.out.println(room.userVc.size());
+								   for(Client user:room.userVc) {
+									   messageTo(Function.ROOMCHAT+"|"+"유저백터 갯 ");
+								   }
+								   
+								   
+								   if(room.current!=room.maxcount) {
+									   System.out.println(room.current+"그리고"+room.maxcount);
+									   System.out.println("dfdfdf");
+									   messageTo(Function.ROOMCHAT+"|"+"상대방이 없습니다. ");
+									   break;
+								   }else {
+									   for(Client user:room.userVc) {
+										   if(user.id.equals(id)) {
+											   user.ready=ready;
+										   }else {
+											   
+										   }
+										   if(user.ready==1) {
+											   c++;
+										   }
+									   }
+									   
+									   
+									   if(room.maxcount!=c) {
+										   for(Client user:room.userVc) {
+											   if(user.ready!=1) {
+												   messageTo(Function.ROOMCHAT+"|"+"상대방이 레디하였습니다.");
+
+											   }else {
+												   messageTo(Function.ROOMCHAT+"|"+"상대방이 레디하지 않았습니다 ");
+											   }
+										   }
+										   break;
+									   }else {
+										   for(Client user:room.userVc) {
+											   messageTo(Function.ROOMCHAT+"|"+"게임이 시작할 준비가 되었습니다");
+										   }
+										   messageTo(Function.GAMEREADY+"|"+rn+"\n");
+										   break;
+									   }
+								   }
+							   }
+						   }
 					   }
 					   
 					   
