@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -74,7 +75,13 @@ public class WaitingRoom extends JPanel implements ActionListener{
 		// User list
 		String[] col2 = { "ID", "캐릭터", "상태" };
 		String[][] row2 = new String[0][4];
-		model2 = new DefaultTableModel(row2, col2);
+		model2 = new DefaultTableModel(row2, col2){ //상속없이 오버라이딩 익명의 클래스
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return false; //편집이 안됨
+			}
+		};
 		table2 = new JTable(model2);
 		JScrollPane js2 = new JScrollPane(table2);
 		// Table decoration
@@ -113,12 +120,13 @@ public class WaitingRoom extends JPanel implements ActionListener{
 		// Chatting
 		chatHistory = new JTextArea();	//채팅 기록
 		chatInput = new JTextField();	//채팅 인풋
-
 		JScrollPane chatRm = new JScrollPane(chatHistory);
 		chatRm.setBounds(705, 10, 300, 680);
 		chatInput.setBounds(705, 695, 300, 30);
+		// 채팅창 세부 옵션
 		chatHistory.setEditable(false);
-		chatInput.addActionListener(this);
+		chatRm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); //horizontal scroll 생기지 않도록
+		chatHistory.setLineWrap(true); //아주 긴 내용 입력 시 자동으로 줄바뀜되도록 
 
 		add(b1);
 		add(b2);
@@ -129,6 +137,8 @@ public class WaitingRoom extends JPanel implements ActionListener{
 
 		b1.addActionListener(this);
 		b2.addActionListener(this);
+		chatInput.addActionListener(this);
+		chatInput.addActionListener(this);
 
 	}
 
