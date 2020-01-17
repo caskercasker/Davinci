@@ -55,7 +55,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 종료 시 게임 종료되도록 (그렇지 않으면 게임 꺼도 계속 돌아감...)
 
 		login.b1.addActionListener(this);
-		sr.b1.addActionListener(this);
 		ava.b5.addActionListener(this);
 		ava.p1Icon.addActionListener(this);
 		ava.p2Icon.addActionListener(this);
@@ -74,6 +73,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		sr.b1.addActionListener(this); //준비
 		sr.b2.addActionListener(this); //시작
 		sr.b3.addActionListener(this); //나가기
+		sr.tf.addActionListener(this);
 	}
 
 	public static void main(String[] args) {
@@ -117,9 +117,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				login.pf.setText("");
 				login.pf.requestFocus();
 			}else {
-				System.out.println("dfdfd");
 				connection(result);
-				System.out.println("asdasd");
 			}
 		}else if(e.getSource() == wr.chatInput) {
 			// 입력된 문자열 읽기
@@ -129,7 +127,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				return;
 			}
 
-			// 서버로 전송 
+			// 서버로 전송
 			try {
 				out.write((Function.WAITCHAT + "|" + msg + "\n").getBytes());
 			} catch (Exception ex) {
@@ -142,9 +140,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		if (e.getSource() == ava.b5) {
 			card.show(getContentPane(), "WR");
 		}
-		if (e.getSource() == sr.b1) {
-			card.show(getContentPane(), "GR");
-		}
+
 		if (e.getSource() == gr.confirmGameEnd) {
 			card.show(getContentPane(),"GR");
 		}
@@ -211,6 +207,30 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		}else if(e.getSource() == mr.b2) {
 			mr.setVisible(false);
 		}
+		else if (e.getSource() == sr.tf) {
+			String msg=sr.tf.getText();
+			if(msg.length()<1)
+				return;
+			try
+			{ // 서버로 값보냄												방이름
+				out.write((Function.ROOMCHAT+"|"+myRoom+"|"+msg+"\n").getBytes());
+			}catch(Exception ex){}
+			sr.tf.setText("");
+		}
+
+
+		else if(e.getSource() == sr.b1) {
+			try {
+				out.write((Function.GAMEREADY+"|"+myRoom+"\n").getBytes());
+			}catch (Exception ex) {}
+		}
+		else if(e.getSource() == sr.b2) {
+			System.out.println("게임 시작하십쇼(클라)");
+			try {
+				out.write((Function.GAMESTART +"|"+myRoom+"\n").getBytes());
+			}catch(Exception ex) {}
+		}
+
 		else if(e.getSource()==sr.b3) // 겜방 나가기.
 		{
 			try
@@ -259,7 +279,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					case Function.MYLOG:{
 						String id = st.nextToken();
 						setTitle(id);
-						card.show(getContentPane(), "AVATAR");
+						card.show(getContentPane(), "WR");
 						break;
 					}
 					case Function.WAITCHAT:{
@@ -358,11 +378,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						 break;
 					}
 					case Function.ROOMCHAT:{
-
-						gr.chatHistory.append(st.nextToken()+"\n");
+						sr.ta.append(st.nextToken()+"\n");
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
-						int sc = gr.chatHistory.getText().length();
-						gr.chatHistory.setCaretPosition(sc);
+						int sc = sr.ta.getText().length();
+						sr.ta.setCaretPosition(sc);
 
 						break;
 					}
@@ -462,6 +481,54 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						JOptionPane.showMessageDialog(this, rn+"방에서 강퇴되었습니다");
 						out.write((Function.ROOMOUT+"|"+rn+"\n").getBytes());
 						break;
+					}
+					case Function.GAMEREADY:{
+						myRoom = st.nextToken();
+						String id = st.nextToken();
+						String img_source = st.nextToken();
+						card.show(getContentPane(), "GAME");
+						for(int i=0;i<2;i++){
+							{
+								if(gr.sw[i]==false)
+								{
+									gr.sw[i]=true;
+									gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
+									gr.pans[i].setLayout(new BorderLayout());
+									gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 160, 199))));
+									gr.pans[i].validate();  // 재배치 remove-validate
+									gr.ids[i].setText(id);
+									break;
+								}
+							}
+						 }
+					 break;
+					}
+
+					case Function.GAMESTART:{
+						 System.out.println(msg);
+						 myRoom = st.nextToken();
+						 System.out.println("메시지2");
+						 String id = st.nextToken();
+						 System.out.println("메시지3");
+						 String img_source = st.nextToken();
+						 System.out.println("메시지4");
+						 card.show(getContentPane(), "GAME");
+						 System.out.println("게임 카드 바꾸기");
+						 for(int i=0;i<2;i++){
+								{
+									if(gr.sw[i]==false)
+									{
+										gr.sw[i]=true;
+										gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
+										gr.pans[i].setLayout(new BorderLayout());
+										gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 160, 199))));
+										gr.pans[i].validate();  // 재배치 remove-validate
+										gr.ids[i].setText(id);
+										break;
+									}
+								}
+							 }
+						 break;
 					}
 				}
 			}

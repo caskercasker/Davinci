@@ -1,5 +1,6 @@
 package com.sist.client;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -16,7 +17,6 @@ import java.util.Collections;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -39,10 +39,12 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	JTextArea chatHistory;		//채팅 내용
 	JTextField chatInput;		//채팅 입력 창
 	JLabel gameMessage;			//게임 메시지 띄우는 레이블
-	JLabel timeLabel;
 	int space = 55;				//고정된 간격값
 	JOptionPane pane;
-	JDialog dialog;
+	boolean[] sw = new boolean[2];
+	JPanel[] pans=new JPanel[6];
+	JTextField[] ids=new JTextField[6];
+
 
 	boolean gameEndMessage = false;  //true일 경우 게임이 끝났음을 체크
 	boolean dummyClickTurn= false;	//본격적인 게임 시작시 dummy 클릭 비활성화를 위한 flag
@@ -104,10 +106,31 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 
 		//기본 이미지 설정 (추후에 대기방에서 데이터를 받아와야함.
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
-		player1 = Toolkit.getDefaultToolkit().getImage("images/Avatar/_11.jpg");
-		player2 = Toolkit.getDefaultToolkit().getImage("images/Avatar/_33.jpg");
-		avatar_1 = new JLabel(new ImageIcon(player1.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
-		avatar_2 = new JLabel(new ImageIcon(player2.getScaledInstance(90, 120, Image.SCALE_SMOOTH)));
+
+		for(int i=0;i<2;i++)
+		   {
+			   pans[i]=new JPanel();
+			   pans[i].setBackground(Color.black);
+			   ids[i]=new JTextField();
+			   ids[i].setEditable(false);
+		   }
+		   setLayout(null);
+
+		   pans[0].setBounds(50, 470, 90, 120);
+		   pans[0].setLayout(new BorderLayout());
+		   pans[0].add("Center",new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("images/blank.png"), 160, 199))));
+		   ids[0].setBounds(50, 595, 90, 20);
+
+		   pans[1].setBounds(50, 50, 90, 120);
+		   pans[1].setLayout(new BorderLayout());
+		   pans[1].add("Center", new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("images/blank.png"), 160, 199))));
+		   ids[1].setBounds(50, 175, 90, 20);
+
+		   for(int i=0;i<2;i++)
+		   {
+			   add(pans[i]);
+			   add(ids[i]);
+		   }
 
 		getRand(su.length); 																			//난수 static su[]배열에 삽입.
 
@@ -196,40 +219,34 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		chatInput.setBounds(705, 695, 300, 30);
 		chatHistory.setEditable(false);
 		chatInput.addActionListener(this);
-		chatRm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); //horizontal scroll 생기지 않도록 
-		chatHistory.setLineWrap(true); //아주 긴 내용 입력 시 자동으로 줄바뀜되도록 
+		chatRm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); //horizontal scroll 생기지 않도록
+		chatHistory.setLineWrap(true); //아주 긴 내용 입력 시 자동으로 줄바뀜되도록
 
 		//안내메시지 위치값 설정
 		gameMessage.setBounds(10,645,690,80);
 		gameMessage.setBackground(Color.white);
 		gameMessage.setOpaque(true);
 
-		//player1,2 의 아바타 위치값 설정
-		avatar_1.setBounds(50, 470, 90, 120);
-		avatar_2.setBounds(50, 50, 90, 120);
-
 		add(chatRm);
 		add(chatInput);
 		add(gameMessage);
-		add(avatar_1);
-		add(avatar_2);
 		add(confirmGameEnd);
 
 		//선턴을  랜덤으로 정함.
-		int a = (int)(Math.random()*2);
-		System.out.println(a);
-		if(a==0) {
-			playerTurn =0;
-			System.out.println("나 선턴");
-			avatar_1.setBorder(border);
-			avatar_2.setBorder(borderEmpty);
-		}else if(a ==1) {
-			playerTurn =1;
-			System.out.println("상대방 선턴");
-			avatar_2.setBorder(border);
-			avatar_1.setBorder(borderEmpty);
-
-		}
+//		int a = (int)(Math.random()*2);
+//		System.out.println(a);
+//		if(a==0) {
+//			playerTurn =0;
+//			System.out.println("나 선턴");
+//			avatar_1.setBorder(border);
+//			avatar_2.setBorder(borderEmpty);
+//		}else if(a ==1) {
+//			playerTurn =1;
+//			System.out.println("상대방 선턴");
+//			avatar_2.setBorder(border);
+//			avatar_1.setBorder(borderEmpty);
+//
+//		}
 
 	}
 
@@ -666,5 +683,11 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	{
 	    return "<html>" + orig.replaceAll("\n", "<br>");
 	}
+	public Image getImageSizeChange(ImageIcon icon,int width,int height)
+	   {
+	   	Image img=icon.getImage();
+	   	Image change=img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+	   	return change;
+	   }
 }
 
