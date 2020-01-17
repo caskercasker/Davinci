@@ -134,12 +134,6 @@ public class WaitingRoom extends JPanel implements ActionListener{
 		add(js2);
 		add(chatRm);
 		add(chatInput);
-
-		b1.addActionListener(this);
-		b2.addActionListener(this);
-		chatInput.addActionListener(this);
-		chatInput.addActionListener(this);
-
 	}
 
 	@Override
