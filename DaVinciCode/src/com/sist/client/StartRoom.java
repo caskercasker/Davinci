@@ -66,6 +66,8 @@ public class StartRoom extends JPanel implements ActionListener{
 	   p.setLayout(new GridLayout(1,4,4,5));
 	   p.setBounds(130, 450, 450, 50);
 
+
+
 	   // Chatting
 	   chatHistory = new JTextArea(); // 채팅 기록
 	   chatInput = new JTextField(); // 채팅 인풋
@@ -78,6 +80,7 @@ public class StartRoom extends JPanel implements ActionListener{
 	   chatHistory.setLineWrap(true); // 아주 긴 내용 입력 시 자동으로 줄바뀜되도록
 	   
 	   p.add(b1);p.add(b2);p.add(b3); p.add(b4);
+
 	   add(p);
 	   add(chatRm);
 	   add(chatInput);

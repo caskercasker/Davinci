@@ -49,7 +49,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 종료 시 게임 종료되도록 (그렇지 않으면 게임 꺼도 계속 돌아감...)
 
 		login.b1.addActionListener(this);
-		wr.chatInput.addActionListener(this);
+  	wr.chatInput.addActionListener(this);
 		wr.b1.addActionListener(this); //방만들기
 		wr.b2.addActionListener(this); //나가기
 		wr.table1.addMouseListener(this);
@@ -58,10 +58,11 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		sr.b1.addActionListener(this); //준비
 		sr.b2.addActionListener(this); //시작
 		sr.b3.addActionListener(this); //나가기
+  	sr.chatInput.addActionListener(this);
 		sr.b4.addActionListener(this); //강퇴
-		sr.chatInput.addActionListener(this);
 		gr.chatInput.addActionListener(this);
 		gr.confirmGameEnd.addActionListener(this);
+
 	}
 
 	public static void main(String[] args) {
@@ -78,7 +79,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	public void actionPerformed(ActionEvent e) {
 		// [로그인] 로그인 버튼 - ID/PW 일치여부 판정 
 		if(e.getSource()==login.b1) {
-			String id = login.tf.getText();
+			String id = login.
+        .getText();
 			if(id.length()<1) {
 				JOptionPane.showMessageDialog(this, "ID를 입력하세요");
 				login.tf.requestFocus();
@@ -102,12 +104,36 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				login.pf.setText("");
 				login.pf.requestFocus();
 			}else {
-				System.out.println("dfdfd");
 				connection(result);
-				System.out.println("asdasd");
 			}
+
+		}else if(e.getSource() == wr.chatInput) {
+			// 입력된 문자열 읽기
+			String msg = wr.chatInput.getText();
+			if(msg.length()<1) {
+				wr.chatInput.requestFocus();
+				return;
+			}
+
+			// 서버로 전송
+			try {
+				out.write((Function.WAITCHAT + "|" + msg + "\n").getBytes());
+			} catch (Exception ex) {
+			}
+
+			wr.chatInput.setText("");
 		}
-		// [대기실] 방만들기 버튼 
+
+
+		if (e.getSource() == ava.b5) {
+			card.show(getContentPane(), "WR");
+		}
+
+		if (e.getSource() == gr.confirmGameEnd) {
+			card.show(getContentPane(),"GR");
+		}
+
+
 		if (e.getSource() == wr.b1) {
 			mr.tf.setText("");
 			mr.rb1.setSelected(true);
@@ -180,15 +206,42 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		else if(e.getSource() == mr.b2) {
 			mr.setVisible(false);
 		}
-		// [시작방] 나가기 버튼 (대기실로 돌아감)
-		else if(e.getSource()==sr.b3) 
+
+		else if (e.getSource() == 
+            ) {
+			String msg=sr.tf.getText();
+			if(msg.length()<1)
+				return;
+			try
+			{ // 서버로 값보냄												방이름
+				out.write((Function.ROOMCHAT+"|"+myRoom+"|"+msg+"\n").getBytes());
+			}catch(Exception ex){}
+			sr.tf.setText("");
+		}
+
+
+		else if(e.getSource() == sr.b1) {
+			try {
+				out.write((Function.GAMEREADY+"|"+myRoom+"\n").getBytes());
+			}catch (Exception ex) {}
+		}
+		else if(e.getSource() == sr.b2) {
+			System.out.println("게임 시작하십쇼(클라)");
+			try {
+				out.write((Function.GAMESTART +"|"+myRoom+"\n").getBytes());
+			}catch(Exception ex) {}
+		}
+
+		else if(e.getSource()==sr.b3) // 겜방 나가기.
+
+
 		{
 			try
 			{
 				out.write((Function.ROOMOUT+"|"+myRoom+"\n").getBytes());
 			}catch(Exception ex) {}
 		}
-		// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
 		// [시작룸] 채팅입력창 
 		else if (e.getSource() == sr.chatInput) {
 			String msg = sr.chatInput.getText();
@@ -205,7 +258,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			} catch (Exception ex) {}
 			sr.chatInput.setText(""); // 채팅입력창 비워준다
 		}
-		// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
 		// [게임룸] 채팅입력창 
 		else if (e.getSource() == gr.chatInput) {
 			String msg = gr.chatInput.getText();
@@ -366,18 +419,11 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						 break;
 					}
 					case Function.ROOMCHAT:{
-						gr.chatHistory.append(st.nextToken()+"\n");
+						sr.ta.append(st.nextToken()+"\n");
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
-						int sc = gr.chatHistory.getText().length();
-						gr.chatHistory.setCaretPosition(sc);
-						break;
-					}
-					case Function.SRCHAT:{
-						sr.chatHistory.append(st.nextToken()+"\n");
-						// 스크롤이 최하단으로 자동으로 내려가게 설정
-						int sc = sr.chatHistory.getText().length();
-						sr.chatHistory.setCaretPosition(sc);
-						break;
+						int sc = sr.ta.getText().length();
+						sr.ta.setCaretPosition(sc);
+  					break;
 					}
 					case Function.WAITUPDATE:
 					{
@@ -475,6 +521,54 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						JOptionPane.showMessageDialog(this, rn+"방에서 강퇴되었습니다");
 						out.write((Function.ROOMOUT+"|"+rn+"\n").getBytes());
 						break;
+					}
+					case Function.GAMEREADY:{
+						myRoom = st.nextToken();
+						String id = st.nextToken();
+						String img_source = st.nextToken();
+						card.show(getContentPane(), "GAME");
+						for(int i=0;i<2;i++){
+							{
+								if(gr.sw[i]==false)
+								{
+									gr.sw[i]=true;
+									gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
+									gr.pans[i].setLayout(new BorderLayout());
+									gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 160, 199))));
+									gr.pans[i].validate();  // 재배치 remove-validate
+									gr.ids[i].setText(id);
+									break;
+								}
+							}
+						 }
+					 break;
+					}
+
+					case Function.GAMESTART:{
+						 System.out.println(msg);
+						 myRoom = st.nextToken();
+						 System.out.println("메시지2");
+						 String id = st.nextToken();
+						 System.out.println("메시지3");
+						 String img_source = st.nextToken();
+						 System.out.println("메시지4");
+						 card.show(getContentPane(), "GAME");
+						 System.out.println("게임 카드 바꾸기");
+						 for(int i=0;i<2;i++){
+								{
+									if(gr.sw[i]==false)
+									{
+										gr.sw[i]=true;
+										gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
+										gr.pans[i].setLayout(new BorderLayout());
+										gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 160, 199))));
+										gr.pans[i].validate();  // 재배치 remove-validate
+										gr.ids[i].setText(id);
+										break;
+									}
+								}
+							 }
+						 break;
 					}
 				}
 			}
