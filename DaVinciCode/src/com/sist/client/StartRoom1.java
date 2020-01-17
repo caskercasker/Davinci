@@ -7,8 +7,8 @@ public class StartRoom1 extends JPanel{
    Image back;
    JPanel[] pans=new JPanel[2];
    JTextField[] ids=new JTextField[2];
-   JTextArea ta=new JTextArea();
-   JTextField tf=new JTextField();
+//   JTextArea ta=new JTextArea();
+//   JTextField tf=new JTextField();
    JButton b1,b2;
 //   GameView games=new GameView();
    
@@ -42,12 +42,11 @@ public class StartRoom1 extends JPanel{
 		   add(ids[i]);
 	   }
 	   
-	   JScrollPane js=new JScrollPane(ta);
-	   js.setBounds(705, 10, 300, 680);
-	   add(js);
-	   
-	   tf.setBounds(705, 695, 300, 30);
-	   add(tf);
+		/*
+		 * JScrollPane js=new JScrollPane(ta); js.setBounds(705, 10, 300, 680); add(js);
+		 * 
+		 * tf.setBounds(705, 695, 300, 30); add(tf);
+		 */
 	   
 	   b1=new JButton("게임준비");
 	   b2=new JButton("게임시작");

@@ -39,12 +39,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
+		add("GAME", gr);
 		add("LOGIN", login);
 
 		add("SR", sr);
 		add("AVARTAR", ava);
 		add("WR", wr );
-		add("GAME", gr);
 
 
 
