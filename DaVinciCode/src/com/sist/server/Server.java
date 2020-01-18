@@ -158,8 +158,8 @@ public class Server implements Runnable{
 								pos = room.roomName;
 								room.current++;
 
-								for (Client user : room.userVc) { // uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을
-																	// 넣어라.
+								for (Client user : room.userVc) { 
+									// uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
 									user.messageTo(Function.ROOMADD + "|" + id + "|" + img_name + "|" + img_source);
 									user.messageTo(Function.ROOMCHAT + "|[알림 ☞] " + id + "님이 입장하셨습니다.");
 								}
@@ -206,8 +206,7 @@ public class Server implements Runnable{
 								for (Client user : room.userVc) {
 									if (!user.id.equals(id)) {
 										user.messageTo(Function.ROOMOUT + "|" + id);
-										user.messageTo(
-												Function.ROOMCHAT + "|[알림☞]" + id + "." + img_name + "님이 퇴장하셨습니다");
+										user.messageTo(Function.ROOMCHAT + "|[알림☞]" + id + "." + img_name + "님이 퇴장하셨습니다");
 									}
 								}
 								// 실제 나가는 사람
@@ -223,8 +222,8 @@ public class Server implements Runnable{
 								// 대기실
 								messageAll(Function.WAITUPDATE + "|" + room.roomName + "|" + room.current + "|"
 										+ room.maxcount + "|" + id + "|" + pos);
-								if (room.current == 0) {
-
+								if (room.current == 0) 
+								{
 									roomVc.remove(i);
 									break;
 								}
@@ -233,46 +232,35 @@ public class Server implements Runnable{
 						// messageTo(Function.MYROOMOUT+"|");
 						// break;
 					}
-
-									   roomVc.remove(i);
-									   break;
-								   }
-							   }
-						   }
-						  //messageTo(Function.MYROOMOUT+"|");
-						   break;
-					   }
-					   case Function.GAMEREADY:{
-						   String rn = st.nextToken();
-						   //int c= Integer.parseInt(st.nextToken());
-						   System.out.println();
-						   for(int i=0;i<roomVc.size();i++) {
-							   System.out.println(roomVc.size());
-							   Room room = roomVc.get(i);
-							   System.out.println(roomVc.get(i));
-							   if(rn.equals(room.roomName)) {
-								   System.out.println(room.ready+"1");
-								   room.ready += 1;
-								   System.out.println(room.ready+"2");
-								   if(room.current!=room.maxcount) {
-									   System.out.println("숫자부족");
-									   messageTo(Function.ROOMCHAT+"|"+"상대방이 없습니다.");
-									   break;
-								   }else if(room.current == room.ready) {
-									   System.out.println(room.ready+"5");
-									   System.out.println("2명다 레뒤");
-									    for(Client user:room.userVc)
-										   user.messageTo(Function.GAMESTART+"|"+room.roomName+"|"+user.id+"|"+user.img_source);
-
-
-								   } else if(room.current != room.ready) {
-									   System.out.println(room.ready+"3");
-									   System.out.println("한명만 레뒤");
-									   //한명만 레디
-								   }
-								   System.out.println(room.ready+"4");
-								   break;
-
+					case Function.GAMEREADY:{
+						String rn = st.nextToken();
+						//int c= Integer.parseInt(st.nextToken());
+						System.out.println();
+						for(int i=0;i<roomVc.size();i++) {
+							System.out.println(roomVc.size());
+							Room room = roomVc.get(i);
+							System.out.println(roomVc.get(i));
+							if(rn.equals(room.roomName)) {
+								System.out.println(room.ready+"1");
+								room.ready += 1;
+								System.out.println(room.ready+"2");
+								if(room.current!=room.maxcount) {
+									System.out.println("숫자부족");
+									messageTo(Function.ROOMCHAT+"|"+"상대방이 없습니다.");
+									break;
+								}
+								else if(room.current == room.ready) {
+									System.out.println(room.ready+"5");
+									System.out.println("2명다 레뒤");
+									for(Client user:room.userVc)
+										user.messageTo(Function.GAMESTART+"|"+room.roomName+"|"+user.id+"|"+user.img_source);
+								}
+								else if(room.current != room.ready) {
+									System.out.println(room.ready+"3");
+									System.out.println("한명만 레뒤");  //한명만 레디
+								}
+								System.out.println(room.ready+"4");
+								break;
 //									   if(room.current== ) {
 //										   messageTo(Function.ROOMCHAT+"|"+"상대방이 레디하지 않았습니다 ");
 //										   messageTo(Function.GAMEREADY+"|"+rn+"\n");
@@ -283,35 +271,27 @@ public class Server implements Runnable{
 //										   }
 //										   break;
 //									   }
-
-								   	}
-								    break;
-							   	}
-							   break;
-						   }
-
+							}
+							break;
+						}
+						break;
+					   }
 					   case Function.GAMESTART:{
 						   System.out.println("게임 시작하십쇼(서버)");
 						   GameRoom gameroom = new GameRoom(st.nextToken());
 							//String roomName, String roomState, String roomPwd, int maxcount)
 							gameroom.gamerVc.add(this);
-
-
 							gameRoomVc.add(gameroom);
 							//gameroom.roomName = st.nextToken();
 							System.out.println(gameroom.roomName);
 							System.out.println(id);
 							System.out.println(img_source);
-
 						   messageTo(Function.GAMESTART+"|"+gameroom.roomName+"|"+id+"|"+img_source);
 						   break;
 					   }
 					}
 				}
-
-
 			} catch (Exception ex) {}
-
 		}
 
 		//반복을 제거 => 메소드
