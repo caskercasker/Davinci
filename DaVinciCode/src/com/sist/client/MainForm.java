@@ -49,7 +49,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 종료 시 게임 종료되도록 (그렇지 않으면 게임 꺼도 계속 돌아감...)
 
 		login.b1.addActionListener(this);
-  	wr.chatInput.addActionListener(this);
+		wr.chatInput.addActionListener(this);
 		wr.b1.addActionListener(this); //방만들기
 		wr.b2.addActionListener(this); //나가기
 		wr.table1.addMouseListener(this);
@@ -58,7 +58,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		sr.b1.addActionListener(this); //준비
 		sr.b2.addActionListener(this); //시작
 		sr.b3.addActionListener(this); //나가기
-  	sr.chatInput.addActionListener(this);
+		sr.chatInput.addActionListener(this);
 		sr.b4.addActionListener(this); //강퇴
 		gr.chatInput.addActionListener(this);
 		gr.confirmGameEnd.addActionListener(this);
@@ -79,8 +79,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	public void actionPerformed(ActionEvent e) {
 		// [로그인] 로그인 버튼 - ID/PW 일치여부 판정 
 		if(e.getSource()==login.b1) {
-			String id = login.
-        .getText();
+			String id = login.tf.getText();
 			if(id.length()<1) {
 				JOptionPane.showMessageDialog(this, "ID를 입력하세요");
 				login.tf.requestFocus();
@@ -107,33 +106,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				connection(result);
 			}
 
-		}else if(e.getSource() == wr.chatInput) {
-			// 입력된 문자열 읽기
-			String msg = wr.chatInput.getText();
-			if(msg.length()<1) {
-				wr.chatInput.requestFocus();
-				return;
-			}
-
-			// 서버로 전송
-			try {
-				out.write((Function.WAITCHAT + "|" + msg + "\n").getBytes());
-			} catch (Exception ex) {
-			}
-
-			wr.chatInput.setText("");
 		}
-
-
-		if (e.getSource() == ava.b5) {
-			card.show(getContentPane(), "WR");
-		}
-
+		// [게임방] 게임끝컨펌
 		if (e.getSource() == gr.confirmGameEnd) {
 			card.show(getContentPane(),"GR");
 		}
-
-
+		// [대기실] 방 만들기
 		if (e.getSource() == wr.b1) {
 			mr.tf.setText("");
 			mr.rb1.setSelected(true);
@@ -206,42 +184,27 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		else if(e.getSource() == mr.b2) {
 			mr.setVisible(false);
 		}
-
-		else if (e.getSource() == 
-            ) {
-			String msg=sr.tf.getText();
-			if(msg.length()<1)
-				return;
-			try
-			{ // 서버로 값보냄												방이름
-				out.write((Function.ROOMCHAT+"|"+myRoom+"|"+msg+"\n").getBytes());
-			}catch(Exception ex){}
-			sr.tf.setText("");
-		}
-
-
+		// [시작룸] 준비 버튼 
 		else if(e.getSource() == sr.b1) {
 			try {
 				out.write((Function.GAMEREADY+"|"+myRoom+"\n").getBytes());
 			}catch (Exception ex) {}
 		}
+		// [시작룸] 시작 버튼 
 		else if(e.getSource() == sr.b2) {
 			System.out.println("게임 시작하십쇼(클라)");
 			try {
 				out.write((Function.GAMESTART +"|"+myRoom+"\n").getBytes());
 			}catch(Exception ex) {}
 		}
-
-		else if(e.getSource()==sr.b3) // 겜방 나가기.
-
-
+		// [시작룸] 나가기 버튼
+		else if(e.getSource()==sr.b3) 
 		{
 			try
 			{
 				out.write((Function.ROOMOUT+"|"+myRoom+"\n").getBytes());
 			}catch(Exception ex) {}
 		}
-
 		// [시작룸] 채팅입력창 
 		else if (e.getSource() == sr.chatInput) {
 			String msg = sr.chatInput.getText();
@@ -251,14 +214,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			}
 			try {
 				out.write((Function.SRCHAT+"|"+myRoom+"|"+msg+"\n").getBytes()); // out.write(); ==> 서버로 값이 넘어감
-				// 방 이름이 넘어가야 방에 있는 사람들에게만 채팅메시지 보낼 수 있음
-				// 방 이름 중복되지 않게 해놨으니까 가능
-				// 방 안에 userVc있으니까 방에 들어간 사람 찾을 수 있음!
-				// 방 찾으려고 myroom이라고 전역변수 만들어놓았음
 			} catch (Exception ex) {}
 			sr.chatInput.setText(""); // 채팅입력창 비워준다
 		}
-
 		// [게임룸] 채팅입력창 
 		else if (e.getSource() == gr.chatInput) {
 			String msg = gr.chatInput.getText();
@@ -275,7 +233,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			} catch (Exception ex) {}
 			gr.chatInput.setText(""); // 채팅입력창 비워준다
 		}
-		
 		// 화면전환 (card.show) ==> 서버 통신 동작으로 변경 필요 
 		if (e.getSource() == sr.b1) {
 			card.show(getContentPane(), "GR");
@@ -283,7 +240,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		if (e.getSource() == gr.confirmGameEnd) {
 			card.show(getContentPane(),"GR");
 		}
-
 	}
 	// ActionEvent Ends 
 	
@@ -395,8 +351,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 							}
 						 }
 						 break;
-
-
 					}
 					case Function.ROOMADD:{
 						 String id = st.nextToken();
@@ -419,11 +373,18 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						 break;
 					}
 					case Function.ROOMCHAT:{
-						sr.ta.append(st.nextToken()+"\n");
+						gr.chatHistory.append(st.nextToken()+"\n");
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
-						int sc = sr.ta.getText().length();
-						sr.ta.setCaretPosition(sc);
-  					break;
+						int sc = gr.chatHistory.getText().length();
+						gr.chatHistory.setCaretPosition(sc);
+						break;
+					}
+					case Function.SRCHAT:{
+						sr.chatHistory.append(st.nextToken()+"\n");
+						// 스크롤이 최하단으로 자동으로 내려가게 설정
+						int sc = sr.chatHistory.getText().length();
+						sr.chatHistory.setCaretPosition(sc);
+						break;
 					}
 					case Function.WAITUPDATE:
 					{
