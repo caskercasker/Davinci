@@ -41,14 +41,22 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	JLabel gameMessage;			//게임 메시지 띄우는 레이블
 	int space = 55;				//고정된 간격값
 	JOptionPane pane;
+
 	boolean[] sw = new boolean[2];
 	JPanel[] pans=new JPanel[6];
 	JTextField[] ids=new JTextField[6];
+	
+	boolean deckChooseEnd=false;
+	boolean deckSizeCheck=false;
+	boolean dummyChooseCheck=false;
+
 
 
 	boolean gameEndMessage = false;  //true일 경우 게임이 끝났음을 체크
 	boolean dummyClickTurn= false;	//본격적인 게임 시작시 dummy 클릭 비활성화를 위한 flag
 	boolean gameStart = false;		//게임 시작임을 알리는 flag
+	
+	int[] gameReadyCheck = {0,0}; //
 
 	Object[] numbers = {"0", "1", "2", "3","4","5","6","7","8","9","10","11"};		//숫자를 고르기 위해 JOptionPane 에 출력될 숫자
 	Object[] goOrStop = {"Yes","No"};												//숫자를 계속 맞출것인지 넘길것인지를 표시하는 옵션
@@ -85,6 +93,8 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	int count2 = 0; 																	//현재 들어온 값 저장.Player2
 	int gameEnd2 = 1000;		//게임 승리조건 초기화 (Player2가 패배할 경우)
 
+
+	
 	GameRoom(){
 		setLayout(null); 																//기본 레이아웃 무시
 
@@ -97,12 +107,12 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		gameMessage.setFont(new Font("Serif", Font.BOLD, 20));
 
 		//게임 종료 확인 버튼 설정 (게임이 종료시에만 드러난다)
-		confirmGameEnd = new JButton("CONFIRM End");
+		confirmGameEnd = new JButton("종료 ");
 		confirmGameEnd.setFont(new Font ("Verdana",Font.BOLD,35));
-		confirmGameEnd.setBounds(320,330,300,100);
+		confirmGameEnd.setBounds(250,400,100,80);
 		confirmGameEnd.setEnabled(false); //단순 비활성화
 		confirmGameEnd.setVisible(false);
-		confirmGameEnd.addActionListener(this);
+		//confirmGameEnd.addActionListener(this);
 
 		//기본 이미지 설정 (추후에 대기방에서 데이터를 받아와야함.
 		back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
@@ -115,6 +125,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			   ids[i].setEditable(false);
 		   }
 		   setLayout(null);
+
 
 		   pans[0].setBounds(50, 470, 90, 120);
 		   pans[0].setLayout(new BorderLayout());
@@ -132,7 +143,8 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			   add(ids[i]);
 		   }
 
-		getRand(su.length); 																			//난수 static su[]배열에 삽입.
+		//getRand(su.length); 																			//난수 static su[]배열에 삽입.
+
 
 
 		//발생한 난수에 따라 Dummy가 배치됨
@@ -163,7 +175,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 				space += 55;
 			}
 			add(dummy[k]);
-			dummy[k].addActionListener(this);
+			//dummy[k].addActionListener(this);
 		}
 
 		space = 0; //간격값 초기화
@@ -187,7 +199,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 				play1[i].setOpaque(false);
 			}
 			add(play1[i]);
-			play1[i].addMouseListener(this);
+			//play1[i].addMouseListener(this);
 		}
 
 		space =0;
@@ -210,7 +222,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 				play2[i].setOpaque(false);
 			}
 			add(play2[i]);
-			play2[i].addMouseListener(this);
+			//play2[i].addMouseListener(this);
 		}
 
 
@@ -233,6 +245,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		add(confirmGameEnd);
 
 		//선턴을  랜덤으로 정함.
+
 //		int a = (int)(Math.random()*2);
 //		System.out.println(a);
 //		if(a==0) {
@@ -248,6 +261,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 //
 //		}
 
+
 	}
 
 	@Override
@@ -259,132 +273,29 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// Chat
-		String msg= chatInput.getText();
-		if(e.getSource()==chatInput) {
-			chatHistory.append(msg+"\n");
-			if(msg ==null || msg.length()==0) {
-					JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
-			}else
-			chatInput.setText("");
-		}
 
-		// TODO Auto-generated method stub
-		if(dummyClickTurn == false || (tail.size()>=4 || tail2.size()>=4)) {			// 게임이 시작하기 전단계라면    OR   플레이어가 고른 카드수가 둘다 4보다 클떄까지 카드만 가져옴
-			for(int j=0; j<24; j++) {
-				if(e.getSource()==dummy[j]) {
-					if(playerTurn == 0) {
-						dummy[j].setVisible(false); 									//기존 버튼 이미지 날리기
-						if(su[j]>12)													 //블랙 화이트 구분하기 위한 숫자 변환 12보다 큰수들은 white에 값
-							su[j] = su[j]-12+0.5;										//같아진 블랙 화이트 카드를 0.5의 값으로 크기를 구분
-						tail.add(su[j]);
-						Collections.sort(tail); 											// 리스트 정렬
-							//카드를 가져온수만큼 player에 레이블을 뿌린다.
-							for(int k=0; k<tail.size();k++) {
-								imageBuf1[k] = setCardImage(tail.get(k));
-								temp[k] = tail.get(k);
-								play1[k].setIcon(new ImageIcon(imageBuf1[k]));
-								play1[k].setOpaque( true);
-								play1[k].setBorder(borderEmpty);
-								if(tail.get(k)%0.5!=0) {										// 게임이 진행되면서 비공개 에서 공개된 값들을 구분하게 뿌려준다.
-									double c = tail.get(k)-0.01;
-									play1[k].setBorder(borderEmpty);
-									play1[k].setIcon(new ImageIcon(reverseCardImage(c)));
-								}
-							}
-							for (int i=0; i<12; i++) {											//현재 선택된 값을 구분하기 위해 count에 위치를 저장해둔다.
-								if(su[j]==temp[i]) {
-									count =i;
-									play1[count].setBorder(border);
-									break;
-								}
-							}
-							if((tail.size()<=4 || tail2.size()<=4) && dummyClickTurn ==false){	//player들이 4장씩 가져오기 전까지 턴을 바꿔가며 가져온다.
-								turnChange();
-								if(tail.size()!=0 || tail2.size()!=0) {							//본격적인 게임 시작전 내 레이블과 상대레이블을 만질수 없게 하는 예외처리
-									disableLabel_1(tail.size());
-									disableLabel_2(tail2.size());
-								}
-							}
-							if(dummyClickTurn ==true) {											//게임이 시작되었다면 Dummy에서 카드를 가져온 이후 추가로 Dummy를 못가져가게 하는 예외처리
-								disableDummy();
-								System.out.println("내턴 상대방고르기");
-								enableLabel_2(tail2.size());
-								disableLabel_1(tail.size());
-								messageByPlyer(10);
-							}
-
-					/*Player 2시점의 위와 같은 기능을 함	*/
-					}else if (playerTurn ==1) {
-						dummy[j].setVisible(false);
-						if(su[j]>12)
-							su[j] = su[j]-12+0.5;
-						tail2.add(su[j]);
-						Collections.sort(tail2);
-							for(int k=0; k<tail2.size();k++) {
-								imageBuf2[k] = setCardImage(tail2.get(k));
-								temp2[k] = tail2.get(k);
-								play2[k].setIcon(new ImageIcon(imageBuf2[k]));
-								play2[k].setOpaque(true);
-								play2[k].setBorder(borderEmpty);
-								if(tail2.get(k)%0.5!=0) {
-									double c = tail2.get(k)-0.01;
-									play2[k].setIcon(new ImageIcon(changeCardImage(c)));
-									play2[k].setBorder(borderEmpty);
-								}
-
-							}
-							for (int i=0; i<12; i++) {
-								if(su[j]==temp2[i]) {
-									count2 =i;
-									play2[count2].setBorder(border);
-									break;
-								}
-							}
-							if((tail.size()<=4 || tail2.size()<=4) && dummyClickTurn ==false) {
-								turnChange();
-								if(tail.size()!=0 || tail2.size()!=0) {
-									disableLabel_1(tail.size());
-									disableLabel_2(tail2.size());
-								}
-							}
-							if(dummyClickTurn ==true) {
-								disableDummy();
-								System.out.println("상대턴 내꺼 고르기");
-								enableLabel_1(tail.size());
-								disableLabel_2(tail2.size());
-								messageByPlyer(10);
-							}
-					}
-				}
-			}
-		}
-
-		if(tail.size()==4 && tail2.size()==4){											//4장씩 가져왔다면 본격적인 게임을 시작함을 알리기 위한 조건문
-			gameStart=true;
-			messageStart(gameStart);
-			dummyClickTurn = true;
-		}
 	}
 
-
-
-	public Image setCardImage(double a) {											// 버튼클릭 혹은 입력한 숫자값에 해당하는 이미지를 세팅하기 위한 메소드
-		if(playerTurn==0)
+	public Image setCardImage(double a) {											// 버튼클릭 혹은 입력한 숫자값에 해당하는 이미지를 세팅하기 위한 메소
 			if(a%1.0!=0) {
 				imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+a+".png");
 			}else {
 				imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+a+".png");
 			}
-		else if(playerTurn==1)
-			if(a%1.0!=0) {
-				imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
-			}else {
-				imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
-			}
 
 		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 		return imgFixed;
+	}
+	
+	public Image setEnemyCardImage (double a) {
+		if(a%1.0!=0) {
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
+		}else {
+			imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
+		}
+
+	imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
+	return imgFixed;
 	}
 
 	public Image changeCardImage(double a) {										//플에이어 기준 없이 입력된 카드를 (필요 없을지도...
@@ -459,114 +370,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {										//숫자 맞추기에 들어가는 메소드
-		// TODO Auto-generated method stub
-		for(int i =0; i<12;i++) {
-			if(e.getSource()==play2[i]) {											//상대방의 레이블을 클릭했을떄 조건문
-				if(e.getClickCount()==2) {
-					//dialog = pane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, numbers, numbers[0]);
-					choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, numbers, numbers[0]);
-					System.out.println("------");
-					System.out.println(choose);
-					System.out.println("------");
-					System.out.println(temp2[i]);
-
-					double tempValue = 0;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
-					if(temp2[i]%1.0!=0) {
-						System.out.println("계산");
-						tempValue = temp2[i] - 0.5;
-						System.out.println(tempValue);
-					}
-
-					if(tempValue == choose || temp2[i] == choose) {					//임시변수와 temp2[i]는 같은 값이지만 버튼 클릭스 블랙 화이트가 구분지어지기 때문에 두개를 비고하여야 함.
-						System.out.println("맞음");
-						play2[i].setIcon(new ImageIcon(changeCardImage(temp2[i])));
-						play2[i].setBorder(borderEmpty);
-						tail2.set(i, tail2.get(i)+0.01);
-						gameEndCheck();												//마우스 클릭 입력을 받았기에 게임 종료 상태인지를 체크
-						if(gameEndMessage==true){
-							break;
-						}else if(gameEndMessage == false) {							//게임 종료 상태가 아니라면  턴을 이어갈것인지 종료할것인지를 체크
-							option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
-							System.out.println(option); //맞으면 0 틀리면 1
-							if (option ==0) {
-								messageByPlyer(1);
-								disableLabel_1(tail.size());
-							}else if(option ==1) {
-								turnChange();
-								enableDummy();
-								messageByPlyer(6);
-								disableLabel_1(tail.size());
-								disableLabel_2(tail2.size());
-							}
-						}
-					}else {																//값을 맞추지 못했을 경우에 내가 받는 패널티 구현
-						System.out.println("틀림");
-						enableDummy();
-						disableLabel_1(tail.size());
-						disableLabel_2(tail2.size());
-						tail.set(count, tail.get(count)+0.01);
-						play1[count].setBorder(borderEmpty);
-						play1[count].setIcon(new ImageIcon(reverseCardImage(count)));
-						messageByPlyer(4);
-						turnChange();
-
-					}
-				}
-			}else if (e.getSource() == play1[i]) {
-				if(e.getClickCount()==2) {
-
-					choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, numbers, numbers[0]);
-					System.out.println("------");
-					System.out.println(choose);
-					System.out.println("------");
-					System.out.println(temp[i]);
-
-					double tempValue = 0;
-					if(temp[i]%1.0!=0) {
-						System.out.println("계산");
-						tempValue = temp[i] - 0.5;
-						System.out.println(tempValue);
-					}
-					System.out.println(count);
-
-					if(tempValue == choose || temp[i] == choose) {
-						System.out.println("맞음");
-						play1[i].setBorder(borderEmpty);
-						play1[i].setIcon(new ImageIcon(reverseCardImage(temp[i])));
-						tail.set(i, tail.get(i)+0.01);
-
-						gameEndCheck();
-						if(gameEndMessage==true){
-							break;
-						}else if(gameEndMessage == false) {
-							option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, goOrStop, goOrStop[0]);
-							System.out.println(option); //맞으면 0 틀리면 1
-							if (option ==0) {
-								messageByPlyer(1);
-								disableLabel_2(tail2.size());
-							}else if(option ==1) {
-								turnChange();
-								messageByPlyer(6);
-								enableDummy();
-								disableLabel_1(tail.size());
-								disableLabel_2(tail2.size());
-							}
-						}
-					}else {
-						System.out.println("틀림");
-						enableDummy();
-						disableLabel_1(tail.size());
-						disableLabel_2(tail2.size());
-						tail2.set(count2, tail2.get(count2)+0.01);
-						play2[count2].setIcon(new ImageIcon(changeCardImage(temp2[count2])));
-						play2[count2].setBorder(borderEmpty);
-						messageByPlyer(4);
-						turnChange();
-
-					}
-				}
-			}
-		}
+	
 	}
 
 
@@ -591,22 +395,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 
 	}
 
-
-	public void turnChange() { 														//내가 0 상대방이 1
-		if(playerTurn==1) {
-			playerTurn = 0;
-			avatar_1.setBorder(border);
-			avatar_2.setBorder(borderEmpty);
-			System.out.println("턴이 나에게로 옴");
-		}else if(playerTurn ==0) {
-			playerTurn =1;
-			avatar_2.setBorder(border);
-			avatar_1.setBorder(borderEmpty);
-			System.out.println("턴이 상대방으로 감");
-		}
-	}
-
-	public void gameEndCheck()  {									//게임 종료조건 -> 비공개에서 공개로 된 카드 숫자와 , 현재 플레이어가 가진 카드수가 같다면 종료.
+	public boolean gameEndCheck()  {									//게임 종료조건 -> 비공개에서 공개로 된 카드 숫자와 , 현재 플레이어가 가진 카드수가 같다면 종료.
 		gameEnd1 =0;
 		gameEnd2 =0;
 
@@ -618,17 +407,18 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			if (tail2.get(cc)%0.5!=0)
 			gameEnd2 +=1;
 		}
+
 		System.out.println("게임 체크함");
-		if(gameEnd1 == tail.size()) {
+		if(gameEnd1-tail.size()==0) {
 			messageByPlyer(9);
-			System.out.println("player 2 승리");
+			System.out.println("종료 ");
 			confirmGameEnd.setEnabled(true); //단순 비활성화
 			confirmGameEnd.setVisible(true);
 			gameEndMessage = true;
 
-		}else if(gameEnd2 == tail.size()) {
+		}else if(gameEnd2-tail2.size()==0) {
 			messageByPlyer(8);
-			System.out.println("player 1 승리");
+			System.out.println("종료 ");
 			confirmGameEnd.setEnabled(true); //단순 비활성화
 			confirmGameEnd.setVisible(true);
 			gameEndMessage = true;
@@ -638,6 +428,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		System.out.println("tailSize = " + tail.size());
 		System.out.println("gmeEnd2 = " + gameEnd2);
 		System.out.println("tail2Size = " + tail2.size());
+		return gameEndMessage;
 	}
 
 	//enable disable은 잘못된 입력값을 방지하기 위한 메소드

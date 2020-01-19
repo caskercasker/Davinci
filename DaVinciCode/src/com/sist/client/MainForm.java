@@ -1,7 +1,9 @@
+
 package com.sist.client;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -10,8 +12,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.StringTokenizer;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -62,7 +66,15 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		sr.b4.addActionListener(this); //강퇴
 		gr.chatInput.addActionListener(this);
 		gr.confirmGameEnd.addActionListener(this);
-
+		
+		
+		for(int i=0; i<24; i++) {
+			gr.dummy[i].addActionListener(this);
+		}
+		for(int i=0; i<12; i++) {
+			gr.play1[i].addMouseListener(this);
+			gr.play2[i].addMouseListener(this);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -108,9 +120,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 		}
 		// [게임방] 게임끝컨펌
-		if (e.getSource() == gr.confirmGameEnd) {
-			card.show(getContentPane(),"GR");
-		}
+//		if (e.getSource() == gr.confirmGameEnd) {
+//			card.show(getContentPane(),"GR");
+//		}
 		// [대기실] 방 만들기
 		if (e.getSource() == wr.b1) {
 			mr.tf.setText("");
@@ -186,17 +198,18 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		}
 		// [시작룸] 준비 버튼 
 		else if(e.getSource() == sr.b1) {
+			System.out.println("버튼입");
 			try {
 				out.write((Function.GAMEREADY+"|"+myRoom+"\n").getBytes());
 			}catch (Exception ex) {}
 		}
 		// [시작룸] 시작 버튼 
-		else if(e.getSource() == sr.b2) {
-			System.out.println("게임 시작하십쇼(클라)");
-			try {
-				out.write((Function.GAMESTART +"|"+myRoom+"\n").getBytes());
-			}catch(Exception ex) {}
-		}
+//		else if(e.getSource() == sr.b2) {
+//			System.out.println("게임 시작하십쇼(클라)");
+//			try {
+//				out.write((Function.GAMESTART +"|"+myRoom+"\n").getBytes());
+//			}catch(Exception ex) {}
+//		}
 		// [시작룸] 나가기 버튼
 		else if(e.getSource()==sr.b3) 
 		{
@@ -240,13 +253,35 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		if (e.getSource() == gr.confirmGameEnd) {
 			card.show(getContentPane(),"GR");
 		}
+		if(gr.dummyClickTurn == false || (gr.tail.size()>=4 || gr.tail2.size()>=4) ) {
+			boolean c = (gr.tail.size()<=4 || gr.tail2.size()<=4);
+			boolean d = (gr.tail.size()!=0 || gr.tail2.size()!=0);
+			
+			gr.dummyChooseCheck= (gr.tail.size()<=4 || gr.tail2.size() <= 4); //55 일때 false
+			gr.deckSizeCheck = (gr.tail.size()!=0 || gr.tail2.size()!=0); //처음에는 false 이후에는 true
+
+			for(int j=0; j<24; j++) {
+				if(e.getSource() == gr.dummy[j]) {
+		    		//String k = String.valueOf(j);
+		    		try {
+		    			out.write((Function.DUMMYCHOOSE+"|"+myRoom+"|"+gr.playerTurn+"|"+j+"|"+gr.dummyClickTurn+"|"+gr.dummyChooseCheck
+		    					+"|"+gr.deckSizeCheck+"\n").getBytes());
+		    		}catch (Exception ex) {}
+				}
+			}
+		}
+		if(e.getSource()==gr.confirmGameEnd) {
+			try {
+    			out.write((Function.GAMERESET+"|"+myRoom+"\n").getBytes());
+    		}catch (Exception ex) {}
+		}
 	}
 	// ActionEvent Ends 
 	
 	// userData와 connect 
 	public void connection(String userData) {
 		try {
-			s = new Socket("localhost",8888); //전화 걸기
+			s = new Socket("192.168.0.4",8888); //전화 걸기
 			//송신/수신
 			out=s.getOutputStream();
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -506,15 +541,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					}
 
 					case Function.GAMESTART:{
-						 System.out.println(msg);
+//						 sr.b1.setEnabled(false);
+//						 sr.b2.setEnabled(true);
+						 //System.out.println(msg);
 						 myRoom = st.nextToken();
-						 System.out.println("메시지2");
 						 String id = st.nextToken();
-						 System.out.println("메시지3");
 						 String img_source = st.nextToken();
-						 System.out.println("메시지4");
 						 card.show(getContentPane(), "GAME");
-						 System.out.println("게임 카드 바꾸기");
+
 						 for(int i=0;i<2;i++){
 								{
 									if(gr.sw[i]==false)
@@ -522,14 +556,358 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 										gr.sw[i]=true;
 										gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
 										gr.pans[i].setLayout(new BorderLayout());
-										gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 160, 199))));
+										gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 90, 120))));
 										gr.pans[i].validate();  // 재배치 remove-validate
 										gr.ids[i].setText(id);
 										break;
 									}
 								}
 							 }
+						 gr.getRand(gr.su.length);
 						 break;
+					}
+					case Function.GAMESTARTADD:{
+						System.out.println(msg);
+						myRoom=st.nextToken();
+						 String id = st.nextToken();
+	 
+						 String img_source = st.nextToken();
+						 for(int i=0;i<2;i++){
+							{
+								if(gr.sw[i]==false)
+								{
+									gr.sw[i]=true;
+									gr.pans[i].removeAll();  // 라벨을 지워야 새로운 라벨을 올릴 수 있다
+									gr.pans[i].setLayout(new BorderLayout());
+									gr.pans[i].add("Center",new JLabel(new ImageIcon(gr.getImageSizeChange(new ImageIcon(img_source), 90,120))));
+									gr.pans[i].validate();  // 재배치 remove-validate
+									gr.ids[i].setText(id);
+									break;
+								}
+							}
+						 }
+						 break;
+					}
+					case Function.GAMESTARTNEW:{
+						System.out.println("GAMESTARTNEW");
+						System.out.println(msg);
+						for (int i=0; i<24; i++) {
+							gr.su[i] = Double.parseDouble(st.nextToken());
+						}
+						
+						dummySet();
+						break;
+					}
+				
+					case Function.TURNSET:{
+						System.out.println("TurnSet");
+						System.out.println(msg);
+						int gameturn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+						
+						gr.playerTurn = gameturn;
+						if(gameturn==0) {
+							gr.pans[0].setBorder(gr.border);
+							gr.pans[1].setBorder(gr.borderEmpty);
+						}else if(gameturn ==1) {
+							gr.pans[1].setBorder(gr.border);
+							gr.pans[0].setBorder(gr.borderEmpty);
+						}
+						
+						if (playerTurn!=gameturn) {
+							gr.disableDummy();
+							gr.disableLabel_1(gr.tail.size());
+							gr.disableLabel_2(gr.tail2.size());
+							
+						}else if(playerTurn==gameturn) {
+							gr.enableDummy();
+							gr.disableLabel_1(gr.tail.size());
+							gr.disableLabel_2(gr.tail2.size());
+							
+						}
+						break;
+					}
+					case Function.DUMMYCHOOSE:{
+						System.out.println("DUMMYCHOOSE");
+						System.out.println(msg);
+						int gameTurn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+						int number = Integer.parseInt(st.nextToken());
+						
+						if(gameTurn == 0) {
+							gr.dummy[number].setVisible(false); 									
+							if(gr.su[number]>12)													 //블랙 화이트 구분하기 위한 숫자 변환 12보다 큰수들은 white에 값
+								gr.su[number] = gr.su[number]-12+0.5;										//같아진 블랙 화이트 카드를 0.5의 값으로 크기를 구분
+							gr.tail.add(gr.su[number]);
+							Collections.sort(gr.tail); 											// 리스트 정렬
+								//카드를 가져온수만큼 player에 레이블을 뿌린다.
+								for(int k=0; k<gr.tail.size();k++) {
+									if(gameTurn == playerTurn)
+										gr.imageBuf1[k] = gr.setCardImage(gr.tail.get(k));
+									if(gameTurn != playerTurn)
+										gr.imageBuf1[k] = gr.setEnemyCardImage(gr.tail.get(k));
+									
+									gr.temp[k] = gr.tail.get(k);
+									gr.play1[k].setIcon(new ImageIcon(gr.imageBuf1[k]));
+									gr.play1[k].setOpaque( true);
+									gr.play1[k].setBorder(gr.borderEmpty);
+									if(gr.tail.get(k)%0.5!=0) {										// 게임이 진행되면서 비공개 에서 공개된 값들을 구분하게 뿌려준다.
+										if(gameTurn == playerTurn) {
+											double c = gr.tail.get(k)-0.01;
+											gr.play1[k].setBorder(gr.borderEmpty);
+											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
+										}
+										if(gameTurn != playerTurn) {
+											double c = gr.tail.get(k)-0.01;
+											gr.play1[k].setBorder(gr.borderEmpty);
+											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
+										}
+									}
+								}
+								for(int i=0; i<12; i++) {
+									if(gr.su[number] == gr.temp[i]) {
+										gr.count=i;
+										gr.play1[gr.count].setBorder(gr.border);
+										break;
+									}
+								}
+						}else if (gameTurn ==1) {
+							gr.dummy[number].setVisible(false);
+							if(gr.su[number]>12)
+								gr.su[number] = gr.su[number]-12+0.5;
+							gr.tail2.add(gr.su[number]);
+							Collections.sort(gr.tail2);
+								for(int k=0; k<gr.tail2.size();k++) {
+									if(gameTurn == playerTurn)
+										gr.imageBuf2[k] = gr.setCardImage(gr.tail2.get(k));
+									if(gameTurn != playerTurn)
+										gr.imageBuf2[k] = gr.setEnemyCardImage(gr.tail2.get(k));
+									gr.temp2[k] = gr.tail2.get(k);
+									gr.play2[k].setIcon(new ImageIcon(gr.imageBuf2[k]));
+									gr.play2[k].setOpaque(true);
+									gr.play2[k].setBorder(gr.borderEmpty);
+									if(gr.tail2.get(k)%0.5!=0) {
+										if(gameTurn == playerTurn) {
+											double c = gr.tail2.get(k)-0.01;
+											gr.play2[k].setBorder(gr.borderEmpty);
+											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
+										}
+										if(gameTurn != playerTurn) {
+											double c = gr.tail2.get(k)-0.01;
+											gr.play2[k].setBorder(gr.borderEmpty);
+											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
+										}
+									}
+								}
+								for(int i=0; i<12; i++) {
+									if(gr.su[number] == gr.temp2[i]) {
+										gr.count2=i;
+										gr.play2[gr.count2].setBorder(gr.border);
+										break;
+									}
+								}
+							
+						}
+						gr.deckSizeCheck = (gr.tail.size()!=0 || gr.tail2.size()!=0);
+						gr.dummyChooseCheck= (gr.tail.size()<=4 || gr.tail2.size() <= 4);
+						
+						gr.deckChooseEnd = (gr.tail.size()==4 && gr.tail2.size()==4);
+
+						if(gr.deckChooseEnd){											//4장씩 가져왔다면 본격적인 게임을 시작함을 알리기 위한 조건문
+							gr.gameStart=true;
+							gr.messageStart(gr.gameStart);
+							gr.dummyClickTurn = true;
+						}
+						break;
+					}
+					case Function.DECKCHOOSE:{
+						int gameTurn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+
+							gr.disableLabel_1(gr.tail.size());
+							gr.disableLabel_2(gr.tail2.size());
+						break;
+					}
+					
+					case Function.GUESSDECKSTART:{
+						int gameTurn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+						gr.disableDummy();
+						if(playerTurn==0) {
+							gr.enableLabel_2(gr.tail2.size());
+							gr.disableLabel_1(gr.tail.size());
+							
+						}else if(playerTurn==1) {
+							gr.enableLabel_1(gr.tail.size());
+							gr.disableLabel_2(gr.tail2.size());
+						}
+						break;
+					}
+					case Function.GUESSNUMBER:{
+						String rn = st.nextToken();
+						int gameTurn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+						int deckNumber = Integer.parseInt(st.nextToken());
+						double numberChosen = Double.parseDouble(st.nextToken());
+						if(gameTurn==0) {
+							double tempValue = 0;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
+							if(gr.temp2[deckNumber]%1.0!=0) {
+								System.out.println("계산");
+								tempValue = gr.temp2[deckNumber] - 0.5;
+								System.out.println(tempValue);
+							}
+	
+							if(tempValue == numberChosen || gr.temp2[deckNumber] == numberChosen) {					//임시변수와 temp2[i]는 같은 값이지만 버튼 클릭스 블랙 화이트가 구분지어지기 때문에 두개를 비고하여야 함.
+								System.out.println("맞음");
+								if(gameTurn == playerTurn) {
+									gr.play2[deckNumber].setIcon(new ImageIcon(gr.changeCardImage(gr.temp2[deckNumber])));
+									gr.play2[deckNumber].setBorder(gr.borderEmpty);
+									gr.tail2.set(deckNumber, gr.tail2.get(deckNumber)+0.01);
+									gr.gameEndCheck();												//마우스 클릭 입력을 받았기에 게임 종료 상태인지를 체크
+									System.out.println(gr.gameEndMessage);
+									System.out.println("ddfdafjdslfjalsdfasdf");
+									System.out.println(gr.gameEndCheck());
+									System.out.println("==================");
+									if(gr.gameEndCheck()==true){
+										System.out.println("ppppppppp");
+										boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
+										boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
+										try {
+											out.write((Function.GAMEEND+"|"+myRoom+"|"+gameTurn+"|"+pl1_Win+"|"+pl2_Win+"\n").getBytes());
+										}catch(Exception ex) {}
+									}else if(gr.gameEndCheck() == false) {							//게임 종료 상태가 아니라면  턴을 이어갈것인지 종료할것인지를 체크
+										gr.option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION,
+												JOptionPane.DEFAULT_OPTION, null, gr.goOrStop, gr.goOrStop[0]);
+										System.out.println(gr.option); //맞으면 0 틀리면 1
+										try {
+											out.write((Function.GO_OR_STOP+"|"+myRoom+"|"+gameTurn+"|"+playerTurn+"|"+gr.option+"\n").getBytes());
+										}catch(Exception ex) {}
+									}
+								}else if (gameTurn != playerTurn) {
+									gr.play2[deckNumber].setIcon(new ImageIcon(gr.reverseCardImage(gr.temp2[deckNumber])));
+									gr.play2[deckNumber].setBorder(gr.borderEmpty);
+									gr.tail2.set(deckNumber, gr.tail2.get(deckNumber)+0.01);
+								}
+							}else {
+								if(gameTurn == playerTurn) {
+									System.out.println("틀림");
+									gr.play1[gr.count].setBorder(gr.borderEmpty);
+									gr.play1[gr.count].setIcon(new ImageIcon(gr.reverseCardImage(gr.temp[gr.count])));
+									gr.tail.set(gr.count,gr.tail.get(gr.count)+0.01);
+	
+								}else if(gameTurn != playerTurn) {
+									gr.play1[gr.count].setBorder(gr.borderEmpty);
+									gr.play1[gr.count].setIcon(new ImageIcon(gr.changeCardImage(gr.temp[gr.count])));
+									gr.tail.set(gr.count,gr.tail.get(gr.count)+0.01);
+								}
+								try {
+									out.write((Function.INGAMETURNCHANGE+"|"+rn+"|"+gameTurn+"|"+playerTurn+"\n").getBytes());
+								}catch(Exception ex) {}
+								
+							}
+						}else if(gameTurn==1) {
+							double tempValue = 0;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
+							if(gr.temp[deckNumber]%1.0!=0) {
+								System.out.println("계산");
+								tempValue = gr.temp[deckNumber] - 0.5;
+								System.out.println(tempValue);
+							}
+	
+							if(tempValue == numberChosen || gr.temp[deckNumber] == numberChosen) {					//임시변수와 temp2[i]는 같은 값이지만 버튼 클릭스 블랙 화이트가 구분지어지기 때문에 두개를 비고하여야 함.
+								System.out.println("맞음");
+								if(gameTurn == playerTurn) {
+									gr.play1[deckNumber].setIcon(new ImageIcon(gr.changeCardImage(gr.temp[deckNumber])));
+									gr.play1[deckNumber].setBorder(gr.borderEmpty);
+									gr.tail.set(deckNumber, gr.tail.get(deckNumber)+0.01);
+									gr.gameEndCheck();												//마우스 클릭 입력을 받았기에 게임 종료 상태인지를 체크
+									System.out.println(gr.gameEndMessage);
+									System.out.println(gr.gameEndCheck());
+									if(gr.gameEndCheck()==true){
+										System.out.println("ppppppp");
+										boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
+										boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
+										try {
+											out.write((Function.GAMEEND+"|"+myRoom+"|"+gameTurn+"|"+pl1_Win+"|"+pl2_Win+"\n").getBytes());
+										}catch(Exception ex) {}
+										break;
+									}else if(gr.gameEndCheck() == false) {							//게임 종료 상태가 아니라면  턴을 이어갈것인지 종료할것인지를 체크
+										gr.option = JOptionPane.showOptionDialog(null, "한 번더 숫자를 맞춰보실래요 ?","GoOrStop", JOptionPane.DEFAULT_OPTION,
+												JOptionPane.DEFAULT_OPTION, null, gr.goOrStop, gr.goOrStop[0]);
+										System.out.println(gr.option); //맞으면 0 틀리면 1
+										try {
+											out.write((Function.GO_OR_STOP+"|"+myRoom+"|"+gameTurn+"|"+playerTurn+"|"+gr.option+"\n").getBytes());
+										}catch(Exception ex) {}
+									}
+								}else if (gameTurn != playerTurn) {
+									gr.play1[deckNumber].setIcon(new ImageIcon(gr.reverseCardImage(gr.temp[deckNumber])));
+									gr.play1[deckNumber].setBorder(gr.borderEmpty);
+									gr.tail.set(deckNumber, gr.tail.get(deckNumber)+0.01);
+								}
+							}else {
+								if(gameTurn == playerTurn) {
+									System.out.println("틀림");
+									gr.play2[gr.count2].setBorder(gr.borderEmpty);
+									gr.play2[gr.count2].setIcon(new ImageIcon(gr.reverseCardImage(gr.temp2[gr.count2])));
+									gr.tail2.set(gr.count2,gr.tail2.get(gr.count2)+0.01);
+	
+								}else if(gameTurn != playerTurn) {
+									gr.play2[gr.count2].setBorder(gr.borderEmpty);
+									gr.play2[gr.count2].setIcon(new ImageIcon(gr.changeCardImage(gr.temp2[gr.count2])));
+									gr.tail2.set(gr.count2,gr.tail2.get(gr.count2)+0.01);
+								}
+								try {
+									out.write((Function.INGAMETURNCHANGE+"|"+rn+"|"+gameTurn+"|"+playerTurn+"\n").getBytes());
+								}catch(Exception ex) {}
+								
+							}
+						}
+						break;	
+					}
+					case Function.GO_OR_STOP:{
+						System.out.println("go_or_stop Client");
+						System.out.println(msg);
+						String rn = st.nextToken();
+						int gameTurn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+						int option = Integer.parseInt(st.nextToken());
+						if(option ==0) {
+							if(playerTurn==gameTurn) {
+								gr.enableLabel_2(gr.tail2.size());
+								gr.disableLabel_1(gr.tail.size());
+							}else if(playerTurn!=gameTurn) {
+								gr.disableLabel_1(gr.tail.size());
+								gr.disableLabel_2(gr.tail2.size());
+							}
+						}else if (option ==1) {
+							try {
+								out.write((Function.INGAMETURNCHANGE+"|"+rn+"|"+gameTurn+"|"+playerTurn+"\n").getBytes());
+							}catch(Exception ex) {}
+						}
+						break;
+					}
+					case Function.GAMEEND:{
+						int gameEndTurn = Integer.parseInt(st.nextToken());
+						int playerTurn = Integer.parseInt(st.nextToken());
+						String id = st.nextToken();
+						
+						if(gameEndTurn==playerTurn) {
+//							gr.confirmGameEnd.setEnabled(true);
+//							gr.confirmGameEnd.setVisible(true);
+//							gr.confirmGameEnd.setText(id+"님이 승리하셨습니다.");
+							JOptionPane.showConfirmDialog(this, id+"님이 승리하셨습니다 ", "게임종료 ",JOptionPane.OK_CANCEL_OPTION);
+						}else if (gameEndTurn!=playerTurn) {
+//							gr.confirmGameEnd.setEnabled(true);
+//							gr.confirmGameEnd.setVisible(true);
+//							gr.confirmGameEnd.setText(id+"님이 패배하셨습니다.");
+							JOptionPane.showConfirmDialog(this, id+"님이 패하셨습니다 ", "게임종료 ",JOptionPane.OK_CANCEL_OPTION);
+						}
+						break;
+					}
+					case Function.GAMERESET:{
+						String rn = st.nextToken();
+						myRoom = rn;
+						card.show(getContentPane(), "SR");
+						break;
 					}
 				}
 			}
@@ -562,6 +940,29 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 			}
 		}
+		
+		for (int i=0; i<12;i++) {
+			if(e.getSource() == gr.play2[i]) {
+				if(e.getClickCount() ==2) {
+					gr.choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, gr.numbers, gr.numbers[0]);
+					try {
+						out.write((Function.GUESSNUMBER+"|"+myRoom+"|"+gr.playerTurn+"|"+i+"|"+gr.choose+"\n").getBytes());
+					}catch(Exception ex) {}
+				
+				}
+				
+			}else if (e.getSource() == gr.play1[i]) {
+				if(e.getClickCount() ==2) {
+					gr.choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, gr.numbers, gr.numbers[0]);
+					try {
+						out.write((Function.GUESSNUMBER+"|"+myRoom+"|"+gr.playerTurn+"|"+i+"|"+gr.choose+"\n").getBytes());
+					}catch(Exception ex) {}
+				
+				}
+				
+				
+			}
+		}
 	}
 
 	@Override
@@ -587,7 +988,27 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		// TODO Auto-generated method stub
 
 	}
-
+	public void dummySet () {
+		for (int k=0; k<gr.su.length;k++) {
+			
+			if(gr.su[k]<12) {
+			gr.imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+gr.su[k]+".png");
+			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
+			gr.imgFixed = gr.imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
+			//gr.dummy[k] = new JButton(new ImageIcon(gr.imgFixed));
+			gr.dummy[k].setIcon(new ImageIcon(gr.imgFixed));
+			}else {
+				gr.su[k] = gr.su[k]-12+0.5;
+			gr.imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+gr.su[k]+".png");
+			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
+			gr.imgFixed = gr.imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
+			//gr.dummy[k] = new JButton(new ImageIcon(gr.imgFixed));
+			gr.dummy[k].setIcon(new ImageIcon(gr.imgFixed));
+			}
+			//add(gr.dummy[k]);
+		}
+	}
 
 }
+
 
