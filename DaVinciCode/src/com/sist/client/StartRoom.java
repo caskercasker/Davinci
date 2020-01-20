@@ -38,7 +38,7 @@ public class StartRoom extends JPanel implements ActionListener {
 			pans[i] = new JPanel();
 			pans[i].setBackground(Color.black);
 			ids[i] = new JTextField();
-			ids[i].setEnabled(false);
+			ids[i].setEditable(false);
 		}
 		setLayout(null);
 		pans[0].setBounds(130, 200, 160, 199);
@@ -65,6 +65,7 @@ public class StartRoom extends JPanel implements ActionListener {
 		b4 = new JButton("강퇴");
 		JPanel p = new JPanel();
 		p.setLayout(new GridLayout(1, 4, 4, 5));
+		p.setBackground(new Color(255, 0, 0, 0));
 		p.setBounds(130, 450, 450, 50);
 
 		// Chatting
