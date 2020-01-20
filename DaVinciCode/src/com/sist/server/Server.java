@@ -289,6 +289,18 @@ public class Server implements Runnable{
 						   messageTo(Function.GAMESTART+"|"+gameroom.roomName+"|"+id+"|"+img_source);
 						   break;
 					   }
+					   case Function.SRCHAT: {
+							String rn = st.nextToken();
+							String strMsg = st.nextToken();
+							for (Room room : roomVc) {
+								if (rn.equals(room.roomName)) {
+									for (Client user : room.userVc) {
+										user.messageTo(Function.SRCHAT+"|["+id+"] "+strMsg);
+									}
+								}
+							}
+							break;
+						}
 					}
 				}
 			} catch (Exception ex) {}
