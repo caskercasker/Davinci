@@ -24,7 +24,7 @@ public class StartRoom extends JPanel implements ActionListener{
    JButton b1,b2,b3,b4; //b1게임준비, b2 게임 시작, b3 나가기 b4 강퇴하기 임시
    JTextArea chatHistory; // 채팅 내용
    JTextField chatInput; // 채팅 입력 창
-   
+
    Image back;
 
 
@@ -32,7 +32,7 @@ public class StartRoom extends JPanel implements ActionListener{
 
    public StartRoom()
    {
-	   // Player info - Avatar, id 
+	   // Player info - Avatar, id
 	   setLayout(null);
 	   back = Toolkit.getDefaultToolkit().getImage("images/gameBackground.jpg");
 	   for(int i=0;i<2;i++)
@@ -59,14 +59,14 @@ public class StartRoom extends JPanel implements ActionListener{
 		   add(ids[i]);
 	   }
 
-	   
+
 	   // Buttons
 	   b1=new JButton("준비");
-	   b2=new JButton("시작");
+	   b2=new JButton("");
 
 	   b3=new JButton("나가기");
 
-	   b4=new JButton("강퇴");
+	   b4=new JButton("");
 	   JPanel p=new JPanel();
 	   p.setLayout(new GridLayout(1,4,4,5));
 	   p.setBounds(130, 450, 450, 50);
@@ -84,14 +84,14 @@ public class StartRoom extends JPanel implements ActionListener{
 	   chatHistory.setEditable(false);
 	   chatRm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // horizontal scroll 생기지 않도록
 	   chatHistory.setLineWrap(true); // 아주 긴 내용 입력 시 자동으로 줄바뀜되도록
-	   
+
 	   p.add(b1);p.add(b2);p.add(b3); p.add(b4);
 
 
 	   add(p);
 	   add(chatRm);
 	   add(chatInput);
-	   
+
 	   b1.addActionListener(this);
 	   b2.addActionListener(this);
 	   b3.addActionListener(this);
@@ -99,7 +99,7 @@ public class StartRoom extends JPanel implements ActionListener{
 	   chatInput.addActionListener(this);
 	   chatInput.addActionListener(this);
    }
-   
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

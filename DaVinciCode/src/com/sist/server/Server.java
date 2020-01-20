@@ -58,7 +58,7 @@ public class Server implements Runnable{
 		OutputStream out;
 		//받기
 		BufferedReader in;
-		
+
 		double[] su = new double[24];
 
 		public Client(Socket s) {
@@ -163,7 +163,7 @@ public class Server implements Runnable{
 								pos = room.roomName;
 								room.current++;
 
-								for (Client user : room.userVc) { 
+								for (Client user : room.userVc) {
 									// uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
 									user.messageTo(Function.ROOMADD + "|" + id + "|" + img_name + "|" + img_source);
 									user.messageTo(Function.ROOMCHAT + "|[알림 ☞] " + id + "님이 입장하셨습니다.");
@@ -187,6 +187,21 @@ public class Server implements Runnable{
 						}
 						break;
 					}
+					case Function.SRCHAT:{
+						String rn = st.nextToken();
+						String strMsg = st.nextToken();
+						for (Room room : roomVc) {
+							if (rn.equals(room.roomName)) {
+								for (Client user : room.userVc) {
+									user.messageTo(Function.SRCHAT + "|[" + id + "." + img_name + "]" + strMsg);
+								}
+							}
+						}
+						break;
+					}
+
+
+
 					case Function.ROOMCHAT: {
 						String rn = st.nextToken();
 						String strMsg = st.nextToken();
@@ -228,7 +243,7 @@ public class Server implements Runnable{
 								// 대기실
 								messageAll(Function.WAITUPDATE + "|" + room.roomName + "|" + room.current + "|"
 										+ room.maxcount + "|" + id + "|" + pos);
-								if (room.current == 0) 
+								if (room.current == 0)
 								{
 									roomVc.remove(i);
 									break;
@@ -237,18 +252,18 @@ public class Server implements Runnable{
 						}
 						// messageTo(Function.MYROOMOUT+"|");
 						// break;
-					
+
 					}
 					case Function.GAMEREADY:{
 						String rn = st.nextToken();
-						//int c= Integer.parseInt(st.nextToken());						
+						//int c= Integer.parseInt(st.nextToken());
 						getRand(su.length);
 						for(int i=0;i<roomVc.size();i++) {
 							Room room = roomVc.get(i);
-						
+
 							if(rn.equals(room.roomName)) {
 								room.ready += 1;
-								
+
 								if(room.current!=room.maxcount) {
 									messageTo(Function.ROOMCHAT+"|"+"상대방이 없습니다.");
 									break;
@@ -263,7 +278,7 @@ public class Server implements Runnable{
 										user.messageTo(Function.GAMESTARTNEW+"|"+su[0]+"|"+su[1]+"|"+su[2]+"|"+su[3]+"|"+su[4]+"|"+su[5]+"|"+su[6]+"|"
 										+su[7]+"|"+su[8]+"|"+su[9]+"|"+su[10]+"|"+su[11]+"|"+su[12]+"|"+su[13]+"|"+su[14]+"|"+su[15]+"|"+su[16]+"|"+su[17]+"|"
 										+su[18]+"|"+su[19]+"|"+su[20]+"|"+su[21]+"|"+su[22]+"|" +su[23]);
-										
+
 										user.messageTo(Function.TURNSET+"|"+room.gameTurn+"|"+user.playerTurn);
 										System.out.println("턴 세팅 보");
 									}
@@ -280,17 +295,16 @@ public class Server implements Runnable{
 						break;
 					   }
 
-					   
+
 					   case Function.DUMMYCHOOSE:{
 						   System.out.println("DUMMYCHOOSE");
 						   System.out.println(msg);
 						   String rn = st.nextToken();
-						   String gameTurn = st.nextToken();
 						   String numberChosen = st.nextToken();
 						   boolean dummyClickTurn = Boolean.parseBoolean(st.nextToken());
 						   boolean dummyChooseCheck = Boolean.parseBoolean(st.nextToken());
 						   boolean deckSizeCheck = Boolean.parseBoolean(st.nextToken());
-						   
+
 						   for(int i=0; i<roomVc.size();i++) {
 							   Room room = roomVc.get(i);
 							   if(rn.equals(room.roomName)){
@@ -303,7 +317,7 @@ public class Server implements Runnable{
 									   }else if(room.gameTurn==0) {
 										   room.gameTurn = 1;
 									   }
-									   
+
 									   for(Client user:room.userVc) {
 									   user.messageTo(Function.TURNSET+"|"+room.gameTurn+"|"+user.playerTurn);
 									   		if (deckSizeCheck) {
@@ -316,14 +330,13 @@ public class Server implements Runnable{
 										   user.messageTo(Function.GUESSDECKSTART+"|"+room.gameTurn+"|"+user.playerTurn);
 									   }
 								   }
-								   
+
 								 }
 							}
 						   break;
 					   }
 					   case Function.GUESSNUMBER:{
 						   String rn = st.nextToken();
-						   String gameTurn = st.nextToken();
 						   String deckNumber = st.nextToken();
 						   String numberChosen = st.nextToken();
 						   for(int i=0; i<roomVc.size();i++) {
@@ -336,7 +349,7 @@ public class Server implements Runnable{
 						   }
 						   break;
 					   }
-					   
+
 					   case Function.GO_OR_STOP:{
 						   System.out.println("Go_or_stop");
 						   System.out.println(msg);
@@ -344,7 +357,7 @@ public class Server implements Runnable{
 						   String gameTurn = st.nextToken();
 						   String playerTurn = st.nextToken();
 						   int option = Integer.parseInt(st.nextToken());
-						   
+
 						   for(int i=0; i<roomVc.size();i++) {
 							   Room room = roomVc.get(i);
 							   if(rn.equals(room.roomName)){
@@ -358,7 +371,7 @@ public class Server implements Runnable{
 						   }
 						   break;
 					   }
-					   
+
 					   case Function.INGAMETURNCHANGE:{
 						   System.out.println("ingameTurnchange");
 						   System.out.println(msg);
@@ -366,7 +379,7 @@ public class Server implements Runnable{
 						   int gameTurn = Integer.parseInt(st.nextToken());
 						   int playerTurn = Integer.parseInt(st.nextToken());
 						   //int option = Integer.parseInt(st.nextToken());
-						   
+
 						   for(int i=0; i<roomVc.size();i++) {
 							   Room room = roomVc.get(i);
 							   if(rn.equals(room.roomName)){
@@ -391,8 +404,8 @@ public class Server implements Runnable{
 						   int gameEndTurn = Integer.parseInt(st.nextToken());
 						   boolean pl1_Win = Boolean.parseBoolean(st.nextToken());
 						   boolean pl2_Win = Boolean.parseBoolean(st.nextToken());
-						   
-						   
+
+
 						   for(int i=0; i<roomVc.size();i++) {
 							   Room room = roomVc.get(i);
 							   if(rn.equals(room.roomName)){
@@ -400,7 +413,7 @@ public class Server implements Runnable{
 								   for(Client user:room.userVc) {
 									  user.messageTo(Function.GAMEEND+"|"+gameEndTurn+"|"+user.playerTurn+"|"+user.id);
 								   }
-								   
+
 							   }
 						   }
 						   break;
@@ -411,10 +424,11 @@ public class Server implements Runnable{
 							   Room room = roomVc.get(i);
 							   if(rn.equals(room.roomName)){
 								   room.ready = 0;
+								   room.gameTurn = 0;
 								   for(Client user:room.userVc) {
 									  user.messageTo(Function.GAMERESET+"|"+rn);
 								   }
-								   
+
 							   }
 						   }
 					   }
@@ -440,7 +454,7 @@ public class Server implements Runnable{
 				}
 			}catch(Exception ex) {}
 		}
-		
+
 		public synchronized void getRand(int a) {														//스택틱 배열인 su에 중복되지 않은 난수를 넣는 메소드
 			boolean bCheck = false;
 			for (int i=0; i<a; i++) {
@@ -459,7 +473,7 @@ public class Server implements Runnable{
 				}
 			}
 		}
-		
+
 
 	}
 }

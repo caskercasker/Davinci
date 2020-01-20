@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -45,18 +44,13 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	boolean[] sw = new boolean[2];
 	JPanel[] pans=new JPanel[6];
 	JTextField[] ids=new JTextField[6];
-	
+
 	boolean deckChooseEnd=false;
 	boolean deckSizeCheck=false;
 	boolean dummyChooseCheck=false;
-
-
-
 	boolean gameEndMessage = false;  //true일 경우 게임이 끝났음을 체크
 	boolean dummyClickTurn= false;	//본격적인 게임 시작시 dummy 클릭 비활성화를 위한 flag
 	boolean gameStart = false;		//게임 시작임을 알리는 flag
-	
-	int[] gameReadyCheck = {0,0}; //
 
 	Object[] numbers = {"0", "1", "2", "3","4","5","6","7","8","9","10","11"};		//숫자를 고르기 위해 JOptionPane 에 출력될 숫자
 	Object[] goOrStop = {"Yes","No"};												//숫자를 계속 맞출것인지 넘길것인지를 표시하는 옵션
@@ -67,15 +61,11 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	Image imgBuf;
 	Image imgFixed;
 	ImageIcon b1;
-	Border border = BorderFactory.createLineBorder(Color.RED, 5);  						//선택된 카드를 구분하기 위한 보더 설정값 (두께 5에 빨간색)
+	Border border = BorderFactory.createLineBorder(Color.RED, 5);
+	Border borderBlue = BorderFactory.createLineBorder(Color.BLUE,3);//선택된 카드를 구분하기 위한 보더 설정값 (두께 5에 빨간색)
 	Border borderEmpty = BorderFactory.createLineBorder(new Color(0,0,0,0),2); 			//현재 들어오지 않은 카드를 설정하기 위한 보더 설정값
-
-
 	int messageToPlayers = 0;
-	int playerTurn;
-	//Player1 용 데이터
-	Image player1;																		//player1 이미지
-	JLabel avatar_1;																	//player1 이미지 파일이 올라갈 레이블
+
 	JLabel[] play1 = new JLabel[12]; 													//player1 덱이 올라갈 레이블
 	Image[] imageBuf1 = new Image[12]; 													//player1의 정렬된 이미지 출력용 이미지 배열
 	double[] temp = {12,12,12,12,12,12,12,12,12,12,12,12};							    // player1 Deck 의 정렬된 숫자값을 가지고 있는 배열
@@ -84,8 +74,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	int gameEnd1 = 100;			//게임 승리조건 초기화(Player1이 패배할 경우)
 
 	//Players2용 데이터
-	Image player2;																		 ////player2 이미지
-	JLabel avatar_2;																	 //player2 이미지 파일이 올라갈 레이블
 	JLabel[] play2 = new JLabel[12];													 // player2 덱이 올라갈 레이블
 	Image[] imageBuf2 = new Image[12];													//player2의 정렬된 이미지 출력용 이미지 배열
 	double[] temp2 = {12,12,12,12,12,12,12,12,12,12,12,12};								 //players2 Deck 의 정렬된 숫자값을 가지고 있는 배열
@@ -94,7 +82,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	int gameEnd2 = 1000;		//게임 승리조건 초기화 (Player2가 패배할 경우)
 
 
-	
+
 	GameRoom(){
 		setLayout(null); 																//기본 레이아웃 무시
 
@@ -107,9 +95,11 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		gameMessage.setFont(new Font("Serif", Font.BOLD, 20));
 
 		//게임 종료 확인 버튼 설정 (게임이 종료시에만 드러난다)
-		confirmGameEnd = new JButton("종료 ");
-		confirmGameEnd.setFont(new Font ("Verdana",Font.BOLD,35));
-		confirmGameEnd.setBounds(250,400,100,80);
+		imgBuf = Toolkit.getDefaultToolkit().getImage("images/reset.png");
+		imgFixed = imgBuf.getScaledInstance(100, 40, Image.SCALE_SMOOTH);
+
+		confirmGameEnd = new JButton(new ImageIcon(imgFixed));
+		confirmGameEnd.setBounds(580,430,100,40);
 		confirmGameEnd.setEnabled(false); //단순 비활성화
 		confirmGameEnd.setVisible(false);
 		//confirmGameEnd.addActionListener(this);
@@ -183,7 +173,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		//player 1의 레이블 배치
 		for (int i=0; i<12; i++) {
 			if(i<6) {
-				play1[i] = new JLabel(new ImageIcon());
+				play1[i] = new JLabel(new ImageIcon("images/blank.png"));
 				play1[i].setBounds(250+space, 470, 45, 65);
 				space += 55;
 				play1[i].setBackground(Color.white);
@@ -192,7 +182,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 				if(i==6) {
 					space=0;
 				}
-				play1[i] = new JLabel(new ImageIcon());
+				play1[i] = new JLabel(new ImageIcon("images/blank.png"));
 				play1[i].setBounds(250+space, 540, 45, 65);
 				space += 55;
 				play1[i].setBackground(Color.white);
@@ -206,7 +196,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		//player2의 레이블 배치
 		for (int i=0; i<12; i++) {
 			if(i<6) {
-				play2[i] = new JLabel(new ImageIcon());
+				play2[i] = new JLabel(new ImageIcon("images/blank.png"));
 				play2[i].setBounds(250+space, 50, 45, 65);
 				space += 55;
 				play2[i].setBackground(Color.white);
@@ -215,14 +205,13 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 				if(i==6) {
 					space=0;
 				}
-				play2[i] = new JLabel(new ImageIcon());
+				play2[i] = new JLabel(new ImageIcon("images/blank.png"));
 				play2[i].setBounds(250+space, 120, 45, 65);
 				space += 55;
 				play2[i].setBackground(Color.white);
 				play2[i].setOpaque(false);
 			}
 			add(play2[i]);
-			//play2[i].addMouseListener(this);
 		}
 
 
@@ -286,7 +275,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		imgFixed = imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 		return imgFixed;
 	}
-	
+
 	public Image setEnemyCardImage (double a) {
 		if(a%1.0!=0) {
 			imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
@@ -322,7 +311,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 
 	public void messageStart(boolean b) {											//게임 시작만 알리는 전용 메소드
 		if(b==true) {
-			gameMessage.setText(convertToMultiline("게임을 시작합니다\n 카드를 한장 골라주세요("+playerTurn+")의 차례"));
+			gameMessage.setText(convertToMultiline("게임을 시작합니다\n 카드를 한장 골라주세요"));
 		}
 
 	}
@@ -333,13 +322,13 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		}else if (a==2) {
 			gameMessage.setText("상대방이 카드를 고르고 있습니다.");
 		}else if (a==3) {
-			gameMessage.setText(convertToMultiline("상대방의 카드에서 1장을 선택해주세요.\n상대방의 카드 숫자는 무엇일까요?\n 01,2,3,4,5,6,7,8,9,10,11,"));
+			gameMessage.setText(convertToMultiline("상대방의 카드에서 1장을 선택, 숫자는 무엇일까요?\n 01,2,3,4,5,6,7,8,9,10,11,"));
 		}else if (a==4) {
-			gameMessage.setText(convertToMultiline("틀렸습니다.새로 가져온 카드의 수가 공개되었습니다.\n 카드를 한장 골라주세요"));
+			gameMessage.setText(convertToMultiline("틀렸습니다.가져온 카드의 수가 공개되었습니다."));
 		}else if (a==5 ) {
 			gameMessage.setText(convertToMultiline("맞았습니다.\n 한 번 숫자를 맞춰보실래요 ? Yes or No"));
 		}else if (a==6) {
-			gameMessage.setText("상대방이 카드를 선택중입니다.");
+			gameMessage.setText("상대방이 추가 카드를 선택중입니다.");
 		}else if (a==7) {
 			gameMessage.setText(convertToMultiline("상대방이 틀렸습니다.\n 상대방의 카드가 하나 공개되었습니다."));
 		}else if (a==8) {
@@ -347,10 +336,17 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		}else if (a==9) {
 			gameMessage.setText("내 카드가 모두 다 공개되었습니다. ");
 		}else if (a==10) {
-			gameMessage.setText("상대방의 덱에서 카드하나를 더블클릭후 숫자를 맞춰 보세요");
+			gameMessage.setText("추가 카드를 한장 골라주세요");
 		}
 	}
 
+	public void messageToGuessCard(int i, double c) {
+		if (i==1) {
+			gameMessage.setText(convertToMultiline("상대방이"+c+"라고 추측했습니다.\n 숫자를 맞췄습니다."));
+		}else if (i==2) {
+			gameMessage.setText(convertToMultiline("상대방이"+c+"라고 추측했습니다.\n 숫자를 틀렸습니다."));
+		}
+	}
 	public void getRand(int a) {														//스택틱 배열인 su에 중복되지 않은 난수를 넣는 메소드
 		boolean bCheck = false;
 		for (int i=0; i<a; i++) {
@@ -370,7 +366,7 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {										//숫자 맞추기에 들어가는 메소드
-	
+
 	}
 
 
@@ -407,27 +403,15 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			if (tail2.get(cc)%0.5!=0)
 			gameEnd2 +=1;
 		}
-
-		System.out.println("게임 체크함");
 		if(gameEnd1-tail.size()==0) {
 			messageByPlyer(9);
-			System.out.println("종료 ");
-			confirmGameEnd.setEnabled(true); //단순 비활성화
-			confirmGameEnd.setVisible(true);
 			gameEndMessage = true;
 
 		}else if(gameEnd2-tail2.size()==0) {
 			messageByPlyer(8);
-			System.out.println("종료 ");
-			confirmGameEnd.setEnabled(true); //단순 비활성화
-			confirmGameEnd.setVisible(true);
 			gameEndMessage = true;
 
 		}
-		System.out.println("gmeEnd1 = " + gameEnd1);
-		System.out.println("tailSize = " + tail.size());
-		System.out.println("gmeEnd2 = " + gameEnd2);
-		System.out.println("tail2Size = " + tail2.size());
 		return gameEndMessage;
 	}
 
