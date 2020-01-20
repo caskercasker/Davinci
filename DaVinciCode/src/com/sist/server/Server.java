@@ -161,7 +161,7 @@ public class Server implements Runnable{
 								for (Client user : room.userVc) { 
 									// uservc들어있는 첫번쨰 값이 true 니까 두번째 공간에다가 userVC에 들어있는 값을 넣어라.
 									user.messageTo(Function.ROOMADD + "|" + id + "|" + img_name + "|" + img_source);
-									user.messageTo(Function.ROOMCHAT + "|[알림 ☞] " + id + "님이 입장하셨습니다.");
+									user.messageTo(Function.SRCHAT + "|[알림☞] " + id + "님이 입장하셨습니다.");
 								}
 								// 본인처리
 								room.userVc.add(this);
@@ -206,7 +206,7 @@ public class Server implements Runnable{
 								for (Client user : room.userVc) {
 									if (!user.id.equals(id)) {
 										user.messageTo(Function.ROOMOUT + "|" + id);
-										user.messageTo(Function.ROOMCHAT + "|[알림☞]" + id + "." + img_name + "님이 퇴장하셨습니다");
+										user.messageTo(Function.SRCHAT + "|[알림☞] " + id+ "님이 퇴장하셨습니다");
 									}
 								}
 								// 실제 나가는 사람
