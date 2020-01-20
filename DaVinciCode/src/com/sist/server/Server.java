@@ -230,7 +230,7 @@ public class Server implements Runnable{
 							}
 						}
 						// messageTo(Function.MYROOMOUT+"|");
-						// break;
+						 break;
 					}
 					case Function.GAMEREADY:{
 						String rn = st.nextToken();
