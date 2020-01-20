@@ -404,11 +404,11 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 			gameEnd2 +=1;
 		}
 		if(gameEnd1-tail.size()==0) {
-			messageByPlyer(9);
+
 			gameEndMessage = true;
 
 		}else if(gameEnd2-tail2.size()==0) {
-			messageByPlyer(8);
+
 			gameEndMessage = true;
 
 		}

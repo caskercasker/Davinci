@@ -754,6 +754,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 										boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
 										boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
+										gameEndMessage(gameTurn, playerTurn);
 										try {
 											out.write((Function.GAMEEND+"|"+myRoom+"|"+gameTurn+"|"+pl1_Win+"|"+pl2_Win+"\n").getBytes());
 										}catch(Exception ex) {}
@@ -804,12 +805,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									gr.play1[deckNumber].setBorder(gr.borderEmpty);
 									gr.tail.set(deckNumber, gr.tail.get(deckNumber)+0.01);
 									gr.gameEndCheck();												//마우스 클릭 입력을 받았기에 게임 종료 상태인지를 체크
-									System.out.println(gr.gameEndMessage);
-									System.out.println(gr.gameEndCheck());
+
 									if(gr.gameEndCheck()==true){
-										System.out.println("ppppppp");
+
 										boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
 										boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
+										gameEndMessage(gameTurn, playerTurn);
 										try {
 											out.write((Function.GAMEEND+"|"+myRoom+"|"+gameTurn+"|"+pl1_Win+"|"+pl2_Win+"\n").getBytes());
 										}catch(Exception ex) {}
@@ -864,7 +865,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 							try {
 								out.write((Function.INGAMETURNCHANGE+"|"+rn+"|"+gameTurn+"|"+playerTurn+"\n").getBytes());
 							}catch(Exception ex) {}
-						}else {
+						}else if(option == 0){
 							message(gameTurn,playerTurn,3);
 							System.out.println("레이블 활성화");
 							if(playerTurn==gameTurn) {

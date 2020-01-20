@@ -361,12 +361,10 @@ public class Server implements Runnable{
 						   for(int i=0; i<roomVc.size();i++) {
 							   Room room = roomVc.get(i);
 							   if(rn.equals(room.roomName)){
-								   if(option ==1) {
-									   for(Client user:room.userVc) {
+								     for(Client user:room.userVc) {
 										   user.messageTo(Function.GO_OR_STOP+"|"+room.roomName+"|"+room.gameTurn+"|"
 									   +user.playerTurn+"|"+option);
-									   }
-								   }
+									}
 							   }
 						   }
 						   break;
