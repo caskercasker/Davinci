@@ -573,6 +573,16 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						System.out.println(msg);
 						int gameturn = Integer.parseInt(st.nextToken());
 						int playerTurn = Integer.parseInt(st.nextToken());
+						
+						if(gr.tail.size()==12 && gr.tail2.size() ==12) {
+							boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
+							boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
+							try {
+								out.write((Function.GAMEEND+"|"+myRoom+"|"+2+"|"+pl2_Win+"|"+pl1_Win+"\n").getBytes());
+								} catch (Exception e) {
+								// TODO: handle exception
+							}
+						}
 						if(gr.dummyClickTurn == false)
 							message(gameturn,playerTurn,1);
 						if(gr.dummyClickTurn == true) {
@@ -645,15 +655,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									gr.play1[k].setOpaque( true);
 									gr.play1[k].setBorder(gr.borderEmpty);
 									if(gr.tail.get(k)%0.5!=0) {										// 게임이 진행되면서 비공개 에서 공개된 값들을 구분하게 뿌려준다.
+										double per = Double.parseDouble(String.format("%.2f",gr.tail.get(k)));
 										if(gameTurn == playerTurn) {
-											double c = gr.tail.get(k)-0.01;
 											gr.play1[k].setBorder(gr.borderEmpty);
-											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
+											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(per)));
 										}
 										if(gameTurn != playerTurn) {
-											double c = gr.tail.get(k)-0.01;
 											gr.play1[k].setBorder(gr.borderEmpty);
-											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
+											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(per)));
 										}
 									}
 								}
@@ -680,15 +689,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									gr.play2[k].setOpaque(true);
 									gr.play2[k].setBorder(gr.borderEmpty);
 									if(gr.tail2.get(k)%0.5!=0) {
+										double per = Double.parseDouble(String.format("%.2f",gr.tail2.get(k)));
 										if(gameTurn == playerTurn) {
-											double c = gr.tail2.get(k)-0.01;
 											gr.play2[k].setBorder(gr.borderEmpty);
-											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
+											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(per)));
 										}
 										if(gameTurn != playerTurn) {
-											double c = gr.tail2.get(k)-0.01;
 											gr.play2[k].setBorder(gr.borderEmpty);
-											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
+											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(per)));
 										}
 									}
 								}
@@ -913,8 +921,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						int gameEndTurn = Integer.parseInt(st.nextToken());
 						int playerTurn = Integer.parseInt(st.nextToken());
 						String id = st.nextToken();
-
-						if(gameEndTurn==playerTurn) {
+						
+						if(gameEndTurn == 2) {
+							gr.confirmGameEnd.setEnabled(true);
+							gr.confirmGameEnd.setVisible(true);
+							JOptionPane.showMessageDialog(this, "비겼습니다 ", "게임종료 ",JOptionPane.NO_OPTION);
+						}else if(gameEndTurn==playerTurn) {
 							gr.confirmGameEnd.setEnabled(true);
 							gr.confirmGameEnd.setVisible(true);
 							JOptionPane.showMessageDialog(this, id+"님이 승리하셨습니다 ", "게임종료 ",JOptionPane.NO_OPTION);
