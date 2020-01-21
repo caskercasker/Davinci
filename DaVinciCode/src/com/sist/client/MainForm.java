@@ -38,6 +38,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 	Image img,img2;
 	String myRoom;
+
 	MainForm() {
 		this.setTitle("The Da Vinci Code Game"); // 타이틀에 게임제목 노출
 		setLayout(card);
@@ -51,6 +52,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		setResizable(false); // 창 크기 변경 불가능하게
 		setLocationRelativeTo(null); // 창이 정 중앙에 뜨게
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 종료 시 게임 종료되도록 (그렇지 않으면 게임 꺼도 계속 돌아감...)
 
 		login.b1.addActionListener(this);
@@ -61,10 +64,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		mr.b1.addActionListener(this);	// 실제방만들기
 		mr.b2.addActionListener(this);  // 방만들기 취소
 		sr.b1.addActionListener(this); //준비
-		sr.b2.addActionListener(this); //시작
+		//sr.b2.addActionListener(this); //시작
 		sr.b3.addActionListener(this); //나가기
 		sr.chatInput.addActionListener(this);
-		sr.b4.addActionListener(this); //강퇴
+		//sr.b4.addActionListener(this); //강퇴
 		gr.chatInput.addActionListener(this);
 		gr.confirmGameEnd.addActionListener(this);
 
@@ -237,7 +240,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				return;
 			}
 			try {
-				out.write((Function.ROOMCHAT+"|"+myRoom+"|"+msg+"\n").getBytes()); // out.write(); ==> 서버로 값이 넘어감
+				out.write((Function.GRCHAT+"|"+myRoom+"|"+msg+"\n").getBytes()); // out.write(); ==> 서버로 값이 넘어감
 				// 방 이름이 넘어가야 방에 있는 사람들에게만 채팅메시지 보낼 수 있음
 				// 방 이름 중복되지 않게 해놨으니까 가능
 				// 방 안에 userVc있으니까 방에 들어간 사람 찾을 수 있음!
@@ -407,10 +410,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						 break;
 					}
 					case Function.ROOMCHAT:{
-						gr.chatHistory.append(st.nextToken()+"\n");
+						sr.chatHistory.append(st.nextToken()+"\n");
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
-						int sc = gr.chatHistory.getText().length();
-						gr.chatHistory.setCaretPosition(sc);
+						int sc = sr.chatHistory.getText().length();
+						sr.chatHistory.setCaretPosition(sc);
 						break;
 					}
 					case Function.SRCHAT:{
@@ -418,6 +421,13 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						// 스크롤이 최하단으로 자동으로 내려가게 설정
 						int sc = sr.chatHistory.getText().length();
 						sr.chatHistory.setCaretPosition(sc);
+						break;
+					}
+					case Function.GRCHAT:{
+						gr.chatHistory.append(st.nextToken()+"\n");
+						// 스크롤이 최하단으로 자동으로 내려가게 설정
+						int sc = gr.chatHistory.getText().length();
+						gr.chatHistory.setCaretPosition(sc);
 						break;
 					}
 					case Function.WAITUPDATE:
@@ -491,6 +501,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 								break;
 							}
 						}
+						sr.b1.setEnabled(true);
 						break;
 					}
 					case Function.MYROOMOUT:
@@ -508,6 +519,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						sr.chatHistory.setText("");
 						sr.chatInput.setText("");
 						card.show(getContentPane(), "WR");  // 대기실로 이동해라
+						sr.b1.setEnabled(true);
 						break;
 					}
 					case Function.KANG:
@@ -744,6 +756,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						message(gameTurn,playerTurn,3);
 
 						double numberChosen = Double.parseDouble(st.nextToken());
+						System.out.println("deckNumber"+deckNumber+"고른숫자"+numberChosen);
+
+
 						if(gameTurn==0) {
 							double tempValue = 0;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
 							if(gr.temp2[deckNumber]%1.0!=0) {
@@ -751,7 +766,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 								tempValue = gr.temp2[deckNumber] - 0.5;
 								System.out.println(tempValue);
 							}
-
+							System.out.println("tempValue:"+tempValue+"gr.temp2[deckNumber]"+gr.temp2[deckNumber]+"고른숫자"+numberChosen);
 							if(tempValue == numberChosen || gr.temp2[deckNumber] == numberChosen) {					//임시변수와 temp2[i]는 같은 값이지만 버튼 클릭스 블랙 화이트가 구분지어지기 때문에 두개를 비고하여야 함.
 								System.out.println("맞음");
 								messageOnDeckChoose(gameTurn,playerTurn, numberChosen,1);
@@ -989,20 +1004,29 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		for (int i=0; i<12;i++) {
 			if(e.getSource() == gr.play2[i]) {
 				if(e.getClickCount() ==2) {
+					double c;
 					gr.choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, gr.numbers, gr.numbers[0]);
+					if(gr.choose == -1) {
+					}else {
+						 c = gr.choose;
 					try {
-						out.write((Function.GUESSNUMBER+"|"+myRoom+"|"+i+"|"+gr.choose+"\n").getBytes());
+						out.write((Function.GUESSNUMBER+"|"+myRoom+"|"+i+"|"+c+"\n").getBytes());
 					}catch(Exception ex) {}
+					}
 
 				}
 
 			}else if (e.getSource() == gr.play1[i]) {
 				if(e.getClickCount() ==2) {
+					double c;
 					gr.choose = JOptionPane.showOptionDialog(null, "숫자를 고르세요","상대카드", JOptionPane.DEFAULT_OPTION, JOptionPane.DEFAULT_OPTION, null, gr.numbers, gr.numbers[0]);
+					if(gr.choose == -1) {
+					}else {
+						 c = gr.choose;
 					try {
-						out.write((Function.GUESSNUMBER+"|"+myRoom+"|"+i+"|"+gr.choose+"\n").getBytes());
+						out.write((Function.GUESSNUMBER+"|"+myRoom+"|"+i+"|"+c+"\n").getBytes());
 					}catch(Exception ex) {}
-
+					}
 				}
 
 
@@ -1129,13 +1153,13 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		}else if (msgNumber ==3) {
 			if(gameturn ==0){
 				if(gameturn == playerturn) {
-					gr.gameMessage.setText(gr.convertToMultiline("상대방의 카드에서 1장을 선택, 숫자는 무엇일까요?\n 01,2,3,4,5,6,7,8,9,10,11,"));
+					gr.gameMessage.setText(gr.convertToMultiline("상대방의 카드에서 1장을 선택, 숫자는 무엇일까요?\n 0,1,2,3,4,5,6,7,8,9,10,11,"));
 				}else if(gameturn!=playerturn) {
 					gr.gameMessage.setText("상대방이 카드를 추측중입니다.");
 				}
 			}else if(gameturn ==1) {
 				if(gameturn == playerturn) {
-					gr.gameMessage.setText(gr.convertToMultiline("상대방의 카드에서 1장을 선택, 숫자는 무엇일까요?\n 01,2,3,4,5,6,7,8,9,10,11,"));
+					gr.gameMessage.setText(gr.convertToMultiline("상대방의 카드에서 1장을 선택, 숫자는 무엇일까요?\n 0,1,2,3,4,5,6,7,8,9,10,11,"));
 				}else if(gameturn!=playerturn) {
 					gr.gameMessage.setText("상대방이 카드를 추측중입니다.");
 				}

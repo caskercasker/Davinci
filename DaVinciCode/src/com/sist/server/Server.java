@@ -200,6 +200,19 @@ public class Server implements Runnable{
 						break;
 					}
 
+					case Function.GRCHAT:{
+						String rn = st.nextToken();
+						String strMsg = st.nextToken();
+						for (Room room : roomVc) {
+							if (rn.equals(room.roomName)) {
+								for (Client user : room.userVc) {
+									user.messageTo(Function.GRCHAT + "|[" + id + "." + img_name + "]" + strMsg);
+								}
+							}
+						}
+						break;
+					}
+
 
 
 					case Function.ROOMCHAT: {
@@ -263,6 +276,7 @@ public class Server implements Runnable{
 
 							if(rn.equals(room.roomName)) {
 								room.ready += 1;
+								room.gameTurn = (int)(Math.random()*2);
 
 								if(room.current!=room.maxcount) {
 									messageTo(Function.ROOMCHAT+"|"+"상대방이 없습니다.");

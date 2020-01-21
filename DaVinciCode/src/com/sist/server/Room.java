@@ -15,8 +15,8 @@ public class Room {
 		this.maxcount = maxcount;
 		current = 1;
 		ready = 0;
-		this.gameTurn = 0;
-		
+
+
 	}
 
 

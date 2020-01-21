@@ -121,12 +121,12 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		   pans[0].setLayout(new BorderLayout());
 		   pans[0].add("Center",new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("images/blank.png"), 160, 199))));
 		   ids[0].setBounds(50, 595, 90, 20);
-
+		   ids[0].setHorizontalAlignment(JTextField.CENTER);
 		   pans[1].setBounds(50, 50, 90, 120);
 		   pans[1].setLayout(new BorderLayout());
 		   pans[1].add("Center", new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("images/blank.png"), 160, 199))));
 		   ids[1].setBounds(50, 175, 90, 20);
-
+		   ids[1].setHorizontalAlignment(JTextField.CENTER);
 		   for(int i=0;i<2;i++)
 		   {
 			   add(pans[i]);

@@ -46,13 +46,14 @@ public class StartRoom extends JPanel implements ActionListener{
 	   pans[0].setBounds(130, 200, 160,199 );
 	   pans[0].setLayout(new BorderLayout());
 	   pans[0].add("Center",new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("c:\\image\\def.png"), 160, 199))));
-	   ids[0].setBounds(130, 400, 100, 20);
+	   ids[0].setBounds(160, 400, 100, 20);
+	   ids[0].setHorizontalAlignment(JTextField.CENTER);
 
 	   pans[1].setBounds(420, 200, 160,199 );
 	   pans[1].setLayout(new BorderLayout());
 	   pans[1].add("Center", new JLabel(new ImageIcon(getImageSizeChange(new ImageIcon("c:\\image\\def.png"), 160, 199))));
-	   ids[1].setBounds(420, 400, 100, 20);
-
+	   ids[1].setBounds(450, 400, 100, 20);
+	   ids[1].setHorizontalAlignment(JTextField.CENTER);
 	   for(int i=0;i<2;i++)
 	   {
 		   add(pans[i]);
@@ -62,11 +63,11 @@ public class StartRoom extends JPanel implements ActionListener{
 
 	   // Buttons
 	   b1=new JButton("준비");
-	   b2=new JButton("");
+	   //b2=new JButton("");
 
 	   b3=new JButton("나가기");
 
-	   b4=new JButton("");
+	   //b4=new JButton("");
 	   JPanel p=new JPanel();
 	   p.setLayout(new GridLayout(1,4,4,5));
 	   p.setBounds(130, 450, 450, 50);
@@ -85,7 +86,7 @@ public class StartRoom extends JPanel implements ActionListener{
 	   chatRm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // horizontal scroll 생기지 않도록
 	   chatHistory.setLineWrap(true); // 아주 긴 내용 입력 시 자동으로 줄바뀜되도록
 
-	   p.add(b1);p.add(b2);p.add(b3); p.add(b4);
+	   p.add(b1);p.add(b3);
 
 
 	   add(p);
@@ -93,9 +94,9 @@ public class StartRoom extends JPanel implements ActionListener{
 	   add(chatInput);
 
 	   b1.addActionListener(this);
-	   b2.addActionListener(this);
+	   //b2.addActionListener(this);
 	   b3.addActionListener(this);
-	   b4.addActionListener(this);
+	   //b4.addActionListener(this);
 	   chatInput.addActionListener(this);
 	   chatInput.addActionListener(this);
    }
