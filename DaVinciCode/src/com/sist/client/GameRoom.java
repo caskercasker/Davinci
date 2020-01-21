@@ -259,16 +259,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// Chat
-		String msg= chatInput.getText();
-		if(e.getSource()==chatInput) {
-			chatHistory.append(msg+"\n");
-			if(msg ==null || msg.length()==0) {
-					JOptionPane.showMessageDialog(null,"대화할 내용을 입력하세요","채팅창 경고",JOptionPane.WARNING_MESSAGE);
-			}else
-			chatInput.setText("");
-		}
-
 		// TODO Auto-generated method stub
 		if(dummyClickTurn == false || (tail.size()>=4 || tail2.size()>=4)) {			// 게임이 시작하기 전단계라면    OR   플레이어가 고른 카드수가 둘다 4보다 클떄까지 카드만 가져옴
 			for(int j=0; j<24; j++) {
