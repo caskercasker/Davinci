@@ -12,7 +12,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-public class MakeRoom extends JDialog implements ActionListener{
+public class MakeRoom extends JDialog {
 	JLabel la1,la2,la3;
 	JTextField tf;
 	JComboBox box;
@@ -34,7 +34,6 @@ public class MakeRoom extends JDialog implements ActionListener{
 	
 		// 선택
 		rb1.setSelected(true);
-		pf.setVisible(false);
 
 		b1 = new JButton("방만들기");
 		b2 = new JButton("취소");
@@ -47,30 +46,28 @@ public class MakeRoom extends JDialog implements ActionListener{
 		//배치
 		setLayout(null);
 		la1.setBounds(10, 15, 50, 30);
-		tf.setBounds(65, 15, 150, 30);
+		tf.setBounds(65, 15, 150, 30); //방 이름 입력
 
 		la2.setBounds(10, 50, 50, 30);
 		rb1.setBounds(65, 50, 70, 30);
-	
-		pf.setBounds(120, 85, 95, 30);
-
-		la3.setBounds(10, 120, 50, 30);
-		box.setBounds(65, 120, 150, 30);
+			
+		la3.setBounds(10, 85, 50, 30);
+		box.setBounds(65, 85, 150, 30);
 
 		JPanel p=new JPanel();
 		p.add(b1);
 		p.add(b2);
 
-		p.setBounds(10, 160, 205, 35);
+		p.setBounds(10, 130, 205, 35);
 		add(la1); add(tf);
 		add(la2); add(rb1);
 		add(la3); add(box);
 		add(p);
 		//setSize(255, 255);
-		setBounds(448,156, 255, 255);
+		setBounds(448,156, 255, 220);
 		//setVisible(true);
 
-		rb1.addActionListener(this);
+	
 
 	}
 
@@ -79,14 +76,5 @@ public class MakeRoom extends JDialog implements ActionListener{
 		new MakeRoom();
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if(e.getSource() == rb1) {
-
-			pf.setVisible(false);
-			pf.setText("");
-		}
-	}
 
 }

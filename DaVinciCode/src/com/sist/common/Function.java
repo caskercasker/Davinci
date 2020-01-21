@@ -28,14 +28,11 @@ public class Function {
 	public static final int POSCHANGE = 260;
 	public static final int WAITCHAT = 270;
 	public static final int ROOMCHAT = 280;
-
-	public static final int KANG = 300;
-	public static final int INVITE = 310;
-	public static final int INVITE_YES = 320;
-	public static final int INVITE_NO = 330;
+	public static final int SRCHAT = 300;
+	
 	public static final int GRCHAT = 290;
-	public static final int GAMEREADY = 340;
-	public static final int GAMESTART = 350;
+	public static final int GAMEREADY = 310;
+	public static final int GAMESTART = 320;
 	public static final int GAMESTARTADD = 360;
 
 	public static final int GAMESTARTNEW = 500;
@@ -50,9 +47,7 @@ public class Function {
 	public static final int DUMMYCHOOSE = 520;
 	public static final int GAMEEND = 570;
 	public static final int GAMERESET = 600;
-
-			;
-	public static final int SRCHAT = 400;
+	
 	public static final int EXIT = 900;		//
 	public static final int MYEXIT = 910;	//나가는 사람 게임에서 나감.
 

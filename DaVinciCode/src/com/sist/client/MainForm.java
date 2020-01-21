@@ -64,10 +64,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		mr.b1.addActionListener(this);	// 실제방만들기
 		mr.b2.addActionListener(this);  // 방만들기 취소
 		sr.b1.addActionListener(this); //준비
-		//sr.b2.addActionListener(this); //시작
+
 		sr.b3.addActionListener(this); //나가기
 		sr.chatInput.addActionListener(this);
-		//sr.b4.addActionListener(this); //강퇴
+
 		gr.chatInput.addActionListener(this);
 		gr.confirmGameEnd.addActionListener(this);
 
@@ -129,8 +129,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			mr.tf.setText("");
 			mr.rb1.setSelected(true);
 			mr.box.setSelectedIndex(0);
-			mr.pf.setVisible(false);
-			mr.pf.setText("");
 			mr.tf.requestFocus();
 			mr.setVisible(true);
 		}
@@ -182,7 +180,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			}
 			else {
 				rs="비공개";
-				rs=String.valueOf(mr.pf.getPassword());
+				rp=" ";
 			}
 			//인원
 			int inwon = mr.box.getSelectedIndex()+2;
@@ -204,13 +202,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 				out.write((Function.GAMEREADY+"|"+myRoom+"\n").getBytes());
 			}catch (Exception ex) {}
 		}
-		// [시작룸] 시작 버튼
-//		else if(e.getSource() == sr.b2) {
-//			System.out.println("게임 시작하십쇼(클라)");
-//			try {
-//				out.write((Function.GAMESTART +"|"+myRoom+"\n").getBytes());
-//			}catch(Exception ex) {}
-//		}
+
+
 		// [시작룸] 나가기 버튼
 		else if(e.getSource()==sr.b3)
 		{
@@ -521,13 +514,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						sr.b1.setEnabled(true);
 						break;
 					}
-					case Function.KANG:
-					{
-						String rn=st.nextToken();
-						JOptionPane.showMessageDialog(this, rn+"방에서 강퇴되었습니다");
-						out.write((Function.ROOMOUT+"|"+rn+"\n").getBytes());
-						break;
-					}
+	
 					case Function.GAMESTART:{
 //						 sr.b1.setEnabled(false);
 //						 sr.b2.setEnabled(true);
