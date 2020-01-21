@@ -934,7 +934,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 							gr.dummy[i].removeAll();
 							gr.dummy[i].setVisible(true);
 						}
-
+						sr.b1.setEnabled(true);
 						gr.count = 0;
 						gr.count2 = 0;
 						gr.gameEnd1 = 10000;
