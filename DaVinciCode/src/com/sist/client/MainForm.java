@@ -603,13 +603,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 							gr.disableDummy();
 							disableLabel_1(gr.tail.size());
 							disableLabel_2(gr.tail2.size());
-
 						}else if(playerTurn==gameturn) {
 							gr.enableDummy();
 							disableLabel_1(gr.tail.size());
 							disableLabel_2(gr.tail2.size());
-
 						}
+
 						break;
 					}
 					case Function.DUMMYCHOOSE:{
