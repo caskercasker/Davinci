@@ -72,10 +72,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		for(int i=0; i<24; i++) {
 			gr.dummy[i].addActionListener(this);
 		}
-//		for(int i=0; i<12; i++) {
-//			gr.play1[i].addMouseListener(this);
-//			gr.play2[i].addMouseListener(this);
-//		}
+
 	}
 
 	public static void main(String[] args) {
@@ -907,11 +904,11 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						if(gameEndTurn==playerTurn) {
 							gr.confirmGameEnd.setEnabled(true);
 							gr.confirmGameEnd.setVisible(true);
-							JOptionPane.showConfirmDialog(this, id+"님이 승리하셨습니다 ", "게임종료 ",JOptionPane.OK_CANCEL_OPTION);
+							JOptionPane.showMessageDialog(this, id+"님이 승리하셨습니다 ", "게임종료 ",JOptionPane.NO_OPTION);
 						}else if (gameEndTurn!=playerTurn) {
 							gr.confirmGameEnd.setEnabled(true);
 							gr.confirmGameEnd.setVisible(true);
-							JOptionPane.showConfirmDialog(this, id+"님이 패하셨습니다 ", "게임종료 ",JOptionPane.OK_CANCEL_OPTION);
+							JOptionPane.showMessageDialog(this, id+"님이 패하셨습니다 ", "게임종료 ",JOptionPane.NO_OPTION);
 						}
 						break;
 					}
