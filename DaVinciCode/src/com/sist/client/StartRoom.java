@@ -18,11 +18,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-public class StartRoom extends JPanel implements ActionListener {
+public class StartRoom extends JPanel {
 
 	JPanel[] pans = new JPanel[2];
 	JTextField[] ids = new JTextField[2];
-	JButton b1, b2, b3, b4; // b1게임준비, b2 게임 시작, b3 나가기 b4 강퇴하기 임시
+	JButton b1, b3;
+	//JButton b1, b2, b3, b4; // b1게임준비, b2 게임 시작, b3 나가기 b4 강퇴하기 임시
 	JTextArea chatHistory; // 채팅 내용
 	JTextField chatInput; // 채팅 입력 창
 
@@ -60,9 +61,9 @@ public class StartRoom extends JPanel implements ActionListener {
 
 		// Buttons
 		b1 = new JButton("준비");
-		b2 = new JButton("시작");
+		//b2 = new JButton("시작");
 		b3 = new JButton("나가기");
-		b4 = new JButton("강퇴");
+		//b4 = new JButton("강퇴");
 		JPanel p = new JPanel();
 		p.setLayout(new GridLayout(1, 4, 4, 5));
 		p.setBackground(new Color(255, 0, 0, 0));
@@ -81,27 +82,17 @@ public class StartRoom extends JPanel implements ActionListener {
 		chatHistory.setLineWrap(true); // 아주 긴 내용 입력 시 자동으로 줄바뀜되도록
 
 		p.add(b1);
-		p.add(b2);
+		//p.add(b2);
 		p.add(b3);
-		p.add(b4);
+		//p.add(b4);
 
 		add(p);
 		add(chatRm);
 		add(chatInput);
 
-		b1.addActionListener(this);
-		b2.addActionListener(this);
-		b3.addActionListener(this);
-		b4.addActionListener(this);
-		chatInput.addActionListener(this);
-		chatInput.addActionListener(this);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 
-	}
 
 	public Image getImageSizeChange(ImageIcon icon, int width, int height) {
 		Image img = icon.getImage();
