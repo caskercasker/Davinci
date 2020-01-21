@@ -129,7 +129,6 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 			mr.tf.setText("");
 			mr.rb1.setSelected(true);
 			mr.box.setSelectedIndex(0);
-			mr.la4.setVisible(false);
 			mr.pf.setVisible(false);
 			mr.pf.setText("");
 			mr.tf.requestFocus();
