@@ -72,10 +72,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		for(int i=0; i<24; i++) {
 			gr.dummy[i].addActionListener(this);
 		}
-		for(int i=0; i<12; i++) {
-			gr.play1[i].addMouseListener(this);
-			gr.play2[i].addMouseListener(this);
-		}
+//		for(int i=0; i<12; i++) {
+//			gr.play1[i].addMouseListener(this);
+//			gr.play2[i].addMouseListener(this);
+//		}
 	}
 
 	public static void main(String[] args) {
@@ -567,8 +567,15 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						int playerTurn = Integer.parseInt(st.nextToken());
 						if(gr.dummyClickTurn == false)
 							message(gameturn,playerTurn,1);
-						if(gr.dummyClickTurn == true)
+						if(gr.dummyClickTurn == true) {
+							try {
+								Thread.sleep(2000);
+							} catch (Exception e) {
+								// TODO: handle exception
+							}
+
 							message (gameturn,playerTurn, 2);
+						}
 						if(playerTurn==1) {
 							gr.ids[1].setBorder(gr.borderBlue);
 						}else if(playerTurn==0) {
