@@ -189,7 +189,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 				play1[i].setOpaque(false);
 			}
 			add(play1[i]);
-			//play1[i].addMouseListener(this);
 		}
 
 		space =0;
@@ -232,25 +231,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 		add(chatInput);
 		add(gameMessage);
 		add(confirmGameEnd);
-
-		//선턴을  랜덤으로 정함.
-
-//		int a = (int)(Math.random()*2);
-//		System.out.println(a);
-//		if(a==0) {
-//			playerTurn =0;
-//			System.out.println("나 선턴");
-//			avatar_1.setBorder(border);
-//			avatar_2.setBorder(borderEmpty);
-//		}else if(a ==1) {
-//			playerTurn =1;
-//			System.out.println("상대방 선턴");
-//			avatar_2.setBorder(border);
-//			avatar_1.setBorder(borderEmpty);
-//
-//		}
-
-
 	}
 
 	@Override
@@ -416,29 +396,6 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	}
 
 	//enable disable은 잘못된 입력값을 방지하기 위한 메소드
-	public void enableLabel_1(int a) {
-		for(int i=0; i<a; i++) {
-			play1[i].addMouseListener(this);
-		}
-	}
-
-	public void enableLabel_2(int a) {
-		for(int i=0; i<a; i++) {
-			play2[i].addMouseListener(this);
-		}
-
-	}
-	public void disableLabel_1(int a) {
-		for(int i=0; i<a; i++) {
-			play1[i].removeMouseListener(this);
-		}
-	}
-
-	public void disableLabel_2(int a) {
-		for(int i=0; i<a; i++) {
-			play2[i].removeMouseListener(this);
-		}
-	}
 	public void disableDummy() {
 		for (int i=0; i<24; i++) {
 				dummy[i].setEnabled(false);

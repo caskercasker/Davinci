@@ -200,6 +200,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		// [시작룸] 준비 버튼
 		else if(e.getSource() == sr.b1) {
 			System.out.println("버튼입");
+			sr.b1.setEnabled(false);
 			try {
 				out.write((Function.GAMEREADY+"|"+myRoom+"\n").getBytes());
 			}catch (Exception ex) {}
@@ -566,7 +567,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						int playerTurn = Integer.parseInt(st.nextToken());
 						if(gr.dummyClickTurn == false)
 							message(gameturn,playerTurn,1);
-
+						if(gr.dummyClickTurn == true)
+							message (gameturn,playerTurn, 2);
 						if(playerTurn==1) {
 							gr.ids[1].setBorder(gr.borderBlue);
 						}else if(playerTurn==0) {
@@ -583,13 +585,13 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 						if (playerTurn!=gameturn) {
 							gr.disableDummy();
-							gr.disableLabel_1(12);
-							gr.disableLabel_2(12);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 
 						}else if(playerTurn==gameturn) {
 							gr.enableDummy();
-							gr.disableLabel_1(12);
-							gr.disableLabel_2(12);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 
 						}
 						break;
@@ -602,8 +604,12 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						int number = Integer.parseInt(st.nextToken());
 						if(gr.dummyClickTurn == false) {
 							message(gameTurn,playerTurn,1);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 						}else if(gr.dummyClickTurn == true) {
 							message(gameTurn,playerTurn,2);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 						}
 
 
@@ -696,9 +702,9 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 					case Function.DECKCHOOSE:{
 						int gameTurn = Integer.parseInt(st.nextToken());
 						int playerTurn = Integer.parseInt(st.nextToken());
-
-							gr.disableLabel_1(12);
-							gr.disableLabel_2(12);
+						System.out.println("카드 고르기 비활성화 양쪽 다");
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 						break;
 					}
 
@@ -712,17 +718,17 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						if(gameTurn==playerTurn) {
 							if(playerTurn ==0) {
 								System.out.println("플레이어1이 고를수있게 되었음");
-								gr.enableLabel_2(12);
-								gr.disableLabel_1(12);
+								enableLabel_2(gr.tail2.size());
+								disableLabel_1(gr.tail.size());
 							}else if(playerTurn ==1) {
 								System.out.println("플레이가 2가 고를수 있게 되었음");
-								gr.disableLabel_2(12);
-								gr.enableLabel_1(12);
+								disableLabel_2(gr.tail2.size());
+								enableLabel_1(gr.tail.size());
 							}
 
 						}else if(gameTurn!=playerTurn) {
-							gr.disableLabel_1(12);
-							gr.disableLabel_2(12);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 						}
 						break;
 					}
@@ -771,6 +777,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									gr.play2[deckNumber].setBorder(gr.borderEmpty);
 									gr.tail2.set(deckNumber, gr.tail2.get(deckNumber)+0.01);
 								}
+
 							}else {
 								messageOnDeckChoose(gameTurn,playerTurn, numberChosen,2);
 								if(gameTurn == playerTurn) {
@@ -847,6 +854,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 								}catch(Exception ex) {}
 
 							}
+
 						}
 						break;
 					}
@@ -861,20 +869,25 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 						if (option ==1) {
 							System.out.println("Stop 메시지 ㄱㄱ");
-							message (gameTurn,playerTurn, 2);
 							try {
 								out.write((Function.INGAMETURNCHANGE+"|"+rn+"|"+gameTurn+"|"+playerTurn+"\n").getBytes());
 							}catch(Exception ex) {}
 						}else if(option == 0){
 							message(gameTurn,playerTurn,3);
 							System.out.println("레이블 활성화");
-							if(playerTurn==gameTurn) {
-								gr.enableLabel_2(12);
-								gr.disableLabel_1(12);
-							}else if(playerTurn!=gameTurn) {
-								gr.disableLabel_1(12);
-								gr.disableLabel_2(12);
-							}
+//							if(playerTurn==gameTurn) {
+//								if(playerTurn==0) {
+//									enableLabel_2(gr.tail2.size());
+//									disableLabel_1(gr.tail.size());
+//								}else if(playerTurn==1) {
+//									enableLabel_1(gr.tail.size());
+//									disableLabel_2(gr.tail2.size());
+//
+//								}
+//							}else if(playerTurn!=gameTurn) {
+//								disableLabel_1(gr.tail.size());
+//								disableLabel_2(gr.tail2.size());
+//							}
 						}
 						break;
 
@@ -1020,14 +1033,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 		for (int k=0; k<gr.su.length;k++) {
 
 			if(gr.su[k]<12) {
-			gr.imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_"+gr.su[k]+".png");
+			gr.imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
 			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/b_tile/b_tile_back.png");
 			gr.imgFixed = gr.imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 			//gr.dummy[k] = new JButton(new ImageIcon(gr.imgFixed));
 			gr.dummy[k].setIcon(new ImageIcon(gr.imgFixed));
 			}else {
 				gr.su[k] = gr.su[k]-12+0.5;
-			gr.imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_"+gr.su[k]+".png");
+			gr.imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
 			//imgBuf = Toolkit.getDefaultToolkit().getImage("images/w_tile/w_tile_back.png");
 			gr.imgFixed = gr.imgBuf.getScaledInstance(220, 190, Image.SCALE_SMOOTH);
 			//gr.dummy[k] = new JButton(new ImageIcon(gr.imgFixed));
@@ -1039,29 +1052,37 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	}
 
 	public void enableLabel_1(int a) {
+		System.out.println("enableLalbe1_In");
+		System.out.println("덱사이즈"+a);
 		for(int i=0; i<a; i++) {
-			gr.play1[i].setFocusable(true);
+			//gr.play1[i].setFocusable(true);
 			gr.play1[i].addMouseListener(this);
 		}
 	}
 
 	public void enableLabel_2(int a) {
+		System.out.println("enableLalbe2_In");
+		System.out.println("덱사이즈"+a);
 		for(int i=0; i<a; i++) {
-			gr.play2[i].setFocusable(true);
+			//gr.play2[i].setFocusable(true);
 			gr.play2[i].addMouseListener(this);
 		}
 
 	}
 	public void disableLabel_1(int a) {
+		System.out.println("DisableLalbe1_In");
+		System.out.println("덱사이즈"+a);
 		for(int i=0; i<a; i++) {
-			gr.play1[i].setFocusable(false);
+			//gr.play1[i].setFocusable(false);
 			gr.play1[i].removeMouseListener(this);
 		}
 	}
 
 	public void disableLabel_2(int a) {
+		System.out.println("DisableLalbe2_In");
+		System.out.println("덱사이즈"+a);
 		for(int i=0; i<a; i++) {
-			gr.play2[i].setFocusable(false);
+			//gr.play2[i].setFocusable(false);
 			gr.play2[i].removeMouseListener(this);
 		}
 	}
