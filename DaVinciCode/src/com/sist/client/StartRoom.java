@@ -16,12 +16,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-public class StartRoom extends JPanel implements ActionListener{
+public class StartRoom extends JPanel{
 
    JPanel[] pans=new JPanel[2];
    JTextField[] ids=new JTextField[2];
 
-   JButton b1,b2,b3,b4; //b1게임준비, b2 게임 시작, b3 나가기 b4 강퇴하기 임시
+   JButton b1,b3; //b1게임준비, b2 게임 시작, b3 나가기 b4 강퇴하기 임시
    JTextArea chatHistory; // 채팅 내용
    JTextField chatInput; // 채팅 입력 창
 
@@ -63,11 +63,9 @@ public class StartRoom extends JPanel implements ActionListener{
 
 	   // Buttons
 	   b1=new JButton("준비");
-	   //b2=new JButton("");
-
 	   b3=new JButton("나가기");
 
-	   //b4=new JButton("");
+	 
 	   JPanel p=new JPanel();
 	   p.setLayout(new GridLayout(1,4,4,5));
 	   p.setBounds(130, 450, 450, 50);
@@ -92,23 +90,9 @@ public class StartRoom extends JPanel implements ActionListener{
 	   add(p);
 	   add(chatRm);
 	   add(chatInput);
+ }
 
-	   b1.addActionListener(this);
-	   //b2.addActionListener(this);
-	   b3.addActionListener(this);
-	   //b4.addActionListener(this);
-	   chatInput.addActionListener(this);
-	   chatInput.addActionListener(this);
-   }
-
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Image getImageSizeChange(ImageIcon icon, int width, int height) {
+   public Image getImageSizeChange(ImageIcon icon, int width, int height) {
 		Image img = icon.getImage();
 		Image change = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		return change;
