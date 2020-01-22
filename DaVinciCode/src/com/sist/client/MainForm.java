@@ -514,7 +514,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						sr.b1.setEnabled(true);
 						break;
 					}
-	
+
 					case Function.GAMESTART:{
 //						 sr.b1.setEnabled(false);
 //						 sr.b2.setEnabled(true);
@@ -560,7 +560,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						System.out.println(msg);
 						int gameturn = Integer.parseInt(st.nextToken());
 						int playerTurn = Integer.parseInt(st.nextToken());
-						
+
 						if(gr.tail.size()==12 && gr.tail2.size() ==12) {
 							boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
 							boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
@@ -644,12 +644,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									if(gr.tail.get(k)%0.5!=0) {										// 게임이 진행되면서 비공개 에서 공개된 값들을 구분하게 뿌려준다.
 										double per = Double.parseDouble(String.format("%.2f",gr.tail.get(k)));
 										if(gameTurn == playerTurn) {
+											double c = gr.tail.get(k)-0.01;
 											gr.play1[k].setBorder(gr.borderEmpty);
-											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(per)));
+											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
 										}
 										if(gameTurn != playerTurn) {
+											double c = gr.tail.get(k)-0.01;
 											gr.play1[k].setBorder(gr.borderEmpty);
-											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(per)));
+											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
 										}
 									}
 								}
@@ -678,12 +680,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									if(gr.tail2.get(k)%0.5!=0) {
 										double per = Double.parseDouble(String.format("%.2f",gr.tail2.get(k)));
 										if(gameTurn == playerTurn) {
+											double c = gr.tail2.get(k)-0.01;
 											gr.play2[k].setBorder(gr.borderEmpty);
-											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(per)));
+											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
 										}
 										if(gameTurn != playerTurn) {
+											double c = gr.tail2.get(k)-0.01;
 											gr.play2[k].setBorder(gr.borderEmpty);
-											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(per)));
+											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
 										}
 									}
 								}
@@ -908,7 +912,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						int gameEndTurn = Integer.parseInt(st.nextToken());
 						int playerTurn = Integer.parseInt(st.nextToken());
 						String id = st.nextToken();
-						
+
 						if(gameEndTurn == 2) {
 							gr.confirmGameEnd.setEnabled(true);
 							gr.confirmGameEnd.setVisible(true);
