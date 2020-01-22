@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 public class MemberDAO {
 	private Connection conn;//오라클 연결 => Socket
 	private PreparedStatement ps; // BufferedReader, OutputStream
-	private final String URL="jdbc:oracle:thin:@211.238.142.192:1521:XE"; // 집에서 개발할 때
-	//private final String URL="jdbc:oracle:thin:@211.238.142.192:1521:XE"; // 학원에서 개발할 때
+	private final String URL="jdbc:oracle:thin:@211.238.142.192:1521:XE"; // 학원에서 개발할 때
+	//private final String URL="jdbc:oracle:thin:@localhost:1521:XE"; // 집에서 개발할 때
 	// 오라클 연결 주소
 	// 1. 드라이버 등록 => 한번수행 => 생성자
 	public MemberDAO() {

@@ -422,4 +422,3 @@ public class GameRoom extends JPanel implements ActionListener, MouseListener {
 	   	return change;
 	   }
 }
-

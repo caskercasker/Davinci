@@ -102,5 +102,4 @@ public class StartRoom extends JPanel{
 	protected void paintComponent(Graphics g) {
 		g.drawImage(back, 0, 0, getWidth(), getHeight(), this);
 	}
-
 }
