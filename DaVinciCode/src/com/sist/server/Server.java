@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import com.sist.common.Function;
 public class Server implements Runnable{
 	//연결 => 접속 => ServerSocket
@@ -192,7 +193,7 @@ public class Server implements Runnable{
 						for (Room room : roomVc) {
 							if (rn.equals(room.roomName)) {
 								for (Client user : room.userVc) {
-									user.messageTo(Function.SRCHAT + "|[" + id + "." + img_name + "]" + strMsg);
+									user.messageTo(Function.SRCHAT + "|[" + id + "]" + strMsg);
 								}
 							}
 						}
@@ -205,7 +206,7 @@ public class Server implements Runnable{
 						for (Room room : roomVc) {
 							if (rn.equals(room.roomName)) {
 								for (Client user : room.userVc) {
-									user.messageTo(Function.GRCHAT + "|[" + id + "." + img_name + "]" + strMsg);
+									user.messageTo(Function.GRCHAT + "|[" + id + "]" + strMsg);
 								}
 							}
 						}
@@ -220,7 +221,7 @@ public class Server implements Runnable{
 						for (Room room : roomVc) {
 							if (rn.equals(room.roomName)) {
 								for (Client user : room.userVc) {
-									user.messageTo(Function.ROOMCHAT + "|[" + id + "." + img_name + "]" + strMsg);
+									user.messageTo(Function.ROOMCHAT + "|[" + id  + "]" + strMsg);
 								}
 							}
 						}
@@ -234,7 +235,7 @@ public class Server implements Runnable{
 							if (rn.equals(room.roomName)) {
 								pos = "대기실";
 								room.current--;
-
+								room.ready--;
 								// 방에 남아 있는 사람
 								for (Client user : room.userVc) {
 									if (!user.id.equals(id)) {
