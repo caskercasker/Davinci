@@ -274,7 +274,7 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 	// userData와 connect
 	public void connection(String userData) {
 		try {
-			s = new Socket("211.238.142.199",8888); //전화 걸기
+			s = new Socket("localhost",8888); //전화 걸기
 			//송신/수신
 			out=s.getOutputStream();
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -573,14 +573,8 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 								// TODO: handle exception
 							}
 						}
-						if(gr.dummyClickTurn == false)
-							message(gameturn,playerTurn,1);
+						
 						if(gr.dummyClickTurn == true) {
-							try {
-								Thread.sleep(2000);
-							} catch (Exception e) {
-								// TODO: handle exception
-							}
 
 							message (gameturn,playerTurn, 2);
 						}
