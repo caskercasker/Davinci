@@ -564,6 +564,10 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						if(gr.tail.size()==12 && gr.tail2.size() ==12) {
 							boolean pl2_Win = (gr.gameEnd1 == gr.tail.size());
 							boolean pl1_Win = (gr.gameEnd2 == gr.tail2.size());
+
+							gr.disableDummy();
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 							try {
 								out.write((Function.GAMEEND+"|"+myRoom+"|"+2+"|"+pl2_Win+"|"+pl1_Win+"\n").getBytes());
 								} catch (Exception e) {
@@ -642,16 +646,16 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									gr.play1[k].setOpaque( true);
 									gr.play1[k].setBorder(gr.borderEmpty);
 									if(gr.tail.get(k)%0.5!=0) {										// 게임이 진행되면서 비공개 에서 공개된 값들을 구분하게 뿌려준다.
-										double per = Double.parseDouble(String.format("%.2f",gr.tail.get(k)));
+										//double per = Double.parseDouble(String.format("%.2f",gr.tail.get(k)));
 										if(gameTurn == playerTurn) {
-											double c = gr.tail.get(k)-0.01;
+											double per = Double.parseDouble(String.format("%.1f",gr.tail.get(k)));
 											gr.play1[k].setBorder(gr.borderEmpty);
-											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
+											gr.play1[k].setIcon(new ImageIcon(gr.reverseCardImage(per)));
 										}
 										if(gameTurn != playerTurn) {
-											double c = gr.tail.get(k)-0.01;
+											double per = Double.parseDouble(String.format("%.1f",gr.tail.get(k)));
 											gr.play1[k].setBorder(gr.borderEmpty);
-											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
+											gr.play1[k].setIcon(new ImageIcon(gr.changeCardImage(per)));
 										}
 									}
 								}
@@ -678,16 +682,16 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 									gr.play2[k].setOpaque(true);
 									gr.play2[k].setBorder(gr.borderEmpty);
 									if(gr.tail2.get(k)%0.5!=0) {
-										double per = Double.parseDouble(String.format("%.2f",gr.tail2.get(k)));
+										//double per = Double.parseDouble(String.format("%.2f",gr.tail2.get(k)));
 										if(gameTurn == playerTurn) {
-											double c = gr.tail2.get(k)-0.01;
+											double per = Double.parseDouble(String.format("%.1f",gr.tail2.get(k)));
 											gr.play2[k].setBorder(gr.borderEmpty);
-											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(c)));
+											gr.play2[k].setIcon(new ImageIcon(gr.reverseCardImage(per)));
 										}
 										if(gameTurn != playerTurn) {
-											double c = gr.tail2.get(k)-0.01;
+											double per = Double.parseDouble(String.format("%.1f",gr.tail2.get(k)));
 											gr.play2[k].setBorder(gr.borderEmpty);
-											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(c)));
+											gr.play2[k].setIcon(new ImageIcon(gr.changeCardImage(per)));
 										}
 									}
 								}
@@ -753,17 +757,21 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						message(gameTurn,playerTurn,3);
 
 						double numberChosen = Double.parseDouble(st.nextToken());
+						System.out.println("GameTurn"+gameTurn);
 						System.out.println("deckNumber"+deckNumber+"고른숫자"+numberChosen);
-
+						System.out.println("gr.temp[deckNumber]"+gr.temp[deckNumber]);
+						System.out.println("gr.temp2[deckNumber]"+gr.temp2[deckNumber]);
 
 						if(gameTurn==0) {
-							double tempValue = 0;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
+							double tempValue = 50;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
 							if(gr.temp2[deckNumber]%1.0!=0) {
 								System.out.println("계산");
 								tempValue = gr.temp2[deckNumber] - 0.5;
 								System.out.println(tempValue);
 							}
-							System.out.println("tempValue:"+tempValue+"gr.temp2[deckNumber]"+gr.temp2[deckNumber]+"고른숫자"+numberChosen);
+
+							System.out.println("Player Turn 0 tempValue:"+tempValue+"gr.temp2[deckNumber]"+gr.temp2[deckNumber]+"고른숫자"+numberChosen);
+
 							if(tempValue == numberChosen || gr.temp2[deckNumber] == numberChosen) {					//임시변수와 temp2[i]는 같은 값이지만 버튼 클릭스 블랙 화이트가 구분지어지기 때문에 두개를 비고하여야 함.
 								System.out.println("맞음");
 								messageOnDeckChoose(gameTurn,playerTurn, numberChosen,1);
@@ -813,12 +821,14 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 
 							}
 						}else if(gameTurn==1) {
-							double tempValue = 0;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
+							double tempValue = 50;											//값 변경 없이 비교를 위한 임시 변수(화이트 값은 0.5가 추가되었지만  사용자 입력은 0.5를 받지 않기 때문에 존재)
 							if(gr.temp[deckNumber]%1.0!=0) {
 								System.out.println("계산");
 								tempValue = gr.temp[deckNumber] - 0.5;
 								System.out.println(tempValue);
 							}
+
+							System.out.println("PLAYER TUrn 1tempValue:"+tempValue+"gr.temp[deckNumber]"+gr.temp[deckNumber]+"고른숫자"+numberChosen);
 
 							if(tempValue == numberChosen || gr.temp[deckNumber] == numberChosen) {					//임시변수와 temp2[i]는 같은 값이지만 버튼 클릭스 블랙 화이트가 구분지어지기 때문에 두개를 비고하여야 함.
 								System.out.println("맞음");
