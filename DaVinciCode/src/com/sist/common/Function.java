@@ -28,12 +28,25 @@ public class Function {
 	public static final int POSCHANGE = 260;
 	public static final int WAITCHAT = 270;
 	public static final int ROOMCHAT = 280;
-	
 	public static final int SRCHAT = 300;
+	
+	public static final int GRCHAT = 290;
 	public static final int GAMEREADY = 310;
 	public static final int GAMESTART = 320;
-	
+	public static final int GAMESTARTADD = 360;
 
+	public static final int GAMESTARTNEW = 500;
+	public static final int TURNSET = 510;
+	public static final int TURNCHANGE = 515;
+	public static final int DECKCHOOSE = 525;
+	public static final int GUESSDECKSTART = 530;
+	public static final int GUESSNUMBER = 535;
+	public static final int GO_OR_STOP = 540;
+	public static final int INGAMETURNCHANGE = 550;
+
+	public static final int DUMMYCHOOSE = 520;
+	public static final int GAMEEND = 570;
+	public static final int GAMERESET = 600;
 	
 	public static final int EXIT = 900;		//
 	public static final int MYEXIT = 910;	//나가는 사람 게임에서 나감.
