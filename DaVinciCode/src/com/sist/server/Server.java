@@ -134,7 +134,7 @@ public class Server implements Runnable{
 						Room room = new Room(st.nextToken(), st.nextToken(), st.nextToken(),
 								Integer.parseInt(st.nextToken()));
 						// String roomName, String roomState, String roomPwd, int maxcount)
-						playerTurn =1; //방장이 선
+						playerTurn =0; //방장이 선
 						room.userVc.add(this);
 						roomVc.add(room);
 						pos = room.roomName;
@@ -168,7 +168,7 @@ public class Server implements Runnable{
 									user.messageTo(Function.SRCHAT + "|[알림 ☞] " + id + "님이 입장하셨습니다.");
 								}
 								// 본인처리
-								playerTurn =0;
+								playerTurn =1;
 								room.userVc.add(this);
 								messageTo(Function.ROOMIN + "|" + room.roomName + "|" + id + "|" + img_name + "|"
 										+ img_source);
@@ -274,8 +274,7 @@ public class Server implements Runnable{
 
 							if(rn.equals(room.roomName)) {
 								room.ready += 1;
-								//room.gameTurn = (int)(Math.random()*2);
-
+								room.gameTurn = 0;
 								if(room.current!=room.maxcount) {
 									messageTo(Function.ROOMCHAT+"|"+"상대방이 없습니다.");
 									break;

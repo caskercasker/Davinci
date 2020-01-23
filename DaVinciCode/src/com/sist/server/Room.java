@@ -15,7 +15,7 @@ public class Room {
 		this.maxcount = maxcount;
 		current = 1;
 		ready = 0;
-		this.gameTurn = (int)Math.random()*2;
+		//this.gameTurn = (int)Math.random()*2;
 
 
 	}
