@@ -573,10 +573,15 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 								// TODO: handle exception
 							}
 						}
-						
-						if(gr.dummyClickTurn == true) {
 
-							message (gameturn,playerTurn, 2);
+						if(gr.dummyClickTurn == false) {
+							message(gameturn,playerTurn,1);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
+						}else if(gr.dummyClickTurn == true) {
+							message(gameturn,playerTurn,2);
+							disableLabel_1(gr.tail.size());
+							disableLabel_2(gr.tail2.size());
 						}
 						if(playerTurn==1) {
 							gr.ids[1].setBorder(gr.borderBlue);
@@ -610,15 +615,15 @@ public class MainForm extends JFrame implements ActionListener, Runnable, MouseL
 						int gameTurn = Integer.parseInt(st.nextToken());
 						int playerTurn = Integer.parseInt(st.nextToken());
 						int number = Integer.parseInt(st.nextToken());
-						if(gr.dummyClickTurn == false) {
-							message(gameTurn,playerTurn,1);
-							disableLabel_1(gr.tail.size());
-							disableLabel_2(gr.tail2.size());
-						}else if(gr.dummyClickTurn == true) {
-							message(gameTurn,playerTurn,2);
-							disableLabel_1(gr.tail.size());
-							disableLabel_2(gr.tail2.size());
-						}
+//						if(gr.dummyClickTurn == false) {
+//							message(gameTurn,playerTurn,1);
+//							disableLabel_1(gr.tail.size());
+//							disableLabel_2(gr.tail2.size());
+//						}else if(gr.dummyClickTurn == true) {
+//							message(gameTurn,playerTurn,2);
+//							disableLabel_1(gr.tail.size());
+//							disableLabel_2(gr.tail2.size());
+//						}
 
 
 						if(gameTurn == 0) {
