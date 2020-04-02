@@ -1,5 +1,11 @@
 # 다빈치 코드 게임 (The Da Vinci Code Game)
 
+[시연 영상](https://youtu.be/4M5JtTOOkWY)은 아래의 Youtube url에서 확인하실 수 있습니다.    
+Youtube url : https://youtu.be/4M5JtTOOkWY
+[![Dynamic Beat 시연 영상](https://k.kakaocdn.net/dn/oFiYq/btqC5oxJepY/UbFLLian2wkkm9KneRUFfK/img.jpg)](https://youtu.be/4M5JtTOOkWY)  
+
+
+
 ### 개괄
  - 개요 : Java 개발 국비과정 1차 프로젝트 
  - 주제 : 다빈치코드 게임 
@@ -15,6 +21,8 @@
 3. 게임로직 구현 
  - 보드게임 다빈치코드의 게임로직을 만들고 이를 구현
 
-### 게임 가능 ID
- - ID : kim, shim, lee, hong, kang, cho (총 5개)
- - 비밀번호 : 1234 (5개 ID 모두 동일) 
+### 게임 실행 정보   
+ - ID : kim, shim, lee, hong, kang, cho (총 5개)   
+ - 비밀번호 : 1234 (5개 ID 모두 동일)    
+ - 실행방법: Server.java 실행 후 MainFrom.java 실행    
+ - 게임 실행에 ojdbc6.jar 가 필요합니다.    
